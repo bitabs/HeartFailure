@@ -1,4 +1,7 @@
-![cover](https://github.com/NaseebullahSafi/HeartFailure/blob/master/App/Images/Icons/pulse.jpg)
+<p align="center">
+  <img src="https://github.com/NaseebullahSafi/HeartFailure/blob/master/App/Images/Icons/heartIconREADME.svg?raw=true" alt="Sublime's custom image"/>
+</p>
+
 
 
 #  HeartFailure
