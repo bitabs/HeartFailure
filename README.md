@@ -1,7 +1,14 @@
+<p align="center">
+  <img src="https://github.com/NaseebullahSafi/HeartFailure/blob/master/App/Images/Icons/pulse.jpg?raw=true" width="100%" alt="Sublime's custom image"/>
+</p>
+
+
+
 #  HeartFailure
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat)](http://standardjs.com/)
 
 * Standard compliant React Native App Utilizing [Ignite](https://github.com/infinitered/ignite)
+
 
 ## :arrow_up: How to Setup
 
