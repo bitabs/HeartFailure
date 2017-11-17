@@ -3,20 +3,20 @@
 </p>
 
 ```
-IgniteProject
-├── App
-│   ├── Components
-│   ├── Config
-│   ├── Containers
-│   ├── Fixtures
-│   ├── Images
-│   ├── Lib
-│   ├── Navigation
-│   ├── Redux
-│   ├── Sagas
-│   ├── Services
-│   ├── Themes
-│   └── Transforms
+HeartFailure
+├── App                            # Compiled files (alternatively `dist`)
+│   ├── Components                 # Compiled files (alternatively `dist`)
+│   ├── Config                     # Compiled files (alternatively `dist`)
+│   ├── Containers                 # Compiled files (alternatively `dist`)
+│   ├── Fixtures                   # Compiled files (alternatively `dist`)
+│   ├── Images                     # Compiled files (alternatively `dist`)
+│   ├── Lib                        # Compiled files (alternatively `dist`)
+│   ├── Navigation                 # Compiled files (alternatively `dist`)
+│   ├── Redux                      # Compiled files (alternatively `dist`)
+│   ├── Sagas                      # Compiled files (alternatively `dist`)
+│   ├── Services                   # Compiled files (alternatively `dist`)
+│   ├── Themes                     # Compiled files (alternatively `dist`)
+│   └── Transforms                 # Compiled files (alternatively `dist`)
 ├── README.md
 ├── __tests__
 │   ├── index.android.js
