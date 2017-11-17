@@ -2,6 +2,47 @@
   <img src="https://github.com/NaseebullahSafi/HeartFailure/blob/master/App/Images/Icons/heartIconREADME.jpg?raw=true" width="50%" alt="Sublime's custom image"/>
 </p>
 
+```
+IgniteProject
+├── App
+│   ├── Components
+│   ├── Config
+│   ├── Containers
+│   ├── Fixtures
+│   ├── Images
+│   ├── Lib
+│   ├── Navigation
+│   ├── Redux
+│   ├── Sagas
+│   ├── Services
+│   ├── Themes
+│   └── Transforms
+├── README.md
+├── __tests__
+│   ├── index.android.js
+│   └── index.ios.js
+├── android
+│   ├── app
+│   ├── build.gradle
+│   ├── gradle
+│   ├── gradle.properties
+│   ├── gradlew
+│   ├── gradlew.bat
+│   ├── keystores
+│   └── settings.gradle
+├── ignite
+│   ├── ignite.json
+│   └── plugins
+├── index.android.js
+├── index.ios.js
+├── ios
+│   ├── IgniteProject
+│   ├── IgniteProject-tvOS
+│   ├── IgniteProject-tvOSTests
+│   ├── IgniteProject.xcodeproj
+│   └── IgniteProjectTests
+└── package.json
+```
 
 
 #  HeartFailure
