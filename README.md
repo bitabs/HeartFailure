@@ -5,7 +5,8 @@
 ```
 HeartFailure
 ├── App                            // Compiled files (alternatively `dist`)
-│   ├── Components                 // Compiled files (alternatively `dist`)
+│   ├── Components                 // "Dumb" components are stored here. All data is passed into dumb components.
+│   │   ├── Styles
 │   ├── Config                     // Compiled files (alternatively `dist`)
 │   ├── Containers                 // Compiled files (alternatively `dist`)
 │   ├── Fixtures                   // Compiled files (alternatively `dist`)
