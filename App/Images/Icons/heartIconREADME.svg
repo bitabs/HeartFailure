@@ -24,8 +24,8 @@
 		l2.994-7.269c0.195-0.473,0.666-0.772,1.177-0.743c0.511,0.027,0.949,0.374,1.092,0.865l3.258,11.182l2.306-3.496
 		c0.222-0.338,0.6-0.54,1.004-0.54h11.961C484.531,131.415,485.07,131.953,485.07,132.617z"/>
 </g>
-<rect x="285.146" y="172.687" fill="none" width="317.708" height="18.75"/>
-<text transform="matrix(0.83 0 0 1 336.4561 186.3477)" fill="#505459" font-family="'FiraCode-Bold'" font-size="18">Awesome Design Systems</text>
-<rect x="341.824" y="192.667" fill="none" width="204.353" height="39.77"/>
-<text transform="matrix(0.75 0 0 1 342.5269 200.9063)"><tspan x="0" y="0" fill="#6B6B6B" font-family="'FiraCode-Regular'" font-size="11">A curated list of design systems, pattern </tspan><tspan x="19.799" y="11" fill="#6B6B6B" font-family="'FiraCode-Regular'" font-size="11">libraries, and everyting inbetween.</tspan></text>
+<rect x="285.146" y="180.687" fill="none" width="317.708" height="18.75"/>
+<text transform="matrix(0.83 0 0 1 336.4561 194.3477)" fill="#505459" font-family="'FiraCode-Bold'" font-size="18">Awesome Design Systems</text>
+<rect x="341.824" y="205.667" fill="none" width="204.353" height="38.77"/>
+<text transform="matrix(0.75 0 0 1 342.5269 213.9063)"><tspan x="0" y="0" fill="#6B6B6B" font-family="'FiraCode-Regular'" font-size="11">A curated list of design systems, pattern </tspan><tspan x="19.799" y="13" fill="#6B6B6B" font-family="'FiraCode-Regular'" font-size="11">libraries, and everyting inbetween.</tspan></text>
 </svg>
