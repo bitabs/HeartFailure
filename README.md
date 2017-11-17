@@ -1,4 +1,4 @@
-![cover](/https://github.com/NaseebullahSafi/HeartFailure/blob/master/App/Images/Icons/pulse.jpg)
+![cover](https://github.com/NaseebullahSafi/HeartFailure/blob/master/App/Images/Icons/pulse.jpg)
 
 
 #  HeartFailure
