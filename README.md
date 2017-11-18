@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://github.com/NaseebullahSafi/HeartFailure/blob/master/App/Images/Icons/heartIconREADME.jpg?raw=true" width="80%" alt="Sublime's custom image"/>
+  <img src="https://github.com/NaseebullahSafi/HeartFailure/blob/master/App/Images/Icons/heartIconREADME.jpg?raw=true" width="100%" alt="Sublime's custom image"/>
 </p>
 
 #  HeartFailure
