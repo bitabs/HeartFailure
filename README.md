@@ -6,18 +6,19 @@
 HeartFailure
 ├── App                            // Compiled files (alternatively `dist`)
 │   ├── Components                 // "Dumb" components are stored here. All data is passed into dumb components.
-│   │   ├── Styles
-│   ├── Config                     // Compiled files (alternatively `dist`)
-│   ├── Containers                 // Compiled files (alternatively `dist`)
-│   ├── Fixtures                   // Compiled files (alternatively `dist`)
-│   ├── Images                     // Compiled files (alternatively `dist`)
-│   ├── Lib                        // Compiled files (alternatively `dist`)
-│   ├── Navigation                 // Compiled files (alternatively `dist`)
-│   ├── Redux                      // Compiled files (alternatively `dist`)
-│   ├── Sagas                      // Compiled files (alternatively `dist`)
-│   ├── Services                   // Compiled files (alternatively `dist`)
-│   ├── Themes                     // Compiled files (alternatively `dist`)
-│   └── Transforms                 // Compiled files (alternatively `dist`)
+│   │   ├── Styles                 // Use this folder to create and store style files that match the naming of your components
+│   ├── Config                     // All application specific configuration falls in this folder
+│   ├── Containers                 // A container is what they call a "Smart Component" in Redux. It is a component which knows about Redux.
+│   │   ├── Styles                 // This /Containers/Styles folder will house your container styles.
+│   ├── Fixtures                   // All key API responses are housed here.
+│   ├── Images                     // Static images used in your project are stored here.
+│   ├── Lib                        // treat this as proving ground for components that could be reusable outside your project.
+│   ├── Navigation                 // This folder will house new navigations.
+│   ├── Redux                      // A place to store your Redux files (reducers, stores, etc.).
+│   ├── Sagas                      // A place to store your Sagas (Redux side effects).
+│   ├── Services                   // API calls to external services.
+│   ├── Themes                     // A place to contain styles shared across your project (fonts, colors, etc.).
+│   └── Transforms                 // working with APIs is to change data so that it plays nice between your app and the API.
 ├── README.md
 ├── __tests__
 │   ├── index.android.js
