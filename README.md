@@ -1,8 +1,8 @@
-<h1 align="center">Tech Interview Handbook</h1>
+<h1 align="center">Heart Failure Application</h1>
 
 <div align="center">
   <a href="https://dribbble.com/shots/3831443-Tech-Interview-Handbook">
-    <img src="https://cdn.rawgit.com/yangshun/tech-interview-handbook/master/assets/book.svg" alt="Tech Interview Handbook" width="400"/>
+    <img src="https://github.com/NaseebullahSafi/HeartFailure/blob/master/App/Images/Icons/heartIconREADME.svg" alt="Tech Interview Handbook" width="400"/>
     </a>
   <br>
   <p>
