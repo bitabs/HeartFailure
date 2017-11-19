@@ -27,6 +27,20 @@ the end of the project, the student should submit a report. Source codes and har
 project proposer. This project can be completed in close collaboration with the student working with project 
 ENK01.
 
+###### Installation
+
+```
+git clone https://github.com/NaseebullahSafi/HeartFailure.git HeartFailure
+cd HeartFailure
+npm install
+```
+
+###### Run Application
+```
+cd HeartFailure
+react-native run-ios        // Run Build for IOS
+react-native run-android    // Run Build for Android
+```
 
 ###### Folder Structure
 ```
@@ -73,20 +87,6 @@ HeartFailure
 └── package.json
 ```
 
-###### Installation
-
-```
-git clone https://github.com/NaseebullahSafi/HeartFailure.git HeartFailure
-cd HeartFailure
-npm install
-```
-
-###### Run Application
-```
-cd HeartFailure
-react-native run-ios        // Run Build for IOS
-react-native run-android    // Run Build for Android
-```
 
 ###### To Lint on Commit
 
