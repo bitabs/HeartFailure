@@ -7,13 +7,13 @@
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat)](http://standardjs.com/)
 
 ###### Project Briefing
-In a normal healthy heart, during each heartbeat a set amount of blood enters the heart and is pumped out 
+> In a normal healthy heart, during each heartbeat a set amount of blood enters the heart and is pumped out 
 again. If you have heart failure, your heart cannot cope with pumping the full amount of blood in each 
 heartbeat. The incidence of heart failure is increasing. Over half a million people in the UK have been 
 diagnosed with heart failure. Heart failure is not a static disease and the patient’s condition might worsen 
 rapidly which calls for a rapid treatment response.  
 
-The most common measure for home monitoring of Heart failure patients is body weight, which relates to the 
+> The most common measure for home monitoring of Heart failure patients is body weight, which relates to the 
 patient’s fluid balance. However, the benefits of such systems are limited. Therefore a system, which combines
 ECG and heart sounds, is proposed for home monitoring. The advantage of combining ECG and heart sounds is 
 that they, in combination, measure both the mechanical and electrophysiological function of the heart in 
