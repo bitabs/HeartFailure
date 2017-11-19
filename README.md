@@ -2,13 +2,8 @@
 
 <div align="center">
   <a href="https://dribbble.com/shots/3831443-Tech-Interview-Handbook">
-    <img src="https://github.com/NaseebullahSafi/HeartFailure/blob/master/App/Images/Icons/heartIconREADME.svg" alt="Tech Interview Handbook" width="400"/>
-    </a>
-  <br>
-  <p>
-    <em>Credits: <a href="https://dribbble.com/shots/3831443-Tech-Interview-Handbook">Illustration</a> by <a href="https://dribbble.com/yangheng">@yangheng</a>
-    </em>
-  </p>
+    <img src="https://github.com/NaseebullahSafi/HeartFailure/blob/master/App/Images/Icons/heartIconREADME.jpg" alt="Tech Interview Handbook" width="400"/>
+  </a>
 </div>
 
 <p align="center">
