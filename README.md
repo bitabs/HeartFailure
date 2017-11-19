@@ -79,10 +79,10 @@ HeartFailure
 ├── index.android.js
 ├── index.ios.js
 ├── ios
-│   ├── IgniteProject
-│   ├── IgniteProject-tvOS
-│   ├── IgniteProject-tvOSTests
-│   ├── IgniteProject.xcodeproj
+│   ├── HeartFailure
+│   ├── HeartFailure-tvOS
+│   ├── HeartFailure-tvOSTests
+│   ├── HeartFailure.xcodeproj
 │   └── IgniteProjectTests
 └── package.json
 ```
