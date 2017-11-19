@@ -21,14 +21,14 @@ real-time. The challenges are many and include design of a system, which is easy
 development of mobile applications for visualization and processing of the signals.
 
 ###### Aim
-This project aims at designing a mobile application (App) capable of receiving data from an external device, 
+> This project aims at designing a mobile application (App) capable of receiving data from an external device, 
 process and visualize for the patient. The project may include setting up a remote server for data storing. At
 the end of the project, the student should submit a report. Source codes and hardware are delivered to the 
 project proposer. This project can be completed in close collaboration with the student working with project 
 ENK01.
 
 
-#### Folder Structure
+###### Folder Structure
 ```
 HeartFailure
 ├── App                            // Compiled files (alternatively `dist`)
