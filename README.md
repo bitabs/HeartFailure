@@ -7,6 +7,7 @@
 * Standard compliant React Native App Utilizing [Ignite](https://github.com/infinitered/ignite)
 
 
+#### Folder Structure
 ```
 HeartFailure
 ├── App                            // Compiled files (alternatively `dist`)
