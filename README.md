@@ -2,7 +2,7 @@
 
 <div align="center">
   <a href="https://dribbble.com/shots/3831443-Tech-Interview-Handbook">
-    <img src="https://github.com/NaseebullahSafi/HeartFailure/blob/master/App/Images/Icons/heartIconREADME.jpg" alt="Tech Interview Handbook" width="400"/>
+    <img src="https://github.com/NaseebullahSafi/HeartFailure/blob/master/App/Images/Icons/heartIconREADME.jpg" alt="Tech Interview Handbook" width="100%"/>
   </a>
 </div>
 
