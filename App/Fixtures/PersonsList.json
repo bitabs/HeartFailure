@@ -1,0 +1,24 @@
+{
+  "Persons": {
+    "Haaris": {
+      "name": "Haaris",
+      "degree": "Computer Science"
+    },
+    "Naseebullah": {
+      "name": "Naseebullah",
+      "degree": "Computer Science"
+    },
+    "Khalil": {
+      "name": "Khalil",
+      "degree": "Computer Science"
+    },
+    "Jacob": {
+      "name": "Jacob",
+      "degree": "Computer Science"
+    },
+    "Nasim": {
+      "name": "Nasim",
+      "degree": "Computer Science"
+    }
+  }
+}

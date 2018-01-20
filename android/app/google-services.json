@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "961008547057",
+    "firebase_url": "https://heartfailure-bad0c.firebaseio.com",
+    "project_id": "heartfailure-bad0c",
+    "storage_bucket": "heartfailure-bad0c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:961008547057:android:20207f3316995bc0",
+        "android_client_info": {
+          "package_name": "com.heartfailure"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "961008547057-rnae3dbphqclso6gnti8f5ldp1j2sn00.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.heartfailure",
+            "certificate_hash": "34e300cc416c8ce5261b31745cfd413f651c8220"
+          }
+        },
+        {
+          "client_id": "961008547057-ved203kkg7j94gfvp6ouueumu1t3iolj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCUp4tMVW5FMJhzdF3TGIMDoTXUyQ1KAkI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "961008547057-ved203kkg7j94gfvp6ouueumu1t3iolj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
