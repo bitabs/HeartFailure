@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
     borderRadius: 3,
   },
   text: {
-    color: '#fff',
+    color: 'black',
     textAlign: 'center',
     marginVertical: 8,
     marginHorizontal: 16,

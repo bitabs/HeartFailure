@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
   },
 
   toggle: {
-    elevation: 10
+    // elevation: 10
   },
 
   avatar: {
