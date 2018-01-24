@@ -12,6 +12,7 @@ const image = require('../Images/launch-icon.png');
 * ======= Firebase Initialisation ======
 * */
 import firebase from 'react-native-firebase';
+import CustomModal from "../Components/CustomModal";
 
 // firebase config
 const firebaseConfig = {
@@ -76,6 +77,10 @@ export default class LaunchScreen extends PureComponent<*, State> {
 
   _renderIcon = ({ route }) => { return <Ionicons name={route.icon} size={24} color="#bccad0" />; };
 
+  openModel = () => {
+    this.child.toggleModal();
+  };
+
   _renderHeader = props => {
     return (
       <View>
@@ -94,7 +99,7 @@ export default class LaunchScreen extends PureComponent<*, State> {
             underlayColor="rgba(253,138,94,0)"
             onHideUnderlay={this._onHideUnderlay.bind(this)}
             onShowUnderlay={this._onShowUnderlay.bind(this)}
-            onPress={() => this.openModal()}
+            onPress={() => this.openModel()}
           >
             <Ionicons style={[styles.msgIcon, this.state.isPressed ? styles.testing : {}]} name="message-square" size={22} color="#bccad0"/>
           </TouchableHighlight>
@@ -107,6 +112,7 @@ export default class LaunchScreen extends PureComponent<*, State> {
             style={styles.tabbar}
           />
         </View>
+        <CustomModal onRef={ref => this.child = ref}/>
       </View>
     );
   };
@@ -139,19 +145,11 @@ export default class LaunchScreen extends PureComponent<*, State> {
       selectedItem: item,
     });
 
-  _onHideUnderlay(){
+  _onHideUnderlay() {
     this.setState({ isPressed: false });
   }
-  _onShowUnderlay(){
+  _onShowUnderlay() {
     this.setState({ isPressed: true });
-  }
-
-  openModal() {
-    this.setState({modalVisible:true});
-  }
-
-  closeModal() {
-    this.setState({modalVisible:false});
   }
 
   render() {
@@ -162,23 +160,7 @@ export default class LaunchScreen extends PureComponent<*, State> {
         renderScene={this._renderScene}
         renderHeader={this._renderHeader}
         onIndexChange={this._handleIndexChange}
-      >
-        <Modal
-          visible={this.state.modalVisible}
-          animationType={'fade'}
-          transparent={true}
-          onRequestClose={() => this.closeModal()}
-        >
-          <View style={styles.modalContainer}>
-            <View style={styles.innerContainer}>
-              <TouchableHighlight activeOpacity={1.0} underlayColor="rgba(253,138,94,0)">
-                <Ionicons name="x" size={22} color="#bccad0"/>
-              </TouchableHighlight>
-              <Text>This is content inside of modal component</Text>
-            </View>
-          </View>
-        </Modal>
-      </TabViewAnimated>
+       />
     );
   }
 }

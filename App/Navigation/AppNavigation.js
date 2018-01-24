@@ -2,7 +2,7 @@ import {DrawerNavigator, StackNavigator} from 'react-navigation'
 import LaunchScreen from '../Containers/LaunchScreen'
 
 import styles from './Styles/NavigationStyles'
-import customSideMenu from "../Components/customSideMenu";
+import CustomSideMenu from "../Components/customSideMenu";
 
 // Manifest of possible screens
 const PrimaryNav = StackNavigator({
@@ -24,7 +24,7 @@ const RootDrawer = DrawerNavigator({
   // Default config for all screens
   headerMode: 'none',
   initialRouteName: 'LaunchScreen',
-  contentComponent: customSideMenu,
+  contentComponent: CustomSideMenu,
   navigationOptions: {
     headerStyle: styles.header
   }
