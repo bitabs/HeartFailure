@@ -7,12 +7,16 @@ import { TabViewAnimated, TabBar } from 'react-native-tab-view';
 import type { NavigationState } from 'react-native-tab-view/types';
 import SimplePage from './SimplePage';
 const image = require('../Images/launch-icon.png');
-
+import { UsbSerial} from 'react-native-usbserial';
+const usbs = new UsbSerial();
 /*
 * ======= Firebase Initialisation ======
 * */
 import firebase from 'react-native-firebase';
 import CustomModal from "../Components/CustomModal";
+import ReactNativeExamples from "../../rn";
+
+
 
 // firebase config
 const firebaseConfig = {
@@ -43,7 +47,8 @@ export default class LaunchScreen extends PureComponent<*, State> {
       selectedItem: 'About',
       data: [],
       isPressed: false,
-      modalVisible: false
+      modalVisible: false,
+      openbci: null
     };
 
     this.personsRef = firebase.app().database().ref().child('Persons');
@@ -54,6 +59,16 @@ export default class LaunchScreen extends PureComponent<*, State> {
   componentDidMount = () => {
     this.listenForPersons(this.personsRef);
   };
+
+  _renderResult(result) {
+    if (result === null) {
+      return 'waiting...';
+    }
+    if (result) {
+      return 'success!';
+    }
+    return 'failed.';
+  }
 
   listenForPersons = (personsRef) => {
     personsRef.on('value', (snap) => {
@@ -73,6 +88,28 @@ export default class LaunchScreen extends PureComponent<*, State> {
   };
 
 
+  getDeviceAsync = async () => {
+
+    try {
+      const deviceList = await usbs.getDeviceListAsync();
+      const firstDevice = deviceList[0];
+
+      console.log(firstDevice);
+
+      if (firstDevice) {
+        const usbSerialDevice = await usbs.openDeviceAsync(firstDevice);
+
+        console.log(usbSerialDevice);
+      }
+    } catch (err) {
+      console.warn(err);
+    }
+
+  };
+
+
+
+
   _handleIndexChange = index => { this.setState({ index }); };
 
   _renderIcon = ({ route }) => { return <Ionicons name={route.icon} size={24} color="#bccad0" />; };
@@ -82,6 +119,8 @@ export default class LaunchScreen extends PureComponent<*, State> {
   };
 
   _renderHeader = props => {
+    this.getDeviceAsync().then(e => console.log(e));
+
     return (
       <View>
         <View style={styles.headerContainer}>
@@ -112,6 +151,7 @@ export default class LaunchScreen extends PureComponent<*, State> {
             style={styles.tabbar}
           />
         </View>
+        <ReactNativeExamples />
         <CustomModal onRef={ref => this.child = ref}/>
       </View>
     );
@@ -140,10 +180,11 @@ export default class LaunchScreen extends PureComponent<*, State> {
     }
   };
 
-  onMenuItemSelected = item =>
+  onMenuItemSelected = item => {
     this.setState({
       selectedItem: item,
     });
+  }
 
   _onHideUnderlay() {
     this.setState({ isPressed: false });

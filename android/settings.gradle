@@ -1,4 +1,12 @@
 rootProject.name = 'HeartFailure'
+include ':react-native-usbserial'
+project(':react-native-usbserial').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-usbserial/android')
+include ':react-native-node'
+project(':react-native-node').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-node/android')
+include ':react-native-node'
+project(':react-native-node').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-node/android')
+include ':react-native-node'
+project(':react-native-node').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-node/android')
 include ':react-native-firebase'
 project(':react-native-firebase').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-firebase/android')
 include ':react-native-config'

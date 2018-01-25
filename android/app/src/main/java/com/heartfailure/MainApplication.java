@@ -3,6 +3,7 @@ package com.heartfailure;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.bmateam.reactnativeusbserial.ReactUsbSerialPackage;
 import io.invertase.firebase.RNFirebasePackage;
 import io.invertase.firebase.database.RNFirebaseDatabasePackage;
 import com.lugg.ReactNativeConfig.ReactNativeConfigPackage;
@@ -25,6 +26,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
         new MainReactPackage(),
+            new ReactUsbSerialPackage(),
         new ReactNativeConfigPackage(),
         new RNFirebasePackage(),
         new RNFirebaseDatabasePackage()
