@@ -1,4 +1,6 @@
 rootProject.name = 'HeartFailure'
+include ':react-native-ble-manager'
+project(':react-native-ble-manager').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-ble-manager/android')
 include ':react-native-usbserial'
 project(':react-native-usbserial').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-usbserial/android')
 include ':react-native-node'
@@ -11,5 +13,4 @@ include ':react-native-firebase'
 project(':react-native-firebase').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-firebase/android')
 include ':react-native-config'
 project(':react-native-config').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-config/android')
-
 include ':app'

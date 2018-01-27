@@ -1,22 +1,38 @@
 import React, { Component, PureComponent } from 'react'
-import {ScrollView, Modal, Text, Image, View, TouchableOpacity, TouchableHighlight} from 'react-native'
+import {
+  ScrollView,
+  Modal,
+  Text,
+  Image,
+  View,
+  TouchableOpacity,
+  TouchableHighlight,
+  StyleSheet,
+  NativeEventEmitter,
+  NativeModules,
+  AppState,
+  Platform,
+  PermissionsAndroid
+} from 'react-native'
+
 import { Images } from '../Themes'
-import { StyleSheet } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Feather';
 import { TabViewAnimated, TabBar } from 'react-native-tab-view';
 import type { NavigationState } from 'react-native-tab-view/types';
 import SimplePage from './SimplePage';
 const image = require('../Images/launch-icon.png');
-import { UsbSerial} from 'react-native-usbserial';
-const usbs = new UsbSerial();
+
+
+import BleManager from "react-native-ble-manager";
+const BleManagerModule = NativeModules.BleManager;
+const bleManagerEmitter = new NativeEventEmitter(BleManagerModule);
+
 /*
 * ======= Firebase Initialisation ======
 * */
 import firebase from 'react-native-firebase';
 import CustomModal from "../Components/CustomModal";
 import ReactNativeExamples from "../../rn";
-
-
 
 // firebase config
 const firebaseConfig = {
@@ -40,7 +56,6 @@ export default class LaunchScreen extends PureComponent<*, State> {
 
   constructor(props) {
     super(props);
-
     this.state = {
       index: 0,
       routes: [{ key: '1', icon: 'activity' }, { key: '2', icon: 'airplay' },],
@@ -48,19 +63,140 @@ export default class LaunchScreen extends PureComponent<*, State> {
       data: [],
       isPressed: false,
       modalVisible: false,
-      openbci: null
+      scanning:false,
+      peripherals: new Map(),
+      appState: ''
     };
-
     this.personsRef = firebase.app().database().ref().child('Persons');
-    this.listenForPersons = this.listenForPersons.bind(this);
 
+    // bindings
+    this.listenForPersons     = this.listenForPersons.bind(this);
+    this.handleDiscoverPeripheral = this.handleDiscoverPeripheral.bind(this);
+    this.handleStopScan = this.handleStopScan.bind(this);
+    this.handleUpdateValueForCharacteristic = this.handleUpdateValueForCharacteristic.bind(this);
+    this.handleDisconnectedPeripheral = this.handleDisconnectedPeripheral.bind(this);
+    this.handleAppStateChange = this.handleAppStateChange.bind(this);
   }
 
   componentDidMount = () => {
+    AppState.addEventListener('change', this.handleAppStateChange);
+
+    BleManager.start({showAlert: false});
+
+    this.handlerDiscover = bleManagerEmitter.addListener('BleManagerDiscoverPeripheral', this.handleDiscoverPeripheral );
+    this.handlerStop = bleManagerEmitter.addListener('BleManagerStopScan', this.handleStopScan );
+    this.handlerDisconnect = bleManagerEmitter.addListener('BleManagerDisconnectPeripheral', this.handleDisconnectedPeripheral );
+    this.handlerUpdate = bleManagerEmitter.addListener('BleManagerDidUpdateValueForCharacteristic', this.handleUpdateValueForCharacteristic );
+
+    if (Platform.OS === 'android' && Platform.Version >= 23) {
+      PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION).then((result) => {
+        if (result) {
+          console.log("Permission is OK");
+        } else {
+          PermissionsAndroid.requestPermission(PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION).then((result) => {
+            if (result) {
+              console.log("User accept");
+            } else {
+              console.log("User refuse");
+            }
+          });
+        }
+      });
+    }
+
+
+    this.INFINITE();
+
     this.listenForPersons(this.personsRef);
   };
 
-  _renderResult(result) {
+  INFINITE = () => {
+    var num = 0;
+
+    setInterval(function () {
+
+      this.startScan();
+      num = (num + 1) % 4;
+    }.bind(this), 9000);
+
+  };
+
+  componentWillUnmount() {
+    this.onDiscover.remove();
+    this.onStopScan.remove();
+    this.onDisconnect.remove();
+    this.onUpdate.remove();
+  }
+
+  handleAppStateChange(nextAppState) {
+    if (this.state.appState.match(/inactive|background/) && nextAppState === 'active') {
+      console.log('App has come to the foreground!')
+      BleManager.getConnectedPeripherals([]).then((peripheralsArray) => {
+        console.log('Connected peripherals: ' + peripheralsArray.length);
+      });
+    }
+    this.setState({appState: nextAppState});
+  }
+
+  componentWillUnmount() {
+    this.handlerDiscover.remove();
+    this.handlerStop.remove();
+    this.handlerDisconnect.remove();
+    this.handlerUpdate.remove();
+  }
+
+  handleDisconnectedPeripheral(data) {
+    let peripherals = this.state.peripherals;
+    let peripheral = peripherals.get(data.peripheral);
+    if (peripheral) {
+      peripheral.connected = false;
+      peripherals.set(peripheral.id, peripheral);
+      this.setState({peripherals});
+    }
+    console.log('Disconnected from ' + data.peripheral);
+  }
+
+  handleUpdateValueForCharacteristic(data) {
+    console.log('Received data from ' + data.peripheral + ' characteristic ' + data.characteristic, data.value);
+  }
+
+  handleStopScan() {
+    console.log('Scan is stopped');
+    this.setState({ scanning: false });
+  }
+
+  startScan() {
+    if (!this.state.scanning) {
+      this.setState({peripherals: new Map()});
+      BleManager.scan([], 3, true).then((results) => {
+        console.log('Scanning...');
+        this.setState({scanning:true});
+      });
+    }
+  }
+
+  retrieveConnected(){
+    BleManager.getConnectedPeripherals([]).then((results) => {
+      console.log(results);
+      var peripherals = this.state.peripherals;
+      for (var i = 0; i < results.length; i++) {
+        var peripheral = results[i];
+        peripheral.connected = true;
+        peripherals.set(peripheral.id, peripheral);
+        this.setState({ peripherals });
+      }
+    });
+  }
+
+  handleDiscoverPeripheral(peripheral){
+    var peripherals = this.state.peripherals;
+    if (!peripherals.has(peripheral.id)){
+      console.log('Got ble peripheral', peripheral);
+      peripherals.set(peripheral.id, peripheral);
+      this.setState({ peripherals })
+    }
+  }
+  _renderResult = (result) => {
     if (result === null) {
       return 'waiting...';
     }
@@ -87,29 +223,6 @@ export default class LaunchScreen extends PureComponent<*, State> {
     });
   };
 
-
-  getDeviceAsync = async () => {
-
-    try {
-      const deviceList = await usbs.getDeviceListAsync();
-      const firstDevice = deviceList[0];
-
-      console.log(firstDevice);
-
-      if (firstDevice) {
-        const usbSerialDevice = await usbs.openDeviceAsync(firstDevice);
-
-        console.log(usbSerialDevice);
-      }
-    } catch (err) {
-      console.warn(err);
-    }
-
-  };
-
-
-
-
   _handleIndexChange = index => { this.setState({ index }); };
 
   _renderIcon = ({ route }) => { return <Ionicons name={route.icon} size={24} color="#bccad0" />; };
@@ -119,7 +232,6 @@ export default class LaunchScreen extends PureComponent<*, State> {
   };
 
   _renderHeader = props => {
-    this.getDeviceAsync().then(e => console.log(e));
 
     return (
       <View>
@@ -136,8 +248,6 @@ export default class LaunchScreen extends PureComponent<*, State> {
           <TouchableHighlight
             activeOpacity={1}
             underlayColor="rgba(253,138,94,0)"
-            onHideUnderlay={this._onHideUnderlay.bind(this)}
-            onShowUnderlay={this._onShowUnderlay.bind(this)}
             onPress={() => this.openModel()}
           >
             <Ionicons style={[styles.msgIcon, this.state.isPressed ? styles.testing : {}]} name="message-square" size={22} color="#bccad0"/>
@@ -184,14 +294,16 @@ export default class LaunchScreen extends PureComponent<*, State> {
     this.setState({
       selectedItem: item,
     });
-  }
+  };
 
-  _onHideUnderlay() {
+  _onHideUnderlay = () => {
     this.setState({ isPressed: false });
-  }
-  _onShowUnderlay() {
+  };
+
+  _onShowUnderlay = () => {
     this.setState({ isPressed: true });
-  }
+
+  };
 
   render() {
     return (
@@ -251,4 +363,4 @@ const styles = StyleSheet.create({
     backgroundColor: '#f9f9fa',
     borderRadius: 100 / 2,
   }
-})
+});

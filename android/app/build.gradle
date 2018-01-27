@@ -101,7 +101,7 @@ android {
 
     defaultConfig {
         applicationId "com.heartfailure"
-        minSdkVersion 16
+        minSdkVersion 19
         multiDexEnabled true
         targetSdkVersion 22
         versionCode 1
@@ -144,6 +144,7 @@ repositories {
 }
 
 dependencies {
+    compile project(':react-native-ble-manager')
     compile project(':react-native-usbserial')
     compile(project(':react-native-firebase')) {
         transitive = false

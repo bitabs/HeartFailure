@@ -34,6 +34,7 @@
     "ramdasauce": "^2.1.0",
     "react": "16.2.0",
     "react-native": "0.52.0",
+    "react-native-ble-manager": "^6.2.6",
     "react-native-config": "^0.11.5",
     "react-native-crypto": "^2.1.2",
     "react-native-elements": "^0.19.0",
