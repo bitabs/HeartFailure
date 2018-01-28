@@ -1,8 +1,19 @@
 {
   "presets": ["react-native"],
+  "sourceMaps": true,
   "env": {
     "production": {
       "plugins": ["ignite-ignore-reactotron"]
+    },
+    "test": {
+      "presets": ["react-native"],
+      "plugins": ["transform-es2015-modules-commonjs"]
     }
-  }
+  },
+  "plugins": [
+    ["module-alias", [
+      { "app": "./App/components", "expose": "components" },
+      { "app": "./App/containers", "expose": "containers" }
+    ]]
+  ]
 }
