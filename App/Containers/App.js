@@ -4,8 +4,6 @@ import { Provider } from 'react-redux'
 import RootContainer from './RootContainer'
 import createStore from '../Redux'
 import {MenuProvider} from "react-native-popup-menu";
-import firebase from 'react-native-firebase';
-import LaunchScreen from './LaunchScreen';
 
 // create our store
 const store = createStore();
@@ -24,55 +22,81 @@ class App extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      loading: true
-    }
+    // this.state = {
+    //   loading: true,
+    // }
   }
 
-  /*
-* Listen for any state changes and update the component state
-* */
-  componentDidMount() {
-    this.authSubscription = firebase.auth().onAuthStateChanged((user) => {
-      this.setState({
-        loading: false,
-        user,
-      });
-    });
-  }
-
-  /**
-   * Don't forget to stop listening for authentication state changes
-   * when the component unmounts.
-   */
-  componentWillUnmount() {
-    this.authSubscription();
-  }
+//   /*
+// * Listen for any state changes and update the component state
+// * */
+//   componentDidMount() {
+//     this.authSubscription = firebase.auth().onAuthStateChanged((user) => {
+//       this.setState({
+//         loading: false,
+//         user,
+//       });
+//     });
+//   }
+//
+//   /**
+//    * Don't forget to stop listening for authentication state changes
+//    * when the component unmounts.
+//    */
+//   componentWillUnmount() {
+//     this.authSubscription();
+//   }
 
 
   render () {
+
+    return (
+      <MenuProvider>
+        <Provider store={store}>
+          <RootContainer />
+        </Provider>
+      </MenuProvider>
+    );
+
+    // const { loading, user } = this.state;
+    //
+    // // If we haven't checked AsyncStorage yet, don't render anything (better ways to do this)
+    // if (loading) {
+    //   return null;
+    // }
+    //
+    // const Layout = createRootNavigator(user);
+    // console.log(Layout);
+    // return (
+    //       <MenuProvider>
+    //         <Provider store={store}><RootContainer /></Provider>
+    //       </MenuProvider>
+    // );
+
     // The application is initialising
-    if (this.state.loading) return null;
-
-    console.log('app.js', this.state.user);
-    // The user is an Object, so they're logged in
-    if (this.state.user) {
-      return (
-        <LaunchScreen />
-      )
-    } else {
-
-      return (
-        <MenuProvider>
-          <Provider store={store}>
-            <RootContainer />
-          </Provider>
-        </MenuProvider>
-      );
-
-      // The user is null, so they're logged out
-      // return <LoggedOut/>;
-    }
+    // if (this.state.loading) return null;
+    //
+    // console.log('app.js', this.state.user);
+    // // The user is an Object, so they're logged in
+    // if (this.state.user) {
+    //
+    //   // since the user is logged in, we navigate to the main page
+    //   return (
+    //     <MenuProvider>
+    //       <Provider store={store}><RootContainer /></Provider>
+    //     </MenuProvider>
+    //   );
+    //
+    // } else {
+    //
+    //   // navigate the user to the signin page where the user adds their details for login
+    //   return (
+    //     <Login />
+    //   );
+    //
+    //   // The user is null, so they're logged out
+    //   // return <LoggedOut/>;
+    // }
 
   }
 }

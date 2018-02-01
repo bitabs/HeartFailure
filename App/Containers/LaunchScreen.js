@@ -5,8 +5,6 @@ import Ionicons from 'react-native-vector-icons/Feather';
 import { TabViewAnimated, TabBar } from 'react-native-tab-view';
 import type { NavigationState } from 'react-native-tab-view/types';
 import SimplePage from './SimplePage';
-
-
 /*
 * ======= Firebase Initialisation ======
 * */

@@ -7,6 +7,31 @@ import {
   AppState,
 } from 'react-native';
 
+const _ = require('lodash');
+
+import { Buffer } from 'buffer';
+
+const CytonBLE = require('../../OpenBCI_NodeJS_Cyton_BLE').CytonBLE;
+const OpenBCIUtilities = require('openbci-utilities');
+const {constants, utilities, debug} = OpenBCIUtilities;
+const verbose = true;
+
+const Cyton = new CytonBLE({
+  // debug: true,
+  sendCounts: true,
+  verbose: verbose,
+  nobleScanOnPowerOn: false,
+  nobleAutoStart: true
+});
+
+const _options = {
+  debug: false,
+  nobleAutoStart: true,
+  nobleScanOnPowerOn: true,
+  sendCounts: false,
+  verbose: false
+};
+
 import BleManager from "react-native-ble-manager";
 const BleManagerModule = NativeModules.BleManager;
 const bleManagerEmitter = new NativeEventEmitter(BleManagerModule);
@@ -18,45 +43,195 @@ export default class BLE extends Component {
     this.state = {
       scanning:false,
       peripherals: new Map(),
-      appState: ''
-    };
+      appState: '',
 
-    this.handleDiscoverPeripheral = this.handleDiscoverPeripheral.bind(this);
-    this.handleStopScan = this.handleStopScan.bind(this);
-    BLE.handleUpdateValueForCharacteristic = BLE.handleUpdateValueForCharacteristic.bind(this);
-    this.handleDisconnectedPeripheral = this.handleDisconnectedPeripheral.bind(this);
-    this.handleAppStateChange = this.handleAppStateChange.bind(this);
+
+      // cyton
+      cytonBLEPeripheralArray: [],
+      _rfduinoService: null,
+      isStreaming: false,
+      _sendCharacteristic: null
+    };
+    // this.handleDiscoverPeripheral = this.handleDiscoverPeripheral.bind(this);
+    // this.handleStopScan = this.handleStopScan.bind(this);
+    // BLE.handleUpdateValueForCharacteristic = BLE.handleUpdateValueForCharacteristic.bind(this);
+    // this.handleDisconnectedPeripheral = this.handleDisconnectedPeripheral.bind(this);
+    // this.handleAppStateChange = this.handleAppStateChange.bind(this);
   }
+  // componentDidMount() {
+  //   this.printCyton();
+  //   AppState.addEventListener('change', this.handleAppStateChange);
+  //
+  //   BleManager.start({showAlert: false});
+  //
+  //   this.handlerDiscover = bleManagerEmitter.addListener('BleManagerDiscoverPeripheral', this.handleDiscoverPeripheral );
+  //   this.handlerStop = bleManagerEmitter.addListener('BleManagerStopScan', this.handleStopScan );
+  //   this.handlerDisconnect = bleManagerEmitter.addListener('BleManagerDisconnectPeripheral', this.handleDisconnectedPeripheral );
+  //   this.handlerUpdate = bleManagerEmitter.addListener('BleManagerDidUpdateValueForCharacteristic', BLE.handleUpdateValueForCharacteristic );
+  //   if (Platform.OS === 'android' && Platform.Version >= 23) {
+  //     PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION).then((result) => {
+  //       if (result) {
+  //         console.log("Permission is OK");
+  //       } else {
+  //         PermissionsAndroid.requestPermission(PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION).then((result) => {
+  //           if (result) {
+  //             console.log("User accept");
+  //           } else {
+  //             console.log("User refuse");
+  //           }
+  //         });
+  //       }
+  //     });
+  //   }
+  //
+  //   const duino = "CF:92:02:BC:0D:CE";
+  //
+  //   this.startScan();
+  //
+  //   BleManager.connect(`${duino}`).then(() => {
+  //     console.log('RFDuino is connected');
+  //     this.setState({isConnected: true});
+  //     return BleManager.retrieveServices(`${duino}`);
+  //   }).then(() => {
+  //     console.log('retrieveServices');
+  //     return BleManager.startNotification(
+  //       `${duino}`,
+  //       '2220', '2221');
+  //
+  //     // BleManager.retrieveServices(`${duino}`).then((p) => {
+  //     //   console.log('Peripheral info:', p);
+  //     //   BleManager.startNotification(`${duino}`, '2220', '2221')
+  //     //     .then(() => {
+  //     //       // Success code
+  //     //       console.log('Notification started');
+  //     //     })
+  //     //     .catch((error) => {
+  //     //       // Failure code
+  //     //       console.log(error);
+  //     //     });
+  //     // }).then(() => {
+  //     //
+  //     //   console.log("inside just about to call write()");
+  //     //
+  //     // });
+  //   }).then(() => {
+  //
+  //   }).catch((error) => { console.log("connect(): ", error, duino)});
+  // }
+
+
+
+
 
   componentDidMount() {
-    AppState.addEventListener('change', this.handleAppStateChange);
+    this.printCyton();
+    Cyton.once(constants.OBCIEmitterRFduino, (p) => {
 
-    BleManager.start({showAlert: false});
-
-    this.handlerDiscover = bleManagerEmitter.addListener('BleManagerDiscoverPeripheral', this.handleDiscoverPeripheral );
-    this.handlerStop = bleManagerEmitter.addListener('BleManagerStopScan', this.handleStopScan );
-    this.handlerDisconnect = bleManagerEmitter.addListener('BleManagerDisconnectPeripheral', this.handleDisconnectedPeripheral );
-    this.handlerUpdate = bleManagerEmitter.addListener('BleManagerDidUpdateValueForCharacteristic', BLE.handleUpdateValueForCharacteristic );
-
-    if (Platform.OS === 'android' && Platform.Version >= 23) {
-      PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION).then((result) => {
-        if (result) {
-          console.log("Permission is OK");
-        } else {
-          PermissionsAndroid.requestPermission(PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION).then((result) => {
-            if (result) {
-              console.log("User accept");
-            } else {
-              console.log("User refuse");
-            }
+      Cyton.searchStop().then(() => {
+        Cyton.connect(p) // Port name is a serial port name, see `.listPorts()`
+          .then(() => {
+            Cyton.on('ready',() => {
+              Cyton.streamStart().then(() => {
+                Cyton.on('sample',(sample) => {
+                  /** Work with sample */
+                  for (let i = 0; i < Cyton.numberOfChannels(); i++) {
+                    console.log("Channel " + (i + 1) + ": " + sample.channelData[i].toFixed(8) + " Volts.");
+                    // prints to the console
+                    //  "Channel 1: 0.00001987 Volts."
+                  }
+                });
+              })
+            });
           });
-        }
+      }).catch(e => console.log(e));
+    });
+
+    Cyton.once(constants.OBCIEmitterBlePoweredUp, () => {
+      Cyton.searchStart().catch(e => console.log(e))
+    });
+
+
+    if (Cyton.isNobleReady()) {
+      console.log(`noble is ready so starting scan`);
+      Cyton.removeListener(constants.OBCIEmitterBlePoweredUp, () => {
+        Cyton.searchStart().catch(e => console.log(e));
       });
+    } else {
+      console.log(`noble is NOT ready so waiting starting scan`);
     }
 
-    this.INFINITE();
-
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  printCyton = () => {
+    console.log(constants);
+  };
+
 
   INFINITE = () => {
     var num = 0;
