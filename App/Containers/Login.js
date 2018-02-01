@@ -10,17 +10,17 @@ export default class Login extends Component {
     //   password  : ''
     // };
     //
-    // this.buttonPress = this.buttonPress.bind(this);
+    this.buttonPress = this.buttonPress.bind(this);
   }
-  //
-  // buttonPress() {
-  //   console.log('called');
-  //   this.props.navigation.navigate('drawerStack');
-  // }
+
+  buttonPress() {
+    console.log('called');
+    this.props.navigation.navigate('drawerStack');
+  }
 
   render() {
     return (
-      <LoginForm navigation={this.props.navigation} />
+      <LoginForm />
     );
   }
 }

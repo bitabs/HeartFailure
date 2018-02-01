@@ -19,7 +19,6 @@ export default class OpeningLogoLoader extends Component {
   render() {
     return(
       <View style={styles.container}>
-        <TouchableHighlight onPress={() => this.props.navigation.navigate('drawerStack')}><Text>Testing</Text></TouchableHighlight>
         <Fade visible={this.state.loading}>
           <Ionicons name="activity" size={33} color="#8F9CAE" />
         </Fade>
