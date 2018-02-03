@@ -1,12 +1,10 @@
 import {DrawerNavigator, StackNavigator} from 'react-navigation'
 import LaunchScreen from '../Containers/LaunchScreen'
 
-import styles from './Styles/NavigationStyles'
-import CustomSideMenu from "../Components/customSideMenu";
-import OpeningLogoLoader from "../Containers/OpeningLogoLoader";
+
 import Login from "../Containers/Login";
-import BLE from "../Containers/BLE";
 import Loading from "../Containers/Loading";
+import CustomSideMenu from "../Components/CustomSideMenu";
 
 
 export const SignedOut = StackNavigator({

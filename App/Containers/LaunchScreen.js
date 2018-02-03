@@ -153,7 +153,6 @@ export default class LaunchScreen extends PureComponent<*, State> {
           renderHeader={this._renderHeader}
           onIndexChange={this._handleIndexChange}
         />
-        <BLE/>
       </React.Fragment>
     );
   }
