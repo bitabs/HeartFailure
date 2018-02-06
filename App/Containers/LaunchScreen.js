@@ -1,19 +1,15 @@
 import React, { Component, PureComponent } from 'react'
-import {ScrollView, Text, Image, View, TouchableOpacity} from 'react-native'
-import { Images } from '../Themes'
-import { StyleSheet } from 'react-native';
+import {View, TouchableHighlight, StyleSheet} from 'react-native'
+import BLE from './BLE';
 import Ionicons from 'react-native-vector-icons/Feather';
 import { TabViewAnimated, TabBar } from 'react-native-tab-view';
 import type { NavigationState } from 'react-native-tab-view/types';
 import SimplePage from './SimplePage';
-import SideMenu from 'react-native-side-menu';
-import Menu from './Menu';
-const image = require('../Images/launch-icon.png');
-
 /*
 * ======= Firebase Initialisation ======
 * */
 import firebase from 'react-native-firebase';
+import CustomModal from "../Components/CustomModal";
 
 // firebase config
 const firebaseConfig = {
@@ -37,20 +33,12 @@ export default class LaunchScreen extends PureComponent<*, State> {
 
   constructor(props) {
     super(props);
-
-    this.toggle = this.toggle.bind(this);
-
     this.state = {
-      index: 0,
-      routes: [{ key: '1', icon: 'activity' }, { key: '2', icon: 'airplay' },],
-      isOpen: false,
-      selectedItem: 'About',
-      data: []
+      index: 0, routes: [{ key: '1', icon: 'activity' }, { key: '2', icon: 'airplay' },],
+      selectedItem: 'About', data: [], isPressed: false, modalVisible: false
     };
-
     this.personsRef = firebase.app().database().ref().child('Persons');
-    this.listenForPersons = this.listenForPersons.bind(this);
-
+    this.listenForPersons     = this.listenForPersons.bind(this);
   }
 
   componentDidMount = () => {
@@ -58,7 +46,6 @@ export default class LaunchScreen extends PureComponent<*, State> {
   };
 
   listenForPersons = (personsRef) => {
-    console.log("here so far");
     personsRef.on('value', (snap) => {
       var persons = [];
       snap.forEach(child => {
@@ -68,8 +55,6 @@ export default class LaunchScreen extends PureComponent<*, State> {
         })
       });
 
-      console.log(persons);
-
       this.setState({
         data: persons
       });
@@ -77,17 +62,35 @@ export default class LaunchScreen extends PureComponent<*, State> {
     });
   };
 
-
   _handleIndexChange = index => { this.setState({ index }); };
 
-  _renderIcon = ({ route }) => { return <Ionicons name={route.icon} size={24} color="#98a0ab" />; };
+  _renderIcon = ({ route }) => { return <Ionicons name={route.icon} size={24} color="#bccad0" />; };
+
+  openModel = () => {
+    this.child.toggleModal();
+  };
 
   _renderHeader = props => {
+
     return (
       <View>
         <View style={styles.headerContainer}>
-          <Ionicons name="menu" size={24} color="white" style={{position: 'absolute', left: 20}} />
-          <Text style={styles.headerText}>Heart Monitor</Text>
+          <TouchableHighlight
+            onPress={() => this.props.navigation.navigate('DrawerToggle')}
+            activeOpacity={1.0}
+            underlayColor="rgba(253,138,94,0)"
+          >
+            <Ionicons style={{padding: 8}} name="menu" size={22} color="#bccad0"/>
+          </TouchableHighlight>
+
+
+          <TouchableHighlight
+            activeOpacity={1}
+            underlayColor="rgba(253,138,94,0)"
+            onPress={() => this.openModel()}
+          >
+            <Ionicons style={[styles.msgIcon, this.state.isPressed ? styles.testing : {}]} name="message-square" size={22} color="#bccad0"/>
+          </TouchableHighlight>
         </View>
         <View style={{width: '100%'}}>
           <TabBar
@@ -97,6 +100,7 @@ export default class LaunchScreen extends PureComponent<*, State> {
             style={styles.tabbar}
           />
         </View>
+        <CustomModal onRef={ref => this.child = ref}/>
       </View>
     );
   };
@@ -124,33 +128,24 @@ export default class LaunchScreen extends PureComponent<*, State> {
     }
   };
 
-  toggle() {
+  onMenuItemSelected = item => {
     this.setState({
-      isOpen: !this.state.isOpen,
-    });
-  }
-
-  updateMenuState(isOpen) {
-    this.setState({ isOpen });
-  }
-
-  onMenuItemSelected = item =>
-    this.setState({
-      isOpen: false,
       selectedItem: item,
     });
+  };
+
+  _onHideUnderlay = () => {
+    this.setState({ isPressed: false });
+  };
+
+  _onShowUnderlay = () => {
+    this.setState({ isPressed: true });
+
+  };
 
   render() {
-    const menu = <Menu onItemSelected={this.onMenuItemSelected} isOpen={this.state.isOpen} />;
-
     return (
-      <SideMenu
-        menu={menu}
-        isOpen={this.state.isOpen}
-        onChange={isOpen => this.updateMenuState(isOpen)}
-        openMenuOffset={200}
-      >
-
+      <React.Fragment>
         <TabViewAnimated
           style={[styles.container, this.props.style]}
           navigationState={this.state}
@@ -158,36 +153,16 @@ export default class LaunchScreen extends PureComponent<*, State> {
           renderHeader={this._renderHeader}
           onIndexChange={this._handleIndexChange}
         />
-        <TouchableOpacity
-          onPress={this.toggle}
-          style={styles.button}
-        >
-        </TouchableOpacity>
-      </SideMenu>
+      </React.Fragment>
     );
-
-
-/*    return (
-
-      <TabViewAnimated
-        style={[styles.container, this.props.style]}
-        navigationState={this.state}
-        renderScene={this._renderScene}
-        renderHeader={this._renderHeader}
-        onIndexChange={this._handleIndexChange}
-      />
-
-    );*/
   }
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     backgroundColor: '#F5FCFF',
-    width: '100%'
   },
   tabbar: {
     backgroundColor: 'white',
@@ -198,23 +173,34 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(152, 168, 171, 0)',
   },
   headerContainer: {
-    width: '100%',
-    height: 50,
-    backgroundColor: '#ff6969',
+    height: 60,
     flexDirection: 'row',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: 'white',
     alignItems: 'center',
-    paddingTop: 30,
-    paddingBottom: 30,
+    width: '100%',
+    paddingLeft: 30,
+    paddingRight: 30,
   },
   headerText: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: 'white',
+    color: '#8395ab',
   },
   button: {
     position: 'absolute',
     top: 10,
     padding: 10,
+  },
+  msgIcon: {
+    padding: 8,
+  },
+  testing: {
+    alignItems: 'center',
+    borderColor: '#fff',
+    justifyContent: 'center',
+    padding: 8,
+    backgroundColor: '#f9f9fa',
+    borderRadius: 100 / 2,
   }
-})
+});

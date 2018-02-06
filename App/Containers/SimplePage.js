@@ -1,9 +1,28 @@
 import * as React from 'react';
 import {View, Text, StyleSheet, FlatList} from 'react-native';
 import { List, ListItem } from "react-native-elements";
+import DataVisualisation from "../Components/DataVisualisation";
+import HeartBeat from "../Components/HeartBeat";
+import Statistics from "./Statistics";
 
 export default function CurrentStateIndicator({ state, style }: *) {
+
   return (
+    <View style={[styles.page, style]}>
+      {
+         state.index === 0 ?
+           <View style={[styles.page, style]}>
+             <HeartBeat/>
+             <DataVisualisation/>
+           </View>
+        : <Statistics/>
+      }
+    </View>
+  );
+}
+
+/*
+TODO uncommont this for data retrieval from firebase:
     <View style={[styles.page, style]}>
       <List containerStyle={{marginBottom: 20, width: 390}}>
         {
@@ -16,10 +35,22 @@ export default function CurrentStateIndicator({ state, style }: *) {
         }
       </List>
     </View>
-  );
-}
+* */
 
 /*
+
+      <List containerStyle={{marginBottom: 20, width: 390}}>
+        {
+          state.data.map((l, i) => (
+            <ListItem
+              key={i}
+              title={l.name}
+            />
+          ))
+        }
+      </List>
+
+
       <View style={styles.container}>
         <Text style={styles.text}>
           Current route is: {state.routes[state.index].title || state.index}
@@ -38,7 +69,7 @@ const styles = StyleSheet.create({
     borderRadius: 3,
   },
   text: {
-    color: '#fff',
+    color: 'black',
     textAlign: 'center',
     marginVertical: 8,
     marginHorizontal: 16,
