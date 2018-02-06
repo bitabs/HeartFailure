@@ -4,7 +4,7 @@ import LaunchScreen from '../Containers/LaunchScreen'
 
 import Login from "../Containers/Login";
 import Loading from "../Containers/Loading";
-import CustomSideMenu from "../Components/CustomSideMenu";
+import CustomSideMenu from "../Components/customSideMenu";
 
 
 export const SignedOut = StackNavigator({

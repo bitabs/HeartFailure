@@ -85,17 +85,26 @@ export default class BLE extends Component {
 
     setTimeout(() => {
       BleManager.retrieveServices(RFDuinoID).then(peripheral => {
-        console.log(peripheral);
+        console.log("peripheral ", peripheral);
         let { serviceUUID , characteristicUUID } = '00002220-0000-1000-8000-00805F9B34FB';
+
+
+        peripheral.characteristics.forEach(c => {
+          if (c.characteristic === "2221") {
+            this.receievedChar = c;
+          }
+        });
+
+
+        this.receievedChar.on('read', () => {
+          console.log("im here")
+        });
 
         setTimeout(() => {
           BleManager.startNotification(RFDuinoID, "2220", "2221").then(() => {
             console.log('Started notification on ' + RFDuinoID);
             setTimeout(() => {
-              const data = stringToBytes('b');
-              BleManager.read(RFDuinoID, "2220", "2223", data).then(() => {
 
-              });
             }, 500);
           }).catch((error) => console.log('Notification error', error));
         }, 200)

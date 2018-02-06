@@ -1,10 +1,28 @@
 import * as React from 'react';
 import {View, Text, StyleSheet, FlatList} from 'react-native';
 import { List, ListItem } from "react-native-elements";
+import DataVisualisation from "../Components/DataVisualisation";
+import HeartBeat from "../Components/HeartBeat";
+import Statistics from "./Statistics";
 
 export default function CurrentStateIndicator({ state, style }: *) {
 
   return (
+    <View style={[styles.page, style]}>
+      {
+         state.index === 0 ?
+           <View style={[styles.page, style]}>
+             <HeartBeat/>
+             <DataVisualisation/>
+           </View>
+        : <Statistics/>
+      }
+    </View>
+  );
+}
+
+/*
+TODO uncommont this for data retrieval from firebase:
     <View style={[styles.page, style]}>
       <List containerStyle={{marginBottom: 20, width: 390}}>
         {
@@ -17,8 +35,7 @@ export default function CurrentStateIndicator({ state, style }: *) {
         }
       </List>
     </View>
-  );
-}
+* */
 
 /*
 
