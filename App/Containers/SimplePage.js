@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {View, Text, StyleSheet, FlatList} from 'react-native';
 import { List, ListItem } from "react-native-elements";
-import DataVisualisation from "../Components/DataVisualisation";
+import ECG from "./ECG";
 import HeartBeat from "../Components/HeartBeat";
 import Statistics from "./Statistics";
 
@@ -13,7 +13,7 @@ export default function CurrentStateIndicator({ state, style }: *) {
          state.index === 0 ?
            <View style={[styles.page, style]}>
              <HeartBeat/>
-             <DataVisualisation/>
+             <ECG/>
            </View>
         : <Statistics/>
       }
