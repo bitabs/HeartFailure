@@ -72,7 +72,7 @@ export default class Chart extends Component {
         },
         plotOptions: {
           series: {
-            color: 'rgba(149, 155, 173, 1)',
+            color: '#bccad0',
             lineWidth: 2
           },
           line: {
@@ -104,7 +104,10 @@ export default class Chart extends Component {
   render() {
     return(
       <ChartView
-        style={{height: 230, width: 410}}
+        style={{
+          height: 400,
+          width: 410
+        }}
         config={this.state.config}
         options={this.state.options}
         scalesPageToFit={false}
