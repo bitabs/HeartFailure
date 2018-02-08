@@ -3,6 +3,8 @@ package com.heartfailure;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.horcrux.svg.SvgPackage;
+import com.bitgo.randombytes.RandomBytesPackage;
 import it.innove.BleManagerPackage;
 import com.bmateam.reactnativeusbserial.ReactUsbSerialPackage;
 import io.invertase.firebase.RNFirebasePackage;
@@ -31,6 +33,8 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
         new MainReactPackage(),
+            new SvgPackage(),
+            new RandomBytesPackage(),
             new BleManagerPackage(),
             new ReactUsbSerialPackage(),
         new RNBLEPackage(),

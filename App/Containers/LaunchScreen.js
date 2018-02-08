@@ -35,13 +35,17 @@ export default class LaunchScreen extends PureComponent<*, State> {
     super(props);
     this.state = {
       index: 0, routes: [{ key: '1', icon: 'activity' }, { key: '2', icon: 'airplay' },],
-      selectedItem: 'About', data: [], isPressed: false, modalVisible: false
+      selectedItem: 'About',
+      data: [],
+      isPressed: false,
+      modalVisible: false,
+      loading: false
     };
     this.personsRef = firebase.app().database().ref().child('Persons');
     this.listenForPersons     = this.listenForPersons.bind(this);
   }
 
-  componentDidMount = () => {
+  componentDidMount() {
     this.listenForPersons(this.personsRef);
   };
 
@@ -75,30 +79,15 @@ export default class LaunchScreen extends PureComponent<*, State> {
     return (
       <View>
         <View style={styles.headerContainer}>
-          <TouchableHighlight
-            onPress={() => this.props.navigation.navigate('DrawerToggle')}
-            activeOpacity={1.0}
-            underlayColor="rgba(253,138,94,0)"
-          >
+          <TouchableHighlight onPress={() => this.props.navigation.navigate('DrawerToggle')} activeOpacity={1.0} underlayColor="rgba(253,138,94,0)">
             <Ionicons style={{padding: 8}} name="menu" size={22} color="#bccad0"/>
           </TouchableHighlight>
-
-
-          <TouchableHighlight
-            activeOpacity={1}
-            underlayColor="rgba(253,138,94,0)"
-            onPress={() => this.openModel()}
-          >
+          <TouchableHighlight activeOpacity={1} underlayColor="rgba(253,138,94,0)" onPress={() => this.openModel()}>
             <Ionicons style={[styles.msgIcon, this.state.isPressed ? styles.testing : {}]} name="message-square" size={22} color="#bccad0"/>
           </TouchableHighlight>
         </View>
         <View style={{width: '100%'}}>
-          <TabBar
-            {...props}
-            indicatorStyle={styles.indicator}
-            renderIcon={this._renderIcon}
-            style={styles.tabbar}
-          />
+          <TabBar {...props} indicatorStyle={styles.indicator} renderIcon={this._renderIcon} style={styles.tabbar}/>
         </View>
         <CustomModal onRef={ref => this.child = ref}/>
       </View>
@@ -111,7 +100,6 @@ export default class LaunchScreen extends PureComponent<*, State> {
         return (
           <SimplePage
             state={this.state}
-            data={this.state.data}
             style={{ backgroundColor: 'white' }}
           />
         );
@@ -119,7 +107,6 @@ export default class LaunchScreen extends PureComponent<*, State> {
         return (
           <SimplePage
             state={this.state}
-            data={this.state.data}
             style={{ backgroundColor: 'white' }}
           />
         );
@@ -145,16 +132,13 @@ export default class LaunchScreen extends PureComponent<*, State> {
 
   render() {
     return (
-      <React.Fragment>
-        <TabViewAnimated
-          style={[styles.container, this.props.style]}
-          navigationState={this.state}
-          renderScene={this._renderScene}
-          renderHeader={this._renderHeader}
-          onIndexChange={this._handleIndexChange}
-        />
-        <BLE/>
-      </React.Fragment>
+      <TabViewAnimated
+        style={[styles.container, this.props.style]}
+        navigationState={this.state}
+        renderScene={this._renderScene}
+        renderHeader={this._renderHeader}
+        onIndexChange={this._handleIndexChange}
+      />
     );
   }
 }
