@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, Text} from 'react-native';
+import {View, Text, Dimensions} from 'react-native';
 import PropTypes from 'prop-types';
 import ChartView from 'react-native-highcharts';
 
@@ -72,12 +72,13 @@ export default class Chart extends Component {
         },
         plotOptions: {
           series: {
-            color: '#bccad0',
-            lineWidth: 2
+            color: '#E67D8F',
+            lineWidth: 2,
+            shadow: true
           },
           line: {
             marker: {
-              enabled: false
+              enabled: true
             }
           }
         },
@@ -105,20 +106,13 @@ export default class Chart extends Component {
     return(
       <ChartView
         style={{
-          height: 400,
-          width: 410
+          flex: 1,
+          height: 300,
+          width: Dimensions.get('window').width
         }}
         config={this.state.config}
         options={this.state.options}
-        scalesPageToFit={false}
-        automaticallyAdjustContentInsets={false}
-        javaScriptEnabled={true}
-        domStorageEnabled={true}
       />
     )
   }
 }
-
-Chart.propTypes = {
-  type: PropTypes.string
-};

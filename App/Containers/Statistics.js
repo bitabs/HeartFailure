@@ -1,39 +1,81 @@
 import React, {Component} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
-import ChartView from 'react-native-highcharts';
+import {ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import Chart from "./Chart";
+
 
 export default class Statistics extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      type: "Day"
+      type: 'Day',
+      current: 'Day',
+      graphType: [{
+        type: 'Day',
+        onPress: () => this.setState({current: "Day"})
+      }, {
+        type: 'Month',
+        onPress: () => this.setState({current: "Month"})
+      }, {
+        type: 'Year',
+        onPress: () => this.setState({current: "Year"})
+      }]
     }
   }
 
-  componentDidMount() {
-
-  }
+  componentWillMount() {}
+  componentDidMount() {}
+  componentWillUnmount() {}
 
   render() {
+
+    // this.state.graphType.map(graph => console.log(graph));
+
+    var topBtns = this.state.graphType.map((graph, key) => {
+      return <TouchableOpacity style={[styles.touchableCalendarBtn, graph.type === this.state.current ? styles.activeTouchableCalendarBtn : '']} onPress={graph.onPress} key={key}>
+        <Text style={[styles.calendarBtn, graph.type === this.state.current ? {color: 'white'} : {color: '#909aae'}]}>{graph.type}</Text>
+      </TouchableOpacity>
+    });
+
     return (
       <View style={styles.container}>
-        <View style={styles.calendarBtnContainer}>
-          <Text style={styles.calendarBtn}>Month</Text>
-          <Text style={styles.calendarBtn}>Day</Text>
-          <Text style={styles.calendarBtn}>Year</Text>
-        </View>
-        <Chart style={styles.chartContainer} type={"day"}/>
-        <View style={styles.calendarBtnContainer}>
-          <Text style={styles.calculationContainer}>Min</Text>
-          <Text style={styles.calculationContainer}>Max</Text>
-          <Text style={styles.calculationContainer}>Avg</Text>
-        </View>
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <View style={styles.calendarBtnContainer}>
+            {topBtns}
+          </View>
+          <Chart style={styles.chartContainer} type={"day"}/>
+          <View style={styles.calendarBtnContainer}>
+            <Text style={styles.calculationContainer}>Min</Text>
+            <Text style={styles.calculationContainer}>Max</Text>
+            <Text style={styles.calculationContainer}>Avg</Text>
+          </View>
+        </ScrollView>
       </View>
     );
   }
 }
+
+/*
+            <TouchableOpacity
+              style={[styles.touchableCalendarBtn, this.state.type === "Day" ? styles.activeTouchableCalendarBtn : '']}
+              onPress={() => this.setState({type: 'Day'})}
+            >
+              <Text style={[styles.calendarBtn, this.state.type === "Day" ? {color: 'white'} : {color: '#909aae'}]}>Day</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.touchableCalendarBtn, this.state.type === "Month" ? styles.activeTouchableCalendarBtn : '']}
+              onPress={() => this.setState({type: 'Month'})}
+            >
+              <Text style={[styles.calendarBtn, this.state.type === "Month" ? {color: 'white'} : {color: '#909aae'}]}>Day</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.touchableCalendarBtn, this.state.type === "Year" ? styles.activeTouchableCalendarBtn : '']}
+              onPress={() => this.setState({type: 'Year'})}
+            >
+              <Text style={[styles.calendarBtn, this.state.type === "Year" ? {color: 'white'} : {color: '#909aae'}]}>Day</Text>
+            </TouchableOpacity>
+ */
+
 
 const styles = StyleSheet.create({
   container: {
@@ -46,19 +88,26 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center'
   },
-  calendarBtn: {
+  touchableCalendarBtn: {
     flex: 1,
     marginTop: 30,
     marginBottom: 30,
     marginRight: 20,
     marginLeft: 20,
+    maxWidth: 100
+  },
+  activeTouchableCalendarBtn: {
+    backgroundColor: '#E67D8F',
+    elevation: 5,
+    borderRadius: 100 / 2
+  },
+  calendarBtn: {
     textAlign: 'center',
     padding: 10,
-    fontWeight: 'bold',
-    color: 'white',
-    borderRadius: 100 / 2,
-    backgroundColor: '#c8d6dc',
-    elevation: 5
+    fontWeight: 'bold'
+  },
+  activeCalendarBtn: {
+    color: 'white'
   },
   chartContainer: {
     // flex: 20

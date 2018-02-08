@@ -35,7 +35,7 @@ export default class ECG extends Component {
   }
 
   componentDidMount() {
-    this.setState({loading: false});
+
   }
 
   render() {
