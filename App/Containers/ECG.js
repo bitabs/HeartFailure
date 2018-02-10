@@ -125,7 +125,7 @@ export default class ECG extends Component {
 
     return(
       <ChartView
-        style={{height: 230, width: 460}}
+        style={{height: 230, width: 380}}
         config={conf}
         options={options}
         scalesPageToFit={false}

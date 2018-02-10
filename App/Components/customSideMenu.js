@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import { StyleSheet } from 'react-native';
 import Ionicons from "react-native-vector-icons/Feather";
 import CustomModal from "./CustomModal";
+import firebase from 'react-native-firebase';
 
 
 class CustomSideMenu extends Component {
@@ -19,6 +20,14 @@ class CustomSideMenu extends Component {
   openModel = () => {
     this.child.toggleModal() // do stuff
   };
+
+  signOutUser = async () => {
+    try {
+      await firebase.auth().signOut();
+    } catch (e) {
+      console.log(e);
+    }
+  }
 
   render () {
 
@@ -37,7 +46,7 @@ class CustomSideMenu extends Component {
               style={[styles.verticalCenter, styles.floatRight]}
               activeOpacity={1.0}
               underlayColor="rgba(253,138,94,0)"
-              onPress={() => this.openModel()}
+              onPress={() => this.signOutUser()}
             >
               <Ionicons name="log-out" size={16} color="#bccad0"/>
             </TouchableHighlight>

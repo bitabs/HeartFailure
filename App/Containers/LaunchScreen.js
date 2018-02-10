@@ -1,5 +1,5 @@
 import React, { Component, PureComponent } from 'react'
-import {View, TouchableHighlight, StyleSheet} from 'react-native'
+import {View, TouchableHighlight, StyleSheet, Text} from 'react-native'
 import BLE from './BLE';
 import Ionicons from 'react-native-vector-icons/Feather';
 import { TabViewAnimated, TabBar } from 'react-native-tab-view';
@@ -27,46 +27,58 @@ type Route = {
 
 type State = NavigationState<Route>;
 
-export default class LaunchScreen extends PureComponent<*, State> {
+export default class LaunchScreen extends Component<*, State> {
   static title = 'Icon only top bar';
   static appbarElevation = 0;
 
   constructor(props) {
     super(props);
     this.state = {
-      index: 0, routes: [{ key: '1', icon: 'activity' }, { key: '2', icon: 'airplay' },],
+      index: 0,
+      routes: [{
+        key: '1', icon: 'activity'
+      }, {
+        key: '2', icon: 'airplay'
+      }],
       selectedItem: 'About',
-      data: [],
       isPressed: false,
       modalVisible: false,
-      loading: false
+      loading: false,
+      userType: "",
+      Patients: null,
+      Users: null,
+      Doctors: null
     };
-    this.personsRef = firebase.app().database().ref().child('Persons');
+    this.usersRef     = firebase.app().database().ref();
     this.listenForPersons     = this.listenForPersons.bind(this);
   }
 
   componentDidMount() {
-    this.listenForPersons(this.personsRef);
+    this.listenForPersons(this.usersRef);
   };
 
   listenForPersons = (personsRef) => {
     personsRef.on('value', (snap) => {
-      var persons = [];
-      snap.forEach(child => {
-        persons.push({
-          name: child.val().name,
-          _key: child.key
-        })
-      });
-
       this.setState({
-        data: persons
+        Users     : snap.val().Users,
+        Patients  : snap.val().Patients,
+        Doctors   : snap.val().Doctors
       });
-
+      firebase.auth().onAuthStateChanged((user) => {
+        if (user && this.state.Patients && this.state.Doctors && this.state.Users) {
+          this.setState({userType: this.state.Patients[user._user.uid] ? "Patient" : this.state.Doctors[user._user.uid] ? "Doctor" : ""})
+        }
+      });
     });
   };
 
   _handleIndexChange = index => { this.setState({ index }); };
+
+
+  updateIndex = () => {
+    this.setState({ index: this.state.index === 0 ? 1 : 0 }, () => console.log(this.state.index));
+  };
+
 
   _renderIcon = ({ route }) => { return <Ionicons name={route.icon} size={24} color="#bccad0" />; };
 
@@ -95,24 +107,7 @@ export default class LaunchScreen extends PureComponent<*, State> {
   };
 
   _renderScene = ({ route }) => {
-    switch (route.key) {
-      case '1':
-        return (
-          <SimplePage
-            state={this.state}
-            style={{ backgroundColor: 'white' }}
-          />
-        );
-      case '2':
-        return (
-          <SimplePage
-            state={this.state}
-            style={{ backgroundColor: 'white' }}
-          />
-        );
-      default:
-        return null;
-    }
+    return <SimplePage state={this.state} style={{ backgroundColor: 'white' }} userType={this.state.userType} updateIndex={this.updateIndex.bind(this)} />
   };
 
   onMenuItemSelected = item => {

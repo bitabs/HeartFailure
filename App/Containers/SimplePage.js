@@ -3,18 +3,14 @@ import {View, Text, StyleSheet, FlatList} from 'react-native';
 import ECG from "./ECG";
 import HeartBeat from "../Components/HeartBeat";
 import Statistics from "./Statistics";
+import Patient from "./Patient";
+import Doctor from "./Doctor";
 
-export default function CurrentStateIndicator({ state, style }: *) {
-
+export default function CurrentStateIndicator({ state, style, userType, updateIndex }: *) {
   return (
-    <View style={[styles.page, style]}>
+    <View style={[styles.page, style, userType === "Doctor" ? {backgroundColor: '#f8f8f8'} : ""]}>
       {
-        state.index === 0 ?
-          <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}} >
-            <HeartBeat/>
-            <ECG/>
-          </View>
-        : <Statistics />
+        userType === "Patient" ? <Patient index={state.index}/> : <Doctor index={state.index} updateIndex={updateIndex} />
       }
     </View>
   );
@@ -25,5 +21,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: 'pink'
   }
 });
