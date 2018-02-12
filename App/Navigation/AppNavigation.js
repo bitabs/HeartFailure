@@ -1,7 +1,6 @@
 import {DrawerNavigator, StackNavigator} from 'react-navigation'
 import LaunchScreen from '../Containers/LaunchScreen'
-
-
+import React from 'react';
 import Login from "../Containers/Login";
 import Loading from "../Containers/Loading";
 import CustomSideMenu from "../Components/customSideMenu";
@@ -20,7 +19,7 @@ export const SignedOut = StackNavigator({
 export const SignedIn = DrawerNavigator({
   Home: {screen: LaunchScreen}
 },{
-  contentComponent: CustomSideMenu,
+  contentComponent: CustomSideMenu
 });
 
 

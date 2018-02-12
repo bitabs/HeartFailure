@@ -110,7 +110,6 @@ export default class LaunchScreen extends Component<*, State> {
   currentUser = async () => {
     var user = firebase.app().auth().currentUser;
     if (user) {
-      console.log(user);
       this.setState({
         userType: this.state.Patients[user._user.uid] ? (
           "Patient"
