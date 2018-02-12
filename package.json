@@ -63,6 +63,7 @@
     "react-native-os": "^1.0.1",
     "react-native-popup-menu": "^0.12.2",
     "react-native-randombytes": "^3.0.0",
+    "react-native-shadow": "^1.2.2",
     "react-native-svg": "^6.1.2",
     "react-native-tab-view": "0.0.74",
     "react-native-tcp": "^3.2.1",

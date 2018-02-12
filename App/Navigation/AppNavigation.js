@@ -5,6 +5,7 @@ import LaunchScreen from '../Containers/LaunchScreen'
 import Login from "../Containers/Login";
 import Loading from "../Containers/Loading";
 import CustomSideMenu from "../Components/customSideMenu";
+import RightSideMenu from "../Components/RightSideMenu";
 
 
 export const SignedOut = StackNavigator({
@@ -20,7 +21,6 @@ export const SignedIn = DrawerNavigator({
   Home: {screen: LaunchScreen}
 },{
   contentComponent: CustomSideMenu,
-  navigationOptions: {}
 });
 
 

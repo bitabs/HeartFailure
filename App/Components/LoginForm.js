@@ -11,7 +11,7 @@ import {
 
 import {Field, reduxForm} from 'redux-form';
 
-let navigation = {};
+
 
 
 const onLogin = creds => {
@@ -22,7 +22,7 @@ const onLogin = creds => {
     * User is logged in
     *
     * */
-    navigation.navigate('drawerStack');
+    // if (user) navigation.navigate('drawerStack');
   }).catch(err => {
     const { code, message } = err;
     console.log("not loggedin, ", message);
@@ -35,7 +35,6 @@ const renderInput = ({placeholder, input: { onChange, ...restInput }}) => {
 
 const LoginForm = props => {
   const { handleSubmit } = props;
-  navigation = props.navigation;
 
   return (
     <View style={styles.container}>

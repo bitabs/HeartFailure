@@ -8,7 +8,7 @@ import CustomModal from "./CustomModal";
 import firebase from 'react-native-firebase';
 
 
-class CustomSideMenu extends Component {
+class RightSideMenu extends Component {
 
   navigateToScreen = (route) => () => {
     const navigateAction = NavigationActions.navigate({
@@ -160,8 +160,8 @@ const styles = StyleSheet.create({
   }
 });
 
-CustomSideMenu.propTypes = {
+RightSideMenu.propTypes = {
   navigation: PropTypes.object
 };
 
-export default CustomSideMenu;
+export default RightSideMenu;
