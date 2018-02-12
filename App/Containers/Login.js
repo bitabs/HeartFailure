@@ -1,4 +1,6 @@
 import React, { Component } from 'react'
+import {View, TouchableHighlight, StyleSheet, Text, Animated} from 'react-native'
+
 import LoginForm from "../Components/LoginForm";
 
 export default class Login extends Component {
@@ -20,7 +22,16 @@ export default class Login extends Component {
 
   render() {
     return (
-      <LoginForm />
+      <View style={styles.container}>
+        <LoginForm/>
+      </View>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#f3f3f3'
+  }
+});

@@ -21,7 +21,7 @@ export default class ListOfPatients extends Component {
 
   render() {
 
-    console.log({P: this.props.Patients});
+    //console.log({P: this.props.Patients});
 
     let Patients = this.props.Patients ? (
       Object.keys(this.props.Patients).map((uid, i) => {
