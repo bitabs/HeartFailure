@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import ChartView from 'react-native-highcharts';
+import PropTypes from 'prop-types';
 import {TouchableHighlight, Text, View, AppState} from "react-native";
 
 export default class ECG extends Component {
@@ -125,7 +126,10 @@ export default class ECG extends Component {
 
     return(
       <ChartView
-        style={{height: 230, width: 380}}
+        style={{
+          height: this.props.height,
+          width: this.props.width
+        }}
         config={conf}
         options={options}
         scalesPageToFit={false}
@@ -137,3 +141,8 @@ export default class ECG extends Component {
 
   }
 }
+
+ECG.propTypes = {
+  height: PropTypes.number.isRequired,
+  width: PropTypes.number.isRequired
+};

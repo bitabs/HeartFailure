@@ -22,7 +22,6 @@ const onLogin = creds => {
     * User is logged in
     *
     * */
-
     // if (user) navigation.navigate('drawerStack');
   }).catch(err => {
     const { code, message } = err;

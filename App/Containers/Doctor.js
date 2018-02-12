@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {View, Text} from "react-native";
 import Dashboard from "./Dashboard";
+import PropTypes from 'prop-types';
 
 export default class Doctor extends Component {
   constructor(props) {
@@ -14,8 +15,18 @@ export default class Doctor extends Component {
   render() {
     return(
       <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}} >
-        <Dashboard index={this.props.index} updateIndex={this.props.updateIndex} style={{backgroundColor: 'pink'}} />
+        <Dashboard
+          index       = {this.props.index}
+          updateIndex = {this.props.updateIndex}
+          style       = {{backgroundColor: 'pink'}}
+          Patients    = {this.props.Patients}
+        />
       </View>
     );
   }
 }
+
+Doctor.propTypes = {
+  index       : PropTypes.number.isRequired,
+  Patients    : PropTypes.object
+};
