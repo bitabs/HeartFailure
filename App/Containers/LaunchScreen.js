@@ -1,6 +1,5 @@
 import React, { Component, PureComponent } from 'react'
 import {View, TouchableHighlight, StyleSheet, Text, Animated} from 'react-native'
-import BLE from './BLE';
 import Ionicons from 'react-native-vector-icons/Feather';
 import { TabViewAnimated, TabBar } from 'react-native-tab-view';
 import type { NavigationState } from 'react-native-tab-view/types';

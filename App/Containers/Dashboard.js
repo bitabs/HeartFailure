@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {View, Text, TouchableOpacity} from "react-native";
 import ListOfPatients from "./ListOfPatients";
 import PropTypes from 'prop-types';
+import BLE from "./BLE";
 
 export default class Dashboard extends Component {
   constructor(props) {
@@ -16,7 +17,7 @@ export default class Dashboard extends Component {
           this.props.index === 0 ? (
             <ListOfPatients updateIndex={this.props.updateIndex} Patients={this.props.Patients}/>
           ) : (
-            <Text>In Two"</Text>
+            <BLE />
           )
         }
       </View>
