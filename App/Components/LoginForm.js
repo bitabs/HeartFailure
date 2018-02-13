@@ -68,7 +68,7 @@ const LoginForm = props => {
         </View>
 
         <View style={styles.bottomContainer}>
-          <TouchableOpacity style={styles.loginBtn}>
+          <TouchableOpacity style={styles.loginBtn} onPress={handleSubmit(onLogin)}>
             <Text style={{textAlign: 'center', fontSize: 18, fontWeight: 'bold', color: 'white', letterSpacing: 2}}>L O G I N</Text>
           </TouchableOpacity>
         </View>
