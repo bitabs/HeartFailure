@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, ScrollView, Text, StyleSheet, Image} from "react-native";
+import {View, ScrollView, Text, StyleSheet, Image, Animated, Easing} from "react-native";
 import Chart from "./Chart";
 import PropTypes from 'prop-types';
 import {Images} from './PreLoadImages';
@@ -9,7 +9,26 @@ export default class PatientBox extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      wait: true,
     };
+    this.animatedValue = new Animated.Value(1)
+  }
+
+  componentDidMount() {
+    this.spin();
+  }
+
+  spin () {
+    this.animatedValue.setValue(1);
+    Animated.timing(
+      this.animatedValue,
+      {
+        toValue: 0,
+        duration: 4000,
+        delay: 2000,
+        easing: Easing.linear
+      }
+    ).start( () => this.setState({wait: false}));
   }
 
   config = () => {
@@ -27,19 +46,31 @@ export default class PatientBox extends Component {
       plotOptions: {
         series: {
           color: 'rgba(230, 125, 143, 0.4)',
-          lineWidth: 1.5
+          lineWidth: 1.5,
+          marker: {
+            enabled: false
+          },
+        },
+        line: {
+          marker: {
+            enabled: false
+          },
+          states: {
+            select: {
+              lineWidth: 1.5
+            }
+          },
+          events: {
+            click: function() {
+              this.setState(this.state === 'select' ? '' : 'select');
+            }
+          }
         }
       },
       yAxis: {
         visible: false
       },
-      tooltip: {
-        formatter: function() {
-          return '<b>' + this.series.name + '</b><br/>' +
-            Highcharts.dateFormat('%Y-%m-%d %H:%M:%S', this.x) + '<br/>' +
-            Highcharts.numberFormat(this.y, 2);
-        }
-      },
+      tooltip: { enabled: false },
       scrollbar: {
         enabled: false
       },
@@ -67,12 +98,23 @@ export default class PatientBox extends Component {
 
   render() {
 
-    return(
-      <View style={styles.box}>
+    const opacity = this.animatedValue.interpolate({
+      inputRange: [0, 0.5, 1],
+      outputRange: [0, 0.5, 1]
+    });
+
+    let returnThis = (
+      <View style={[styles.box, {position: 'relative'}]}>
         <View style={{flexWrap: 'wrap', alignItems: 'center'}}>
-          <Image style={styles.userImg} source={Images[this.props.uid]} resizeMode="contain"/>
+          <View style={{position: 'relative'}}>
+            <Image style={styles.userImg} source={Images[this.props.uid]} resizeMode="contain"/>
+            <View style={{position: 'absolute', bottom: 0, backgroundColor: '#59D0D0', padding: 2, width: 20,
+              height: 20, borderRadius: 100/2, alignItems: 'center', justifyContent: 'center'}}>
+              <Ionicons style={{fontWeight: '900'}} name="md-checkmark" size={15} color="white" />
+            </View>
+          </View>
           <Text style={{marginTop: 10, fontSize: 16, color: '#909aae'}}>{this.props.name}</Text>
-          <Text style={{marginTop: 3, fontSize: 13, opacity: 0.5}}>{this.props.profession}</Text>
+          <Text style={{marginTop: 3, fontSize: 13, opacity: 0.5, color: 'rgba(144, 154, 174, 0.8)'}}>{this.props.profession}</Text>
         </View>
         <View>
           <Chart type={"day"} height={100} config={this.config()} component={"ListOfPatients"} showsHorizontalScrollIndicator={false} />
@@ -80,23 +122,36 @@ export default class PatientBox extends Component {
           <View style={styles.infoContainer}>
             <View style={[styles.infoBox]}>
               <Ionicons style={{marginRight: 10, opacity: 0.5}} name="md-heart" size={15} color="#bccad0" />
-              <Text style={{fontSize: 35, color: "#909aae"}}>{this.props.history.bpm}
+              <Text style={{fontSize: 30, color: "#909aae"}}>{this.props.history.bpm}
                 <Text style={{fontSize: 13, fontWeight: 'bold', color: 'rgba(144, 154, 174, 0.5)'}}>bpm</Text>
               </Text>
             </View>
             <View style={styles.infoBox}>
               <Ionicons style={{marginRight: 10, opacity: 0.5}} name="md-flame" size={15} color="#bccad0" />
-              <Text style={{fontSize: 35, color: "#909aae"}}>{this.props.history.calories}
+              <Text style={{fontSize: 30, color: "#909aae"}}>{this.props.history.calories}
                 <Text style={{fontSize: 13, fontWeight: 'bold', color: 'rgba(144, 154, 174, 0.5)'}}>cal</Text>
               </Text>
             </View>
             <View style={styles.infoBox}>
               <Ionicons style={{marginRight: 10, opacity: 0.5}} name="md-thermometer" size={15} color="#bccad0" />
-              <Text style={{fontSize: 35, color: "#909aae"}}>{this.props.history.thermometer}°</Text>
+              <Text style={{fontSize: 30, color: "#909aae"}}>{this.props.history.thermometer}°</Text>
             </View>
           </View>
 
         </View>
+        {
+          this.state.wait ? (
+            <Animated.View style={{position: 'absolute', top: 0, bottom: 0, left: 0, right: 0, backgroundColor: 'white', opacity} } />
+          ) : null
+        }
+      </View>
+    );
+
+    return(
+      <View>
+        {
+          returnThis
+        }
       </View>
     );
   }

@@ -4,6 +4,8 @@ import Ionicons from 'react-native-vector-icons/Feather';
 import { TabViewAnimated, TabBar } from 'react-native-tab-view';
 import type { NavigationState } from 'react-native-tab-view/types';
 import SimplePage from './SimplePage';
+import Svg, { Line } from 'react-native-svg';
+
 /*
 * ======= Firebase Initialisation ======
 * */
@@ -79,14 +81,18 @@ export default class LaunchScreen extends Component<*, State> {
   _renderHeader = props => {
 
     return (
-      <View style={{elevation: 2, backgroundColor:'white'}}>
+      <View style={{elevation: 0.5, backgroundColor:'white'}}>
         <View style={styles.headerContainer}>
           <TouchableHighlight
             onPress={() => {
               this.props.navigation.navigate('DrawerToggle')
             }}
             activeOpacity={1.0} underlayColor="rgba(253,138,94,0)">
-            <Ionicons style={{padding: 8}} name="menu" size={22} color="#bccad0"/>
+            <Svg height="24" width="24">
+              <Line fill="none" stroke="#bccad0" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" x1="3" y1="12" x2="21" y2="12"/>
+              <Line fill="none" stroke="#bccad0" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" x1="10.208" y1="6" x2="21" y2="6"/>
+              <Line fill="none" stroke="#bccad0" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" x1="3" y1="18" x2="13.791" y2="18"/>
+            </Svg>
           </TouchableHighlight>
           <View style={{position: 'relative'}}>
             <TouchableHighlight activeOpacity={1} underlayColor="rgba(253,138,94,0)" onPress={() => this.openModel()}>
