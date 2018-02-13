@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, Text, TouchableOpacity} from "react-native";
+import {View, Text, TouchableOpacity, StyleSheet} from "react-native";
 import ListOfPatients from "./ListOfPatients";
 import PropTypes from 'prop-types';
 
@@ -23,6 +23,15 @@ export default class Dashboard extends Component {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  page: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'red'
+  }
+});
 
 Dashboard.propTypes = {
   Patients    : PropTypes.object

@@ -58,7 +58,8 @@ const styles = StyleSheet.create({
   page: {
     flex: 1,
     flexDirection: 'column',
-    alignItems: 'center'
+    alignItems: 'center',
+    backgroundColor: '#f7f7f7'
   }
 });
 
