@@ -16,36 +16,45 @@ export const SignedOut = StackNavigator({
   }
 });
 
-export const SignedIn = DrawerNavigator({
+
+const DrawerExample = DrawerNavigator({
   Home: {screen: LaunchScreen}
+},{
+  drawerOpenRoute: 'FooDrawerOpen',
+  drawerCloseRoute: 'FooDrawerClose',
+  drawerPosition: "right",
+  contentComponent: CustomSideMenu
+});
+
+
+export const SignedIn = DrawerNavigator({
+  Home: {screen: DrawerExample}
 },{
   contentComponent: CustomSideMenu
 });
 
 
-const PrimaryNav = StackNavigator(
-  {
-    SignedIn: {
-      screen: SignedIn,
-      navigationOptions: {
-        gesturesEnabled: false
-      }
-    },
-    SignedOut: {
-      screen: SignedOut,
-      navigationOptions: {
-        gesturesEnabled: false
-      }
-    },
-    Loading: {
-      screen: Loading
+const PrimaryNav = StackNavigator({
+  SignedIn: {
+    screen: SignedIn,
+    navigationOptions: {
+      gesturesEnabled: false
     }
-  }, {
-    headerMode: "none",
-    mode: "modal",
-    initialRouteName: "Loading"
+  },
+  SignedOut: {
+    screen: SignedOut,
+    navigationOptions: {
+      gesturesEnabled: false
+    }
+  },
+  Loading: {
+    screen: Loading
   }
-);
+}, {
+  headerMode: "none",
+  mode: "modal",
+  initialRouteName: "Loading"
+});
 
 export default PrimaryNav;
 

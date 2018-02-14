@@ -85,7 +85,7 @@ export default class LaunchScreen extends Component<*, State> {
         <View style={styles.headerContainer}>
           <TouchableHighlight
             onPress={() => {
-              this.props.navigation.navigate('DrawerToggle')
+              this.props.navigation.navigate('DrawerOpen')
             }}
             activeOpacity={1.0} underlayColor="rgba(253,138,94,0)">
             <Svg height="24" width="24">
@@ -95,7 +95,9 @@ export default class LaunchScreen extends Component<*, State> {
             </Svg>
           </TouchableHighlight>
           <View style={{position: 'relative'}}>
-            <TouchableHighlight activeOpacity={1} underlayColor="rgba(253,138,94,0)" onPress={() => this.openModel()}>
+            <TouchableHighlight activeOpacity={1} underlayColor="rgba(253,138,94,0)" onPress={() => {
+              this.props.navigation.navigate('FooDrawerOpen')
+            }}>
               <Ionicons style={[styles.msgIcon, this.state.isPressed ? styles.testing : {}]} name="message-square" size={22} color="#bccad0"/>
             </TouchableHighlight>
             <View style={styles.notificationDot} />
