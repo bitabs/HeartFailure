@@ -38,17 +38,17 @@ export default class MessageComponent extends Component {
           <Image style={styles.userImg} source={Images[this.props.uid]} resizeMode="contain"/>
 
           <View style={{flex: 1}}>
-            <Text style={styles.msgPersonName}>{this.props.name}</Text>
-            <Text style={styles.msgTime}>15 min ago</Text>
+            <Text numberOfLines={1} style={styles.msgPersonName}>{this.props.name}</Text>
+            <Text style={styles.msgTime}>{this.props.dateTime}</Text>
           </View>
-          <View style={{flexDirection: 'column', alignItems: 'center', justifyContent: 'space-between'}}>
+          <View style={{flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'space-between'}}>
             {this.randomIcon()}
 
-            <View style={styles.tag}><Text style={{fontSize: 8, color: 'white', fontWeight: 'bold'}}>H I G H</Text></View>
+            <View style={styles.tag}><Text style={{fontSize: 8, color: 'white', fontWeight: 'bold'}}>{this.props.healthAlert}</Text></View>
           </View>
         </View>
         <View>
-          <Text style={styles.msgText} numberOfLines={2}>{this.props.patientsComments[this.props.patientsComments.length - 1]}</Text>
+          <Text style={styles.msgText} numberOfLines={2}>{this.props.comment}</Text>
         </View>
       </View>
     )
@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
     marginRight: 10
   },
   msgPersonName: {
-    fontSize: 17,
+    fontSize: 15,
     color: '#bccad0'
   },
   msgTime: {
@@ -94,5 +94,7 @@ MessageComponent.propTypes = {
   navigation        : PropTypes.object,
   name              : PropTypes.string.isRequired,
   uid               : PropTypes.string.isRequired,
-  patientsComments  : PropTypes.array.isRequired
+  comment           : PropTypes.string.isRequired,
+  dateTime          : PropTypes.string.isRequired,
+  healthAlert       : PropTypes.string.isRequired
 };

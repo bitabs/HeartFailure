@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { NavigationActions } from "react-navigation";
-import {StyleSheet, ScrollView, View, AsyncStorage} from "react-native";
-import PropTypes from 'prop-types';
+import {StyleSheet, ScrollView, View} from "react-native";
 import MessageComponent from "./MessageComponent";
 
 
@@ -9,9 +8,7 @@ export default class MessagingComponent extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {
-      dataLoaded: false
-    }
+    this.state = {}
 
   }
 
@@ -26,24 +23,27 @@ export default class MessagingComponent extends Component {
     const {routes: [{params: data}]} = this.props.navigation.state;
     let patients = null;
     if (data) {
-      const {data: [{Patients, DoctorUID}]} = data;
 
+      const {data: [{Patients, DoctorUID}]} = data;
       patients = Object.keys(Patients).map( (uuid, i) => {
         const patient = Patients[uuid];
-        const {name, profilePicture} = patient;
+        const {name, healthAlert} = patient;
         const {patientsComments} = patient.doctors[DoctorUID];
-        console.log(name, profilePicture);
 
+        // console.log(patientsComments[patientsComments.length - 1]);
         return (
           <MessageComponent
             name              = {name}
             uid               = {uuid}
-            patientsComments  = {patientsComments}
+            healthAlert       = {healthAlert}
+            comment           = {patientsComments[patientsComments.length - 1].msgText}
+            dateTime          = {patientsComments[patientsComments.length - 1].dateTime}
             key               = {i}
           />
         )
       });
     }
+
     return patients;
   };
 
