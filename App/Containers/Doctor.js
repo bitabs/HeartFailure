@@ -6,10 +6,7 @@ import PropTypes from 'prop-types';
 export default class Doctor extends Component {
   constructor(props) {
     super(props);
-
-    this.state = {
-
-    }
+    this.state = {}
   }
 
   render() {

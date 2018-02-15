@@ -5,6 +5,7 @@ import Login from "../Containers/Login";
 import Loading from "../Containers/Loading";
 import CustomSideMenu from "../Components/customSideMenu";
 import RightSideMenu from "../Components/RightSideMenu";
+import MessagingComponent from "../Components/MessagingComponent";
 
 
 export const SignedOut = StackNavigator({
@@ -18,12 +19,16 @@ export const SignedOut = StackNavigator({
 
 
 const DrawerExample = DrawerNavigator({
-  Home: {screen: LaunchScreen}
+  Home: {
+    screen: LaunchScreen
+  },
 },{
   drawerOpenRoute: 'FooDrawerOpen',
   drawerCloseRoute: 'FooDrawerClose',
   drawerPosition: "right",
-  contentComponent: CustomSideMenu
+  contentComponent: ({ navigation }) => (
+    <MessagingComponent navigation={navigation} />
+  ),
 });
 
 
@@ -53,7 +58,7 @@ const PrimaryNav = StackNavigator({
 }, {
   headerMode: "none",
   mode: "modal",
-  initialRouteName: "Loading"
+  initialRouteName: "Loading",
 });
 
 export default PrimaryNav;
