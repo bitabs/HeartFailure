@@ -1,21 +1,19 @@
 {
-  "Users": {
-    "w14FKo72BieZwbxwUouTpN7UQm02": {
-      "emailAddress"  : "Naseebullah@kcl.ac.uk"
-    },
-
-    "VoxHFgUEIwRFWg7JTKNXSSoFoMV2": {
-      "emailAddress"  : "Ernest@kcl.ac.uk"
-    }
-  },
-
   "Patients": {
     "w14FKo72BieZwbxwUouTpN7UQm02": {
       "name"              : "Naseebullah Ahmadi",
       "profession"        : "Student",
       "gender"            : "Male",
       "type"              : "Patient",
-      "doctors"           : ["Ernest"],
+      "doctors"           : {
+        "VoxHFgUEIwRFWg7JTKNXSSoFoMV2" : {
+          "patientsComments": [
+            { "msgText": "Hi Dr Ernest, can I please book an appointment?", "dateTime": "15-Feb-18 18:17" },
+            { "msgText": "Hi there, can I call you now?", "dateTime": "15-Feb-18 18:17" },
+            { "msgText": "Can we please reschedule the time; thanks!", "dateTime": "15-Feb-18 18:17" }
+          ]
+        }
+      },
       "age"               : "20",
       "DOB"               : "02/06/1997",
       "address"           : "122 Atherstone Court",
@@ -140,14 +138,23 @@
         -0.01423095703125, -0.013834716796875, -0.012556030273437501, -0.010675048828125, -0.00835888671875,
         -0.0057305908203125, -0.0000562744140625
       ],
-      "heartSound"        : [""]
+      "heartSound"        : [""],
+      "healthAlert"       : "A V E R A G E"
     },
     "sLSfCQziLTTmoI3e74xTpWhnZoj2": {
       "name"              : "George Dane",
       "profession"        : "Teacher",
       "gender"            : "Male",
       "type"              : "Patient",
-      "doctors"           : ["Ernest"],
+      "doctors"           : {
+        "VoxHFgUEIwRFWg7JTKNXSSoFoMV2" : {
+          "patientsComments": [
+            { "msgText": "Can you please advice me when to do my ECG, and how long it will take for the result to come back? Thanks.", "dateTime": "15-Feb-18 10:00" },
+            { "msgText": "So the situation is actually quite complicated. Can I please come over to go through this issue please? Thanks.", "dateTime": "15-Feb-18 10:30" },
+            { "msgText": "That's great to hear, I hope you enjoy the weekend. Hope to seeing you soon.", "dateTime": "15-Feb-18 12:05" }
+          ]
+        }
+      },
       "age"               : "20",
       "DOB"               : "02/06/1997",
       "address"           : "122 Atherstone Court",
@@ -272,14 +279,23 @@
         -0.01423095703125, -0.013834716796875, -0.012556030273437501, -0.010675048828125, -0.00835888671875,
         -0.0057305908203125, -0.0000562744140625
       ],
-      "heartSound"        : [""]
+      "heartSound"        : [""],
+      "healthAlert"       : "S T A B L E"
     },
     "q7EbYl2zEfYh0GhS8AB6VtrhG6g1": {
       "name"              : "Kate Flee",
       "profession"        : "Lecturer",
       "gender"            : "Female",
       "type"              : "Patient",
-      "doctors"           : ["Ernest"],
+      "doctors"           : {
+        "VoxHFgUEIwRFWg7JTKNXSSoFoMV2" : {
+          "patientsComments": [
+            { "msgText": "I'm trying to send my readings to you but its not working.", "dateTime": "14-Feb-18 09:10" },
+            { "msgText": "Is there any possibility for a follow up meeting today?", "dateTime": "14-Feb-18 10:50" },
+            { "msgText": "I'de like to meet you sometime today regarding my health. Please let me know when you are free", "dateTime": "14-Feb-18 11:00" }
+          ]
+        }
+      },
       "age"               : "25",
       "DOB"               : "02/06/1997",
       "address"           : "122 Atherstone Court",
@@ -404,14 +420,23 @@
         -0.01423095703125, -0.013834716796875, -0.012556030273437501, -0.010675048828125, -0.00835888671875,
         -0.0057305908203125, -0.0000562744140625
       ],
-      "heartSound"        : [""]
+      "heartSound"        : [""],
+      "healthAlert"       : "H I G H"
     },
     "E1kxLTE8UTXIG4topUhmVcfRdut2": {
       "name"              : "Stacy Jones",
       "profession"        : "Student",
       "gender"            : "Female",
       "type"              : "Patient",
-      "doctors"           : ["Ernest"],
+      "doctors"           : {
+        "VoxHFgUEIwRFWg7JTKNXSSoFoMV2" : {
+          "patientsComments": [
+            { "msgText": "Hi Dr Ernest, can I please book an appointment?", "dateTime": "15-Feb-18 08:15" },
+            { "msgText": "Hi there, please find the attach my reading. Can you please get back to me if it's something to worry about", "dateTime": "15-Feb-18 12:17" },
+            { "msgText": "How is it that my ECG reading is ok yet I'm unable to exercise?", "dateTime": "15-Feb-18 09:20" }
+          ]
+        }
+      },
       "age"               : "20",
       "DOB"               : "02/06/1997",
       "address"           : "122 Atherstone Court",
@@ -536,14 +561,23 @@
         -0.01423095703125, -0.013834716796875, -0.012556030273437501, -0.010675048828125, -0.00835888671875,
         -0.0057305908203125, -0.0000562744140625
       ],
-      "heartSound"        : [""]
+      "heartSound"        : [""],
+      "healthAlert"       : "S T A B L E"
     },
     "I5vEyeZwbyS6p1PKAUeDEnB7Bbr2": {
       "name"              : "James Michael",
       "profession"        : "Dentist",
       "gender"            : "Male",
       "type"              : "Patient",
-      "doctors"           : ["Ernest"],
+      "doctors"           : {
+        "VoxHFgUEIwRFWg7JTKNXSSoFoMV2" : {
+          "patientsComments": [
+            { "msgText": "Hi Dr Ernest, I'd like to book an appointment sometime next week. Please get back to me anytime you're free", "dateTime": "15-Feb-18 17:00" },
+            { "msgText": "My chest is making rumbling sound and I'm worried if its something serious. Can I come anytime today?", "dateTime": "15-Feb-18 17:20" },
+            { "msgText": "Can we please reschedule the time; thanks!", "dateTime": "15-Feb-18 10:45" }
+          ]
+        }
+      },
       "age"               : "20",
       "DOB"               : "02/06/1997",
       "address"           : "122 Atherstone Court",
@@ -668,14 +702,23 @@
         -0.01423095703125, -0.013834716796875, -0.012556030273437501, -0.010675048828125, -0.00835888671875,
         -0.0057305908203125, -0.0000562744140625
       ],
-      "heartSound"        : [""]
+      "heartSound"        : [""],
+      "healthAlert"       : "A V E R A G E"
     },
     "SXMrXfBvexQUXfnVg5WWVwsKjpD2": {
       "name"              : "Levi Yeager",
       "profession"        : "Frontend Developer",
       "gender"            : "Male",
       "type"              : "Patient",
-      "doctors"           : ["Ernest"],
+      "doctors"           : {
+        "VoxHFgUEIwRFWg7JTKNXSSoFoMV2" : {
+          "patientsComments": [
+            { "msgText": "Can you please get back to me regarding my ECG test? I'm worried about my health.", "dateTime": "12-Jan-18 12:00" },
+            { "msgText": "There's a sever pain in my chest and I find breathing more difficult from last week. I don't know what is cause to be honest.", "dateTime": "15-Feb-18 13:30" },
+            { "msgText": "Is it possible if I can come today to see you about my ECG and heart test result which I got from the app?", "dateTime": "15-Feb-18 18:17" }
+          ]
+        }
+      },
       "age"               : "20",
       "DOB"               : "02/06/1997",
       "address"           : "122 Atherstone Court",
@@ -800,7 +843,8 @@
         -0.01423095703125, -0.013834716796875, -0.012556030273437501, -0.010675048828125, -0.00835888671875,
         -0.0057305908203125, -0.0000562744140625
       ],
-      "heartSound"        : [""]
+      "heartSound"        : [""],
+      "healthAlert"       : "H I G H"
     }
   },
 
@@ -809,7 +853,38 @@
       "name"              : "Ernest Kamavuako",
       "gender"            : "Male",
       "type"              : "Doctor",
-      "Patients"           : ["Naseebullah"],
+      "Patients"           : {
+        "w14FKo72BieZwbxwUouTpN7UQm02" : {
+          "doctorsComments" : [
+            "Can you please send me your ECG", "This is urgent, please get in touch to discuss your ECG result"
+          ]
+        },
+        "sLSfCQziLTTmoI3e74xTpWhnZoj2" : {
+          "doctorsComments" : [
+            "Can you please send me your ECG", "This is urgent, please get in touch to discuss your ECG result"
+          ]
+        },
+        "q7EbYl2zEfYh0GhS8AB6VtrhG6g1" : {
+          "doctorsComments" : [
+            "Can you please send me your ECG", "This is urgent, please get in touch to discuss your ECG result"
+          ]
+        },
+        "E1kxLTE8UTXIG4topUhmVcfRdut2" : {
+          "doctorsComments" : [
+            "Can you please send me your ECG", "This is urgent, please get in touch to discuss your ECG result"
+          ]
+        },
+        "I5vEyeZwbyS6p1PKAUeDEnB7Bbr2" : {
+          "doctorsComments" : [
+            "Can you please send me your ECG", "This is urgent, please get in touch to discuss your ECG result"
+          ]
+        },
+        "SXMrXfBvexQUXfnVg5WWVwsKjpD2" : {
+          "doctorsComments" : [
+            "Can you please send me your ECG", "This is urgent, please get in touch to discuss your ECG result"
+          ]
+        }
+      },
       "age"               : "30",
       "dob"               : "20/12/1970",
       "address"           : "122 Harrow Street",

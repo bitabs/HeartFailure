@@ -5,6 +5,7 @@ import Login from "../Containers/Login";
 import Loading from "../Containers/Loading";
 import CustomSideMenu from "../Components/customSideMenu";
 import RightSideMenu from "../Components/RightSideMenu";
+import MessagingComponent from "../Components/MessagingComponent";
 
 
 export const SignedOut = StackNavigator({
@@ -16,36 +17,49 @@ export const SignedOut = StackNavigator({
   }
 });
 
+
+const DrawerExample = DrawerNavigator({
+  Home: {
+    screen: LaunchScreen
+  },
+},{
+  drawerOpenRoute: 'FooDrawerOpen',
+  drawerCloseRoute: 'FooDrawerClose',
+  drawerPosition: "right",
+  contentComponent: ({ navigation }) => (
+    <MessagingComponent navigation={navigation} />
+  ),
+});
+
+
 export const SignedIn = DrawerNavigator({
-  Home: {screen: LaunchScreen}
+  Home: {screen: DrawerExample}
 },{
   contentComponent: CustomSideMenu
 });
 
 
-const PrimaryNav = StackNavigator(
-  {
-    SignedIn: {
-      screen: SignedIn,
-      navigationOptions: {
-        gesturesEnabled: false
-      }
-    },
-    SignedOut: {
-      screen: SignedOut,
-      navigationOptions: {
-        gesturesEnabled: false
-      }
-    },
-    Loading: {
-      screen: Loading
+const PrimaryNav = StackNavigator({
+  SignedIn: {
+    screen: SignedIn,
+    navigationOptions: {
+      gesturesEnabled: false
     }
-  }, {
-    headerMode: "none",
-    mode: "modal",
-    initialRouteName: "Loading"
+  },
+  SignedOut: {
+    screen: SignedOut,
+    navigationOptions: {
+      gesturesEnabled: false
+    }
+  },
+  Loading: {
+    screen: Loading
   }
-);
+}, {
+  headerMode: "none",
+  mode: "modal",
+  initialRouteName: "Loading",
+});
 
 export default PrimaryNav;
 

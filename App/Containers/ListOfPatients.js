@@ -6,17 +6,7 @@ import PropTypes from 'prop-types';
 export default class ListOfPatients extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      Patients: null
-    }
-  }
-
-  componentWillReceiveProps() {
-    if (this.props.Patients) {
-      this.setState({
-        Patients: this.props.Patients
-      })
-    }
+    this.state = {}
   }
 
   render() {
@@ -26,7 +16,6 @@ export default class ListOfPatients extends Component {
     let Patients = this.props.Patients ? (
       Object.keys(this.props.Patients).map((uid, i) => {
         let patient = this.props.Patients[uid];
-        //console.log(patient);
         return (
           <PatientBox
             uid         = {uid}

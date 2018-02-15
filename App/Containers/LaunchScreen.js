@@ -1,5 +1,5 @@
-import React, { Component, PureComponent } from 'react'
-import {View, TouchableHighlight, StyleSheet, Text, Animated} from 'react-native'
+import React, { Component } from 'react'
+import {View, TouchableHighlight, StyleSheet, Text, Animated, AsyncStorage} from 'react-native'
 import Ionicons from 'react-native-vector-icons/Feather';
 import { TabViewAnimated, TabBar } from 'react-native-tab-view';
 import type { NavigationState } from 'react-native-tab-view/types';
@@ -11,6 +11,7 @@ import Svg, { Line } from 'react-native-svg';
 * */
 import firebase from 'react-native-firebase';
 import CustomModal from "../Components/CustomModal";
+import MessagingComponent from "../Components/MessagingComponent";
 
 // firebase config
 const firebaseConfig = {
@@ -42,15 +43,15 @@ export default class LaunchScreen extends Component<*, State> {
       }, {
         key: '2', icon: 'airplay'
       }],
-      selectedItem: 'About',
-      isPressed: false,
-      currentUser: null,
-      modalVisible: false,
-      loading: false,
-      userType: "",
-      Patients: null,
-      Users: null,
-      Doctors: null
+      selectedItem  : 'About',
+      isPressed     : false,
+      currentUser   : null,
+      modalVisible  : false,
+      loading       : false,
+      userType      : "",
+      UID           : null,
+      Patients      : null,
+      Doctors       : null,
     };
     this.usersRef             = firebase.app().database().ref();
     this.listenForPersons     = this.listenForPersons.bind(this);
@@ -62,8 +63,15 @@ export default class LaunchScreen extends Component<*, State> {
 
   listenForPersons = (personsRef) => {
     personsRef.on('value', (snap) => {
-      this.setState({ Users : snap.val().Users, Patients : snap.val().Patients, Doctors : snap.val().Doctors }, () => {
-        this.currentUser().catch(e => console.log(e));
+      this.setState({
+        Patients  : snap.val().Patients,
+        Doctors   : snap.val().Doctors
+      }, () => {
+        this.currentUser().then(() => {
+          this.props.navigation.setParams({
+            data: [{Patients: this.state.Patients, DoctorUID: this.state.UID}]
+          });
+        }).catch(e => console.log(e));
       });
     });
   };
@@ -78,27 +86,39 @@ export default class LaunchScreen extends Component<*, State> {
 
   openModel = () => { this.child.toggleModal();};
 
+  currentUser = async () => {
+    var user = firebase.app().auth().currentUser;
+    if (user) {
+      this.setState({
+        userType    : this.state.Patients[user._user.uid] ? "Patient" : this.state.Doctors[user._user.uid] ? "Doctor" : "",
+        currentUser : this.state.Patients[user._user.uid] || this.state.Doctors[user._user.uid],
+        UID         : user._user.uid
+      })
+    }
+  };
+
   _renderHeader = props => {
 
     return (
       <View style={{elevation: 0.5, backgroundColor:'white'}}>
         <View style={styles.headerContainer}>
-          <TouchableHighlight
-            onPress={() => {
-              this.props.navigation.navigate('DrawerToggle')
-            }}
-            activeOpacity={1.0} underlayColor="rgba(253,138,94,0)">
+          <TouchableHighlight onPress={() => this.props.navigation.navigate('DrawerOpen')} activeOpacity={1.0} underlayColor="rgba(253,138,94,0)">
+
             <Svg height="24" width="24">
               <Line fill="none" stroke="#bccad0" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" x1="3" y1="12" x2="21" y2="12"/>
               <Line fill="none" stroke="#bccad0" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" x1="10.208" y1="6" x2="21" y2="6"/>
               <Line fill="none" stroke="#bccad0" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" x1="3" y1="18" x2="13.791" y2="18"/>
             </Svg>
+
           </TouchableHighlight>
+
           <View style={{position: 'relative'}}>
-            <TouchableHighlight activeOpacity={1} underlayColor="rgba(253,138,94,0)" onPress={() => this.openModel()}>
+            <TouchableHighlight activeOpacity={1} underlayColor="rgba(253,138,94,0)" onPress={() => {this.props.navigation.navigate('FooDrawerOpen')}}>
               <Ionicons style={[styles.msgIcon, this.state.isPressed ? styles.testing : {}]} name="message-square" size={22} color="#bccad0"/>
             </TouchableHighlight>
+
             <View style={styles.notificationDot} />
+
           </View>
         </View>
         <TabBar
@@ -112,20 +132,6 @@ export default class LaunchScreen extends Component<*, State> {
     /*<CustomModal onRef={ref => this.child = ref}/>*/
   };
 
-  currentUser = async () => {
-    var user = firebase.app().auth().currentUser;
-    if (user) {
-      this.setState({
-        userType: this.state.Patients[user._user.uid] ? (
-          "Patient"
-        ): (
-          this.state.Doctors[user._user.uid] ? "Doctor" : ""
-        ),
-        currentUser: user
-      })
-    }
-  };
-
   _renderScene = ({ route }) => {
     return (
       <SimplePage
@@ -133,7 +139,6 @@ export default class LaunchScreen extends Component<*, State> {
         style       = {{ backgroundColor: 'white' }}
         userType    = {this.state.userType}
         updateIndex = {this.updateIndex.bind(this)}
-        currentUser = {this.state.currentUser}
         Patients    = {this.state.Patients}
         Doctors     = {this.state.Doctors}
       />
@@ -157,7 +162,7 @@ export default class LaunchScreen extends Component<*, State> {
 
   render() {
     return (
-      <TabViewAnimated
+        <TabViewAnimated
         style={[styles.container, this.props.style]}
         navigationState={this.state}
         renderScene={this._renderScene}
