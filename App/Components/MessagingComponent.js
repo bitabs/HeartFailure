@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import { NavigationActions } from "react-navigation";
-import {StyleSheet, ScrollView, View} from "react-native";
+import {StyleSheet, ScrollView, View, Text, TextInput, Keyboard, TouchableWithoutFeedback} from "react-native";
 import MessageComponent from "./MessageComponent";
+import Ionicons from 'react-native-vector-icons/Feather';
 
 
 export default class MessagingComponent extends Component {
@@ -50,7 +51,18 @@ export default class MessagingComponent extends Component {
   render () {
     return (
       <View style={styles.sideMenuContainer}>
-        <ScrollView>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+          <View style={{position: 'relative', marginBottom: 20}}>
+            <Ionicons name="search" size={18} color="rgba(188,202,208, 0.5)" style={{position: 'absolute', left: 15, top: 16}} />
+            <TextInput
+              style={styles.searchInput}
+              placeholder="Search..."
+              underlineColorAndroid="transparent"
+              placeholderTextColor={"#bccad0"}
+            />
+          </View>
+        </TouchableWithoutFeedback>
+        <ScrollView showsVerticalScrollIndicator={false}>
           {this.messageComponent()}
         </ScrollView>
       </View>
@@ -61,7 +73,19 @@ export default class MessagingComponent extends Component {
 const styles = StyleSheet.create({
   sideMenuContainer: {
     flex: 1,
-    paddingTop: 40,
+    //paddingTop: 40,
     padding: 20
+  },
+  searchInput: {
+    fontSize: 13,
+    color: "#aab8be",
+    height: 30,
+    paddingTop:0,
+    paddingBottom: 0,
+    paddingLeft: 40,
+    backgroundColor: 'rgba(188,202,208, 0.1)',
+    marginTop: 10,
+    marginBottom: 10,
+    borderRadius: 5
   },
 });
