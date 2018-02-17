@@ -56,7 +56,7 @@ export default class LaunchScreen extends Component<*, State> {
       firebase.app().database().ref(`/Users/${user.uid}`).on('value', (snap) => {
         this.setState({
           userType: snap.val().userType
-        }, () => console.log(this.state.userType))
+        })
       });
     })
   };

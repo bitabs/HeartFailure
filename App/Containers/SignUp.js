@@ -15,8 +15,19 @@ const onSignUp = (creds) => {
   });
 };
 
-const renderInput = ({placeholder, input: { onChange, ...restInput }}) => {
-  return <TextInput placeholder={placeholder} placeholderTextColor={"#bccad0"} style={styles.input} onChangeText={onChange} {...restInput} underlineColorAndroid="transparent" />
+const renderInput = ({secureTextEntry, password, placeholder, input: { onChange, ...restInput }}) => {
+  return (
+    <TextInput
+      placeholder           = {placeholder}
+      secureTextEntry       = {secureTextEntry}
+      password              = {password}
+      placeholderTextColor  = {"#bccad0"}
+      style                 = {styles.input}
+      onChangeText          = {onChange}
+      underlineColorAndroid = "transparent"
+      {...restInput}
+    />
+  )
 };
 
 const SignUp = props => {
@@ -41,10 +52,10 @@ const SignUp = props => {
               <Field style={[styles.input, {marginBottom: 40}]} name="email" placeholder="Email" component={renderInput} />
             </View>
             <View style={{position: 'relative'}}>
-              <Field style={[styles.input, {marginBottom: 40}]} name="password" placeholder="Password" component={renderInput} />
+              <Field style={[styles.input, {marginBottom: 40}]} secureTextEntry={true} password={true} name="password" placeholder="Password" component={renderInput} />
             </View>
             <View style={{position: 'relative'}}>
-              <Field style={[styles.input, {marginBottom: 40}]} name="confirmPassword" placeholder="Confirm password" component={renderInput} />
+              <Field style={[styles.input, {marginBottom: 40}]} secureTextEntry={true} password={true} name="confirmPassword" placeholder="Confirm password" component={renderInput} />
             </View>
           </View>
 

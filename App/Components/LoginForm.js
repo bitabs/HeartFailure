@@ -21,8 +21,8 @@ const onLogin = creds => {
   });
 };
 
-const renderInput = ({placeholder, input: { onChange, ...restInput }}) => {
-  return <TextInput placeholder={placeholder} placeholderTextColor={"#bccad0"} style={styles.input} onChangeText={onChange} {...restInput} underlineColorAndroid="transparent" />
+const renderInput = ({secureTextEntry, password, placeholder, input: { onChange, ...restInput }}) => {
+  return <TextInput secureTextEntry={secureTextEntry} password={password}  placeholder={placeholder} placeholderTextColor={"#bccad0"} style={styles.input} onChangeText={onChange} {...restInput} underlineColorAndroid="transparent" />
 };
 
 const LoginForm = props => {
@@ -43,7 +43,7 @@ const LoginForm = props => {
             <Field style={styles.input} name="email" placeholder="Email" component={renderInput} />
             <View style={{position: 'relative'}}>
               <Ionicons name="eye" size={18} color="rgba(188,202,208, 0.5)" style={{position: 'absolute', right: 15, top: 21}} />
-              <Field style={[styles.input, {marginBottom: 40}]} name="password" placeholder="Password" component={renderInput} />
+              <Field style={[styles.input, {marginBottom: 40}]} secureTextEntry={true} password={true} name="password" placeholder="Password" component={renderInput} />
               <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 10}}>
                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
                   <CheckBox

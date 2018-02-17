@@ -12,44 +12,46 @@ export default class MessagingComponent extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      $        : null,
-      userType : null
+      messageObject : null,
+      userType      : null
     };
 
-    this.usersRef     = firebase.app().database().ref('/Users');
-    this.identifyUser = this.identifyUser.bind(this);
-
+    this.fetchMessagesObject = this.fetchMessagesObject.bind(this);
   }
 
-  componentWillMount() {
-    this.identifyUser(this.usersRef);
+  componentDidMount() {
+    this.fetchMessagesObject();
   };
 
-  identifyUser = (usersRef) => {
+  navigateToScreen = (route) => () => {
+    const navigateAction = NavigationActions.navigate({
+      routeName: route
+    });
+    this.props.navigation.dispatch(navigateAction);
+  };
+
+  fetchMessagesObject = () => {
     User().then(user => {
-      usersRef.on('value', snap => {
-        if (snap.val() && snap.val()[user.uid]) {
-          const userType = snap.val()[user.uid].userType;
-          this.setState({userType: userType});
+      firebase.app().database().ref(`/Users/${user.uid}`).on('value', (snap) => {
+        if (snap.val()) this.setState({ userType: snap.val().userType });
+        this.messages = snap.val().userType === "Doctor" ? (
+          firebase.app().database().ref('/PatientsCommentsToDoctors')
+        ) : (
+          firebase.app().database().ref('/DoctorsCommentsToPatients')
+        );
 
-          this.messages = userType === "Doctor" ? (
-            firebase.app().database().ref('/PatientsCommentsToDoctors')
-          ) : (
-            firebase.app().database().ref('/DoctorsCommentsToPatients')
-          );
-
-          this.$messages  = this.$messages.bind(this);
-          this.$messages(this.messages, user);
-        }
+        this.initMessages  = this.initMessages.bind(this);
+        this.initMessages(this.messages, user);
       });
     });
   };
 
-  $messages = (messages, user) => {
+  initMessages = (messages, user) => {
     messages.on('value', snap => {
-      const msgObj = snap.val() || {};
+      const msgObj = snap.val();
+
       this.setState({
-        $: Object.keys(msgObj).map(($uid) => {
+        messageObject: Object.keys(msgObj).map(($uid, i) => {
           const person = msgObj[$uid];
 
           if ($uid.match( /<=>(.*)/)[1] === user.uid) {
@@ -58,24 +60,16 @@ export default class MessagingComponent extends Component {
                 name         = {person.name}
                 uid          = {this.state.userType === "Doctor" ? $uid.match( /(.*)<=>/)[1] : $uid.match( /<=>(.*)/)[1] }
                 healthAlert  = {person.healthAlert || ""}
-                comment      = {person.messages[person.messages.length - 1].msgText || {}}
-                timeStamp    = {person.messages[person.messages.length - 1].timeStamp || {}}
+                comment      = {person.messages[person.messages.length - 1].msgText || null}
+                timeStamp    = {person.messages[person.messages.length - 1].timeStamp || null}
                 userType     = {this.state.userType}
-                key          = {$uid}
+                key          = {i}
               />
             );
           }
-
         })
       })
     });
-  };
-
-  navigateToScreen = (route) => () => {
-    const navigateAction = NavigationActions.navigate({
-      routeName: route
-    });
-    this.props.navigation.dispatch(navigateAction);
   };
 
   render () {
@@ -87,7 +81,7 @@ export default class MessagingComponent extends Component {
             <TextInput style={styles.searchInput} placeholder="Search..." underlineColorAndroid="transparent" placeholderTextColor={"#bccad0"}/>
           </View>
         </TouchableWithoutFeedback>
-        <ScrollView showsVerticalScrollIndicator={false}>{this.state.$}</ScrollView>
+        <ScrollView showsVerticalScrollIndicator={false}>{this.state.messageObject}</ScrollView>
       </View>
     );
   }
