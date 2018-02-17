@@ -14,7 +14,7 @@ export default class Dashboard extends Component {
       <View>
         {
           this.props.index === 0 ? (
-            <ListOfPatients updateIndex={this.props.updateIndex} Patients={this.props.Patients}/>
+            <ListOfPatients updateIndex={this.props.updateIndex}/>
           ) : (
             <Text>In Two"</Text>
           )
@@ -28,11 +28,8 @@ const styles = StyleSheet.create({
   page: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'red'
+    justifyContent: 'center'
   }
 });
 
-Dashboard.propTypes = {
-  Patients    : PropTypes.object
-};
+Dashboard.propTypes = {};

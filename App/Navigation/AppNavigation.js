@@ -6,11 +6,18 @@ import Loading from "../Containers/Loading";
 import CustomSideMenu from "../Components/customSideMenu";
 import RightSideMenu from "../Components/RightSideMenu";
 import MessagingComponent from "../Components/MessagingComponent";
+import SignUp from "../Containers/SignUp";
 
 
 export const SignedOut = StackNavigator({
   SignIn: {
     screen: Login,
+    navigationOptions: {
+      header: null
+    }
+  },
+  SignUp: {
+    screen: SignUp,
     navigationOptions: {
       header: null
     }

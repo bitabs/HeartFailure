@@ -40,6 +40,5 @@ const styles = StyleSheet.create({
 });
 
 Patient.propTypes = {
-  index   : PropTypes.number.isRequired,
-  Doctors : PropTypes.object
+  index   : PropTypes.number.isRequired
 };
