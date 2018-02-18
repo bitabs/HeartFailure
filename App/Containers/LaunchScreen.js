@@ -47,7 +47,7 @@ export default class LaunchScreen extends Component<*, State> {
       currentUser   : null,
       modalVisible  : false,
       loading       : false,
-      userType      : ""
+      type          : ""
     };
   }
 
@@ -55,17 +55,15 @@ export default class LaunchScreen extends Component<*, State> {
     User().then(user => {
       firebase.app().database().ref(`/Users/${user.uid}`).on('value', (snap) => {
         this.setState({
-          userType: snap.val().userType
+          type: snap.val().type
         })
       });
-    })
+    });
   };
 
   _handleIndexChange = index => { this.setState({ index }) };
 
-
   updateIndex = () => { this.setState({ index: this.state.index === 0 ? 1 : 0 }) };
-
 
   _renderIcon = ({ route }) => { return <Ionicons name={route.icon} size={24} color="#bccad0" />; };
 
@@ -111,7 +109,7 @@ export default class LaunchScreen extends Component<*, State> {
       <SimplePage
         state       = {this.state}
         style       = {{ backgroundColor: 'white' }}
-        userType    = {this.state.userType}
+        type    = {this.state.type}
         updateIndex = {this.updateIndex.bind(this)}
       />
     );

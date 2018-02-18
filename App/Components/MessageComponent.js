@@ -77,7 +77,7 @@ export default class MessageComponent extends Component {
             {this.randomIcon()}
 
             {
-              this.props.userType === "Doctor" ? (
+              this.props.type === "Doctor" ? (
                 <View style={[styles.tag, {backgroundColor: this.dynamicTagColor(this.props.healthAlert)} ]}>
                   <Text style={{fontSize: 8, color: 'white', fontWeight: 'bold'}}>
                     {
@@ -144,6 +144,6 @@ MessageComponent.propTypes = {
   comment     : PropTypes.string.isRequired,
   timeStamp   : PropTypes.string.isRequired,
   healthAlert : PropTypes.string,
-  userType    : PropTypes.string.isRequired
+  type    : PropTypes.string.isRequired
 
 };

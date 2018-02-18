@@ -17,7 +17,7 @@ export default class ListOfPatients extends Component {
     this.initialiseDashboard = this.initialiseDashboard.bind(this);
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.initialiseDashboard(this.$ref)
   }
 

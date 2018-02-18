@@ -2,25 +2,25 @@
 
   "Users": {
     "w14FKo72BieZwbxwUouTpN7UQm02": {
-      "userType" : "Patient"
+      "type" : "Patient"
     },
     "sLSfCQziLTTmoI3e74xTpWhnZoj2": {
-      "userType" : "Patient"
+      "type" : "Patient"
     },
     "q7EbYl2zEfYh0GhS8AB6VtrhG6g1": {
-      "userType" : "Patient"
+      "type" : "Patient"
     },
     "E1kxLTE8UTXIG4topUhmVcfRdut2": {
-      "userType" : "Patient"
+      "type" : "Patient"
     },
     "I5vEyeZwbyS6p1PKAUeDEnB7Bbr2": {
-      "userType" : "Patient"
+      "type" : "Patient"
     },
     "SXMrXfBvexQUXfnVg5WWVwsKjpD2": {
-      "userType" : "Patient"
+      "type" : "Patient"
     },
     "VoxHFgUEIwRFWg7JTKNXSSoFoMV2": {
-      "userType" : "Doctor"
+      "type" : "Doctor"
     }
   },
 

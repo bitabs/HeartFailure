@@ -3,13 +3,20 @@ import firebase from 'react-native-firebase';
 import React from 'react'
 import { StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View, Keyboard } from 'react-native'
 import {Field, reduxForm} from 'redux-form';
+import Database from '../Components/Database';
 
 
 const onSignUp = (creds) => {
-  const {email, password} = creds;
+  const {name, email, password, type} = creds;
+  const userToBeRegistered = {
+    name              : name,
+    type              : type,
+    writePermission   : type === "Doctor"
+  };
+
   //console.log("props123 ", values, nav);
   firebase.auth().createUserWithEmailAndPassword(email, password).then((user) => {
-
+    Database.setUser(userToBeRegistered);
   }).catch(err => {
     const { code, message } = err;
   });
@@ -50,6 +57,9 @@ const SignUp = props => {
             </View>
             <View style={{position: 'relative'}}>
               <Field style={[styles.input, {marginBottom: 40}]} name="email" placeholder="Email" component={renderInput} />
+            </View>
+            <View style={{position: 'relative'}}>
+              <Field style={[styles.input, {marginBottom: 40}]} name="type" placeholder="Patient or Doctor?" component={renderInput} />
             </View>
             <View style={{position: 'relative'}}>
               <Field style={[styles.input, {marginBottom: 40}]} secureTextEntry={true} password={true} name="password" placeholder="Password" component={renderInput} />

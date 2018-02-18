@@ -13,7 +13,7 @@ export default class MessagingComponent extends Component {
     super(props);
     this.state = {
       messageObject : null,
-      userType      : null
+      type      : null
     };
 
     this.fetchMessagesObject = this.fetchMessagesObject.bind(this);
@@ -33,8 +33,8 @@ export default class MessagingComponent extends Component {
   fetchMessagesObject = () => {
     User().then(user => {
       firebase.app().database().ref(`/Users/${user.uid}`).on('value', (snap) => {
-        if (snap.val()) this.setState({ userType: snap.val().userType });
-        this.messages = snap.val().userType === "Doctor" ? (
+        if (snap.val()) this.setState({ type: snap.val().type });
+        this.messages = snap.val().type === "Doctor" ? (
           firebase.app().database().ref('/PatientsCommentsToDoctors')
         ) : (
           firebase.app().database().ref('/DoctorsCommentsToPatients')
@@ -58,11 +58,11 @@ export default class MessagingComponent extends Component {
             return (
               <MessageComponent
                 name         = {person.name}
-                uid          = {this.state.userType === "Doctor" ? $uid.match( /(.*)<=>/)[1] : $uid.match( /<=>(.*)/)[1] }
+                uid          = {this.state.type === "Doctor" ? $uid.match( /(.*)<=>/)[1] : $uid.match( /<=>(.*)/)[1] }
                 healthAlert  = {person.healthAlert || ""}
                 comment      = {person.messages[person.messages.length - 1].msgText || null}
                 timeStamp    = {person.messages[person.messages.length - 1].timeStamp || null}
-                userType     = {this.state.userType}
+                type     = {this.state.type}
                 key          = {i}
               />
             );
