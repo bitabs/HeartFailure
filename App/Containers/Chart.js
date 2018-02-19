@@ -40,7 +40,7 @@ export default class Chart extends Component {
   render() {
     return(
       <ChartView
-        style={{height: this.props.height, width: Dimensions.get('window').width}}
+        style={{height: this.props.height, width: this.props.width || Dimensions.get('window').width}}
         config={this.state.config}
         options={this.state.options}
         scalesPageToFit={false}
