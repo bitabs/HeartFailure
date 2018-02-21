@@ -1,39 +1,34 @@
 import React, {Component} from 'react';
-import {Text, View, TouchableOpacity, StyleSheet, TouchableHighlight, Image, Dimensions, ScrollView} from "react-native";
-import Ionicons from "react-native-vector-icons/Feather";
+import {View, Text, StyleSheet, TouchableHighlight, ScrollView, Image} from "react-native";
 import Svg, { Line, G, Path } from 'react-native-svg';
 import _ from 'lodash';
 import firebase from 'react-native-firebase';
 import Database from '../Components/Database'
 import User from '../Components/User';
 
-export default class Cardiologists extends Component {
+export default class ViewMyDoctors extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      User    : null,
-      doctors : null
+      doctors: null
     };
 
     this.usersRef = firebase.app().database().ref('/Users');
-    this.fetchDoctors = this.fetchDoctors.bind(this);
+    this.fetchFollowedDoctors = this.fetchFollowedDoctors.bind(this);
   }
 
   componentDidMount() {
-    this.fetchDoctors(this.usersRef);
+    this.fetchFollowedDoctors(this.usersRef);
   }
 
-  fetchDoctors = (userRef) => {
+  fetchFollowedDoctors = (userRef) => {
     User().then(user => {
       userRef.on('value', (snap) => {
         if (snap.val()) this.setState({
-          type        : snap.val()[user.uid].type,
-          name        : snap.val()[user.uid].name,
-          healthAlert : _.has(snap.val()[user.uid], "healthAlrt") ? snap.val()[user.uid].healthAlert : "",
           doctors : JSON.parse(JSON.stringify(snap.val()), (k, v) => !v.type || (
-            v.type === 'Doctor' && (_.has(snap.val()[user.uid], "Doctors") ? !_.has(snap.val()[user.uid].Doctors, k) : true )
+            v.type === 'Doctor' && (_.has(snap.val()[user.uid], "Doctors") ? _.has(snap.val()[user.uid].Doctors, k) : false )
           ) ? v : void 0)
-        }, () => {})
+        }, () => console.log(this.state.doctors));
       })
     });
   };
@@ -54,13 +49,6 @@ export default class Cardiologists extends Component {
               <Text style={{textAlign: 'center', fontSize: 15, color: '#bccad0'}}>{this.state.doctors[uid].name}</Text>
               <Text style={{textAlign: 'center', fontSize: 12, color: 'rgba(188, 202, 208, 0.7)'}}>{this.state.doctors[uid].profession}</Text>
             </View>
-
-            <TouchableOpacity style={styles.folllowBtn} onPress={() => Database.followDoctor(
-              this.state.doctors[uid].name, this.state.doctors[uid].profession, uid,
-              this.state.type, this.state.healthAlert
-            )}>
-              <Text style={{color: 'white', fontSize: 13, fontWeight: 'bold', textAlign: 'center'}}>Follow</Text>
-            </TouchableOpacity>
 
           </View>
         )

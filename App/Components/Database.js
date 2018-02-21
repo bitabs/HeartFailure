@@ -61,4 +61,43 @@ export default class Database {
       }).catch(e => console.log(e));
     });
   }
+
+  static async initialiseMessagesDB(msgTo, health, uid) {
+    User().then(user => {
+      return firebase.app().database().ref(`/PatientsCommentsToDoctors/${user.uid}<=>${uid}`).set({
+        name: msgTo,
+        healthAlert: health,
+        messages: {}
+      }).then(() => {
+        console.log("Successfully initialised messageDB");
+      }).catch(e => console.log(e));
+    });
+  }
+
+  static setMessage(uid, type) {
+    const message = {
+      timeStamp   : "",
+      msgText     : ""
+    };
+
+    User().then(user => {
+      if (type === "Patient") {
+        firebase.app().database().ref(`/PatientsCommentsToDoctors/${user.uid}<=>${uid}/messages`).push(message).then(() => {
+          console.log("Successfully added to message");
+        }).catch(e => console.log(e));
+      }
+    })
+  }
+
+  static followDoctor(msgTo, profession, uid, type, healthAlert) {
+    User().then(user => {
+      firebase.app().database().ref(`/Users/${user.uid}/Doctors/${uid}`).set({name: msgTo, profession: profession}).then(() => {
+        console.log("successfully added to DoctorsList!");
+        this.initialiseMessagesDB(msgTo, healthAlert, uid).then(() => {
+          //this.setMessage(uid, type);
+        })
+        //this.setMessage(uid, type, healthAlert, userName);
+      }).catch(e => console.log(e));
+    });
+  }
 }

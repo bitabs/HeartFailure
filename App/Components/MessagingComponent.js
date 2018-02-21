@@ -5,7 +5,7 @@ import MessageComponent from "./MessageComponent";
 import Ionicons from 'react-native-vector-icons/Feather';
 import firebase from 'react-native-firebase';
 import User from './User';
-
+import _ from 'lodash';
 
 export default class MessagingComponent extends Component {
 
@@ -33,11 +33,12 @@ export default class MessagingComponent extends Component {
   fetchMessagesObject = () => {
     User().then(user => {
       firebase.app().database().ref(`/Users/${user.uid}`).on('value', (snap) => {
-        if (snap.val()) this.setState({ type: snap.val().type });
+        if (snap.val()) this.setState({ type: snap.val().type }, () => {});
+
         this.messages = snap.val().type === "Doctor" ? (
-          firebase.app().database().ref('/PatientsCommentsToDoctors')
-        ) : (
           firebase.app().database().ref('/DoctorsCommentsToPatients')
+        ) : (
+          firebase.app().database().ref('/PatientsCommentsToDoctors')
         );
 
         this.initMessages  = this.initMessages.bind(this);
@@ -50,25 +51,60 @@ export default class MessagingComponent extends Component {
     messages.on('value', snap => {
       const msgObj = snap.val();
 
-      this.setState({
-        messageObject: Object.keys(msgObj).map(($uid, i) => {
-          const person = msgObj[$uid];
-
-          if ($uid.match( /<=>(.*)/)[1] === user.uid) {
-            return (
-              <MessageComponent
-                name         = {person.name}
-                uid          = {this.state.type === "Doctor" ? $uid.match( /(.*)<=>/)[1] : $uid.match( /<=>(.*)/)[1] }
-                healthAlert  = {person.healthAlert || ""}
-                comment      = {person.messages[person.messages.length - 1].msgText || null}
-                timeStamp    = {person.messages[person.messages.length - 1].timeStamp || null}
-                type     = {this.state.type}
-                key          = {i}
-              />
-            );
-          }
+      if (msgObj) {
+        this.setState({
+          messageObject: Object.keys(msgObj).map(($uid, i) => {
+            const person = msgObj[$uid];
+            if (person.messages) {
+              const latest = Object.values(person.messages)[Object.keys(person.messages).length - 1];
+              return (
+                <MessageComponent
+                  name          = {person.name}
+                  uid           = {this.state.type === "Doctor" ? $uid.match( /(.*)<=>/)[1] : $uid.match( /<=>(.*)/)[1] }
+                  healthAlert   = {person.healthAlert || ""}
+                  comment       = {latest ? latest.msgText : ""}
+                  timeStamp     = {latest ? latest.timeStamp : ""}
+                  type          = {this.state.type}
+                  key           = {i}
+                />
+              );
+            }
+          })
         })
-      })
+      }
+
+      // this.setState({
+      //   messageObject: Object.keys(msgObj).map(($uid, i) => {
+      //     const person = msgObj[$uid];
+      //     const latest = Object.values(person.messages)[Object.keys(person.messages).length - 1];
+      //
+      //     return (
+      //       <MessageComponent
+      //         name          = {person.name}
+      //         uid           = {this.state.type === "Doctor" ? $uid.match( /(.*)<=>/)[1] : $uid.match( /<=>(.*)/)[1] }
+      //         healthAlert   = {person.healthAlert || ""}
+      //         comment       = {latest.msgText || null}
+      //         timeStamp     = {latest.timeStamp}
+      //         type          = {this.state.type}
+      //         key           = {i}
+      //       />
+      //     );
+      //
+      //     // if ($uid.match( /<=>(.*)/)[1] === user.uid) {
+      //     //   return (
+      //     //     <MessageComponent
+      //     //       name         = {person.name}
+      //     //       uid          = {this.state.type === "Doctor" ? $uid.match( /(.*)<=>/)[1] : $uid.match( /<=>(.*)/)[1] }
+      //     //       healthAlert  = {person.healthAlert || ""}
+      //     //       comment      = {person.messages[person.messages.length - 1].msgText || null}
+      //     //       timeStamp    = {person.messages[person.messages.length - 1].timeStamp || null}
+      //     //       type     = {this.state.type}
+      //     //       key          = {i}
+      //     //     />
+      //     //   );
+      //     // }
+      //   })
+      // })
     });
   };
 

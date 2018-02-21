@@ -55,7 +55,6 @@
       }
     ]
   },
-
   "Dashboard": {
     "VoxHFgUEIwRFWg7JTKNXSSoFoMV2": {
       "E1kxLTE8UTXIG4topUhmVcfRdut2": {
@@ -4286,7 +4285,6 @@
       }
     }
   },
-
   "DoctorsCommentsToPatients": {
     "VoxHFgUEIwRFWg7JTKNXSSoFoMV2<=>E1kxLTE8UTXIG4topUhmVcfRdut2": {
       "messages": [
@@ -4380,7 +4378,6 @@
       "name": "Karla Stanlee"
     }
   },
-
   "ECG": {
     "E1kxLTE8UTXIG4topUhmVcfRdut2": [
       0,
@@ -7395,7 +7392,6 @@
       -0.0000562744140625
     ]
   },
-
   "Health": {
     "E1kxLTE8UTXIG4topUhmVcfRdut2": {
       "age": "22",
@@ -7488,136 +7484,23 @@
       "weight": "53"
     }
   },
-
   "PatientsCommentsToDoctors": {
-    "E1kxLTE8UTXIG4topUhmVcfRdut2<=>VoxHFgUEIwRFWg7JTKNXSSoFoMV2": {
-      "healthAlert": "Stable",
-      "messages": [
-        {
-          "msgText": "Hi Dr Ernest, can I please book an appointment?",
-          "timeStamp": "2018-02-15T06:24:44.124Z"
-        },
-        {
-          "msgText": "Hi there, please find the attach my reading. Can you please get back to me if it's something to worry about",
-          "timeStamp": "2018-02-15T06:24:44.124Z"
-        },
-        {
-          "msgText": "How is it that my ECG reading is ok yet I'm unable to exercise?",
-          "timeStamp": "2018-02-14T10:24:44.124Z"
-        }
-      ],
-      "name": "Stacy Jones"
-    },
-    "I5vEyeZwbyS6p1PKAUeDEnB7Bbr2<=>VoxHFgUEIwRFWg7JTKNXSSoFoMV2": {
-      "healthAlert": "Average",
-      "messages": [
-        {
-          "msgText": "Hi Dr Ernest, I'd like to book an appointment sometime next week. Please get back to me anytime you're free",
-          "timeStamp": "2018-01-16T06:24:44.124Z"
-        },
-        {
-          "msgText": "My chest is making rumbling sound and I'm worried if its something serious. Can I come anytime today?",
-          "timeStamp": "2018-02-15T06:24:44.124Z"
-        },
-        {
-          "msgText": "Can we please reschedule the time; thanks!",
-          "timeStamp": "2018-02-16T20:24:44.124Z"
-        }
-      ],
-      "name": "James Michael"
-    },
-    "SXMrXfBvexQUXfnVg5WWVwsKjpD2<=>VoxHFgUEIwRFWg7JTKNXSSoFoMV2": {
-      "healthAlert": "High",
-      "messages": [
-        {
-          "msgText": "Can you please get back to me regarding my ECG test? I'm worried about my health.",
-          "timeStamp": "2018-02-15T06:24:44.124Z"
-        },
-        {
-          "msgText": "There's a sever pain in my chest and I find breathing more difficult from last week. I don't know what is cause to be honest.",
-          "timeStamp": "2018-02-15T06:24:44.124Z"
-        },
-        {
-          "msgText": "Is it possible if I can come today to see you about my ECG and heart test result which I got from the app?",
-          "timeStamp": "2018-02-13T04:24:44.124Z"
-        }
-      ],
-      "name": "Levi Yeager"
-    },
-    "q7EbYl2zEfYh0GhS8AB6VtrhG6g1<=>VoxHFgUEIwRFWg7JTKNXSSoFoMV2": {
-      "healthAlert": "High",
-      "messages": [
-        {
-          "msgText": "I'm trying to send my readings to you but its not working.",
-          "timeStamp": "2018-02-16T16:24:44.124Z"
-        },
-        {
-          "msgText": "Is there any possibility for a follow up meeting today?",
-          "timeStamp": "2018-02-16T09:24:44.124Z"
-        },
-        {
-          "msgText": "I'de like to meet you sometime today regarding my health. Please let me know when you are free",
-          "timeStamp": "2018-02-14T06:24:44.124Z"
-        }
-      ],
-      "name": "Kate Flee"
-    },
-    "sLSfCQziLTTmoI3e74xTpWhnZoj2<=>hFoWuyxv6Vbt8sEKA87T0720tXV2": {
-      "healthAlert": "Stable",
-      "messages": [
-        {
-          "msgText": "Can you please advice me when to do my ECG, and how long it will take for the result to come back? Thanks.",
-          "timeStamp": "2018-02-16T09:24:44.124Z"
-        },
-        {
-          "msgText": "So the situation is actually quite complicated. Can I please come over to go through this issue please? Thanks.",
-          "timeStamp": "2018-02-16T09:24:44.124Z"
-        },
-        {
-          "msgText": "That's great to hear, I hope you enjoy the weekend. Hope to seeing you soon.",
-          "timeStamp": "2018-02-16T01:24:44.124Z"
-        }
-      ],
-      "name": "George Dane"
-    },
+    "E1kxLTE8UTXIG4topUhmVcfRdut2<=>VoxHFgUEIwRFWg7JTKNXSSoFoMV2": {},
+    "I5vEyeZwbyS6p1PKAUeDEnB7Bbr2<=>VoxHFgUEIwRFWg7JTKNXSSoFoMV2": {},
+    "SXMrXfBvexQUXfnVg5WWVwsKjpD2<=>VoxHFgUEIwRFWg7JTKNXSSoFoMV2": {},
+    "q7EbYl2zEfYh0GhS8AB6VtrhG6g1<=>VoxHFgUEIwRFWg7JTKNXSSoFoMV2": {},
+    "sLSfCQziLTTmoI3e74xTpWhnZoj2<=>hFoWuyxv6Vbt8sEKA87T0720tXV2": {},
     "w14FKo72BieZwbxwUouTpN7UQm02<=>VoxHFgUEIwRFWg7JTKNXSSoFoMV2": {
       "healthAlert": "Average",
-      "messages": [
-        {
-          "msgText": "Hi Dr Ernest, can I please book an appointment?",
-          "timeStamp": "2018-02-15T06:24:44.124Z"
-        },
-        {
-          "msgText": "Hi there, can I call you now?",
-          "timeStamp": "2018-02-15T06:24:44.124Z"
-        },
-        {
-          "msgText": "Can we please reschedule the time; thanks!",
-          "timeStamp": "2018-02-16T01:14:44.124Z"
-        }
-      ],
+      "messages": {},
       "name": "Naseebullah Ahmadi"
     },
     "w14FKo72BieZwbxwUouTpN7UQm02<=>hFoWuyxv6Vbt8sEKA87T0720tXV2": {
       "healthAlert": "Average",
-      "messages": [
-        {
-          "msgText": "Hi Dr Ernest, can I please book an appointment?",
-          "timeStamp": "2018-02-15T06:24:44.124Z"
-        },
-        {
-          "msgText": "Hi there, can I call you now?",
-          "timeStamp": "2018-02-15T06:24:44.124Z"
-        },
-        {
-          "msgText": "Can we please reschedule the time; thanks!",
-          "timeStamp": "2018-02-16T01:14:44.124Z"
-        }
-      ],
+      "messages": {},
       "name": "Naseebullah Ahmadi"
     }
   },
-
   "Users": {
     "3gOlvmX4WoP3734IdtoeVCzpEy22": {
       "DOB": "",
@@ -7628,6 +7511,7 @@
       "name": "Haaris",
       "profession": "Doctor",
       "type": "Doctor",
+      "Patients": {},
       "writePermission": true
     },
     "E1kxLTE8UTXIG4topUhmVcfRdut2": {
@@ -7639,6 +7523,12 @@
       "name": "Stacy Jones",
       "profession": "Student",
       "type": "Patient",
+      "Doctors": {
+        "VoxHFgUEIwRFWg7JTKNXSSoFoMV2": {
+          "name": "Ernest Kamavuako",
+          "profession": "Doctor"
+        }
+      },
       "writePermission": false
     },
     "I5vEyeZwbyS6p1PKAUeDEnB7Bbr2": {
@@ -7650,6 +7540,12 @@
       "name": "James Michael",
       "profession": "Dentist",
       "type": "Patient",
+      "Doctors": {
+        "VoxHFgUEIwRFWg7JTKNXSSoFoMV2": {
+          "name": "Ernest Kamavuako",
+          "profession": "Doctor"
+        }
+      },
       "writePermission": false
     },
     "SXMrXfBvexQUXfnVg5WWVwsKjpD2": {
@@ -7661,6 +7557,12 @@
       "name": "Levi Yeager",
       "profession": "Frontend Developer",
       "type": "Patient",
+      "Doctors": {
+        "VoxHFgUEIwRFWg7JTKNXSSoFoMV2": {
+          "name": "Ernest Kamavuako",
+          "profession": "Doctor"
+        }
+      },
       "writePermission": false
     },
     "VoxHFgUEIwRFWg7JTKNXSSoFoMV2": {
@@ -7672,6 +7574,28 @@
       "name": "Ernest Kamavuako",
       "profession": "Doctor",
       "type": "Doctor",
+      "Patients": {
+        "E1kxLTE8UTXIG4topUhmVcfRdut2": {
+          "name": "Stacy Jones",
+          "profession": "Student"
+        },
+        "I5vEyeZwbyS6p1PKAUeDEnB7Bbr2": {
+          "name": "James Michael",
+          "profession": "Dentist"
+        },
+        "SXMrXfBvexQUXfnVg5WWVwsKjpD2": {
+          "name": "Levi Yeager",
+          "profession": "Frontend Developer"
+        },
+        "q7EbYl2zEfYh0GhS8AB6VtrhG6g1": {
+          "name": "Kate Flee",
+          "profession": "Lecturer"
+        },
+        "w14FKo72BieZwbxwUouTpN7UQm02": {
+          "name": "Naseebullah Ahmadi",
+          "profession": "Student"
+        }
+      },
       "writePermission": true
     },
     "hFoWuyxv6Vbt8sEKA87T0720tXV2": {
@@ -7683,6 +7607,16 @@
       "name": "Karla Stanlee",
       "profession": "FullStack Developer",
       "type": "Doctor",
+      "Patients": {
+        "sLSfCQziLTTmoI3e74xTpWhnZoj2": {
+          "name": "George Dane",
+          "profession": "Teacher"
+        },
+        "w14FKo72BieZwbxwUouTpN7UQm02": {
+          "name": "Karla Stanlee",
+          "profession": "Student"
+        }
+      },
       "writePermission": true
     },
     "q7EbYl2zEfYh0GhS8AB6VtrhG6g1": {
@@ -7694,6 +7628,12 @@
       "name": "Kate Flee",
       "profession": "Lecturer",
       "type": "Patient",
+      "Doctors": {
+        "VoxHFgUEIwRFWg7JTKNXSSoFoMV2": {
+          "name": "Ernest Kamavuako",
+          "profession": "Doctor"
+        }
+      },
       "writePermission": false
     },
     "sLSfCQziLTTmoI3e74xTpWhnZoj2": {
@@ -7705,6 +7645,12 @@
       "name": "George Dane",
       "profession": "Teacher",
       "type": "Patient",
+      "Doctors": {
+        "hFoWuyxv6Vbt8sEKA87T0720tXV2": {
+          "name": "Karla Stanlee",
+          "profession": "FullStack Developer"
+        }
+      },
       "writePermission": false
     },
     "w14FKo72BieZwbxwUouTpN7UQm02": {
@@ -7716,6 +7662,16 @@
       "name": "Naseebullah Ahmadi",
       "profession": "Student",
       "type": "Patient",
+      "Doctors": {
+        "VoxHFgUEIwRFWg7JTKNXSSoFoMV2": {
+          "name": "Ernest Kamavuako",
+          "profession": "Doctor"
+        },
+        "hFoWuyxv6Vbt8sEKA87T0720tXV2": {
+          "name": "Karla Stanlee",
+          "profession": "FullStack Developer"
+        }
+      },
       "writePermission": false
     }
   }

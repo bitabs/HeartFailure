@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import {View, TouchableHighlight, StyleSheet, Text, Animated, AsyncStorage} from 'react-native'
 import Ionicons from 'react-native-vector-icons/Feather';
 import { TabViewAnimated, TabBar } from 'react-native-tab-view';
@@ -28,7 +28,7 @@ type Route = {
 
 type State = NavigationState<Route>;
 
-export default class LaunchScreen extends Component<*, State> {
+export default class LaunchScreen extends PureComponent<*, State> {
 
   static title = 'Icon only top bar';
   static appbarElevation = 0;
@@ -47,13 +47,15 @@ export default class LaunchScreen extends Component<*, State> {
       currentUser   : null,
       modalVisible  : false,
       loading       : false,
-      type          : ""
+      type          : "",
+      renderThis    : true,
     };
   }
 
   componentDidMount() {
     User().then(user => {
       firebase.app().database().ref(`/Users/${user.uid}`).on('value', (snap) => {
+
         this.setState({
           type: snap.val().type
         })
@@ -61,9 +63,23 @@ export default class LaunchScreen extends Component<*, State> {
     });
   };
 
+  componentWillReceiveProps(nextProps) {
+    console.log(nextProps);
+  }
+
+  componentDidUpdate() {
+    // console.log("here")
+  }
+
+  // shouldComponentUpdate(nextProps, nextState) {
+  //   console.log(nextProps, nextState);
+  // }
+
   _handleIndexChange = index => { this.setState({ index }) };
 
   updateIndex = () => { this.setState({ index: this.state.index === 0 ? 1 : 0 }) };
+
+  eliminateRender = () => { this.setState({ renderThis: false }) };
 
   _renderIcon = ({ route }) => { return <Ionicons name={route.icon} size={24} color="#bccad0" />; };
 
@@ -107,10 +123,11 @@ export default class LaunchScreen extends Component<*, State> {
   _renderScene = ({ route }) => {
     return (
       <SimplePage
-        state       = {this.state}
-        style       = {{ backgroundColor: 'white' }}
-        type    = {this.state.type}
-        updateIndex = {this.updateIndex.bind(this)}
+        state           = {this.state}
+        style           = {{ backgroundColor: 'white' }}
+        type            = {this.state.type}
+        updateIndex     = {this.updateIndex.bind(this)}
+
       />
     );
   };
@@ -131,6 +148,7 @@ export default class LaunchScreen extends Component<*, State> {
   };
 
   render() {
+
     return (
         <TabViewAnimated
         style={[styles.container, this.props.style]}

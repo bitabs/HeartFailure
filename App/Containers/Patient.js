@@ -15,7 +15,6 @@ export default class Patient extends Component {
   }
 
   render() {
-
     let ret = (this.props.index === 0 ?
         <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}} >
           <HeartBeat/>

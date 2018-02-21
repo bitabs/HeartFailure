@@ -4,12 +4,12 @@ import React from 'react';
 import Login from "../Containers/Login";
 import Loading from "../Containers/Loading";
 import CustomSideMenu from "../Components/customSideMenu";
-import RightSideMenu from "../Components/RightSideMenu";
 import MessagingComponent from "../Components/MessagingComponent";
 import SignUp from "../Containers/SignUp";
 import Profile from "../Containers/Profile";
 import EditProfile from "../Containers/EditProfile";
 import Cardiologists from "../Containers/Cardiologists";
+import ViewMyDoctors from "../Containers/ViewMyDoctors";
 
 
 export const SignedOut = StackNavigator({
@@ -41,46 +41,57 @@ const DrawerExample = DrawerNavigator({
   ),
 });
 
-export const SignedIn = DrawerNavigator({
+export const $LaunchScreen = DrawerNavigator({
   Home: {screen: DrawerExample}
 },{
   contentComponent: CustomSideMenu
 });
 
-export const SignedInProfile = DrawerNavigator({
+export const $Profile = DrawerNavigator({
   Profile: {screen:  Profile}
 },{
   contentComponent: CustomSideMenu
 });
 
-export const Doctors = DrawerNavigator({
+export const $Doctors = DrawerNavigator({
   Profile: {screen:  Cardiologists}
 },{
   contentComponent: CustomSideMenu
 });
 
+export const $MyDoctors = DrawerNavigator({
+  Profile: {screen:  ViewMyDoctors}
+},{
+  contentComponent: CustomSideMenu
+});
+
+
+
+export const SignedIn = StackNavigator({
+  LaunchScreen: {
+    screen: $LaunchScreen
+  },
+  Profile: {
+    screen: $Profile
+  },
+  EditProfile: {
+    screen: EditProfile
+  },
+  DoctorsScreen: {
+    screen: $Doctors
+  },
+  MyDoctors: {
+    screen: $MyDoctors
+  }
+}, {
+  headerMode: "none",
+  mode: "modal",
+  initialRouteName: 'LaunchScreen'
+});
+
 export const HomeNav = StackNavigator({
   Home: {
     screen: SignedIn,
-    navigationOptions: {
-      gesturesEnabled: false
-    }
-  },
-  EditProfile: {
-    screen: ({navigation}) => (<EditProfile navigation={navigation}/>),
-    navigationOptions: {
-      gesturesEnabled: false
-    }
-  },
-  Profile: {
-    screen: SignedInProfile,
-    navigationOptions: {
-      gesturesEnabled: false
-    }
-  },
-
-  MyDoctors: {
-    screen: Doctors,
     navigationOptions: {
       gesturesEnabled: false
     }

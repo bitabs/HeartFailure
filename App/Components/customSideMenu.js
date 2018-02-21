@@ -20,7 +20,7 @@ class CustomSideMenu extends Component {
   componentDidMount() {
     User().then(user => {
       firebase.app().database().ref(`/Users/${user.uid}`).on('value', (snap) => {
-        if (snap.val()) this.setState({ user: snap.val() }, () => console.log(this.state.user));
+        if (snap.val()) this.setState({ user: snap.val() });
       });
     });
   }
@@ -117,10 +117,18 @@ class CustomSideMenu extends Component {
             </TouchableHighlight>
           </View>
 
+          <View style={styles.linkStack}>
+            <View style={styles.link}>
+              <TouchableHighlight
+                onPress={() => this.props.navigation.navigate('DoctorsScreen')}
+                style={styles.linkIcon} activeOpacity={1.0} underlayColor="rgba(253,138,94,0)">
+                <Ionicons name="user" size={22} color="#bccad0"/>
+              </TouchableHighlight>
+            </View>
 
-          {
-            userType
-          }
+            <Text style={styles.linkFontColour}>Search</Text>
+
+          </View>
 
 
           {
@@ -133,9 +141,7 @@ class CustomSideMenu extends Component {
                     <Ionicons name="user" size={22} color="#bccad0"/>
                   </TouchableHighlight>
                 </View>
-
-                <Text style={styles.linkFontColour}>{this.state.user.type === "Patient" ? "Cardiologists" : "Patients"}</Text>
-
+                <Text style={styles.linkFontColour}>{this.state.user.type === "Patient" ? "My Doctors" : "My Patients"}</Text>
               </View>
             ): null
           }
