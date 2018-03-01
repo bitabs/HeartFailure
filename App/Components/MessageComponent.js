@@ -78,7 +78,7 @@ export default class MessageComponent extends Component {
 
             {
               this.props.type === "Doctor" ? (
-                <View style={[styles.tag, {backgroundColor: this.dynamicTagColor(this.props.healthAlert)} ]}>
+                <View style={[styles.tag, {backgroundColor: this.dynamicTagColor(this.props.healthAlert), elevation: 2} ]}>
                   <Text style={{fontSize: 8, color: 'white', fontWeight: 'bold'}}>
                     {
                       this.formatText(this.props.healthAlert)

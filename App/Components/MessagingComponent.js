@@ -36,9 +36,9 @@ export default class MessagingComponent extends Component {
         if (snap.val()) this.setState({ type: snap.val().type }, () => {});
 
         this.messages = snap.val().type === "Doctor" ? (
-          firebase.app().database().ref('/DoctorsCommentsToPatients')
-        ) : (
           firebase.app().database().ref('/PatientsCommentsToDoctors')
+        ) : (
+          firebase.app().database().ref('/DoctorsCommentsToPatients')
         );
 
         this.initMessages  = this.initMessages.bind(this);
@@ -50,18 +50,22 @@ export default class MessagingComponent extends Component {
   initMessages = (messages, user) => {
     messages.on('value', snap => {
       const msgObj = snap.val();
-
       if (msgObj) {
+        //console.log(msgObj);
         this.setState({
           messageObject: Object.keys(msgObj).map(($uid, i) => {
             const person = msgObj[$uid];
+            const doctorsUIDMatch   = $uid.match( /<=>(.*)/)[1];
+            const patientsUIDMatch  = $uid.match(/(.*)<=>/)[1];
+
             if (person.messages) {
               const latest = Object.values(person.messages)[Object.keys(person.messages).length - 1];
+
               return (
                 <MessageComponent
                   name          = {person.name}
-                  uid           = {this.state.type === "Doctor" ? $uid.match( /(.*)<=>/)[1] : $uid.match( /<=>(.*)/)[1] }
-                  healthAlert   = {person.healthAlert || ""}
+                  uid           = {$uid.match( /<=>(.*)/)[1] ? ($uid.match( /(.*)<=>/)[1]) : $uid.match( /(.*)<=>/)[1] ? $uid.match( /<=>(.*)/)[1] : ""  }
+                  healthAlert   = {person.healthAlert || "S T A B L E"}
                   comment       = {latest ? latest.msgText : ""}
                   timeStamp     = {latest ? latest.timeStamp : ""}
                   type          = {this.state.type}

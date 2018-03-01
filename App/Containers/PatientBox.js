@@ -96,6 +96,10 @@ export default class PatientBox extends Component {
     }
   };
 
+
+
+
+
   render() {
     const opacity = this.animatedValue.interpolate({
       inputRange: [0, 0.5, 1],
@@ -104,6 +108,12 @@ export default class PatientBox extends Component {
 
     let returnThis = (
       <View style={[styles.box, {position: 'relative'}]}>
+        <Ionicons style={{
+          fontWeight: '100',
+          position: 'absolute',
+          top: 10,
+          right: 40
+        }} name="md-arrow-round-forward" size={25} color="#bccad0" />
         <View style={{flexWrap: 'wrap', alignItems: 'center'}}>
           <View style={{position: 'relative'}}>
             <Image style={styles.userImg} source={Images[this.props.uid]} resizeMode="contain"/>
@@ -117,7 +127,6 @@ export default class PatientBox extends Component {
         </View>
         <View>
           <Chart type={"day"} height={100} config={this.config()} component={"ListOfPatients"} showsHorizontalScrollIndicator={false} />
-
           <View style={styles.infoContainer}>
             <View style={[styles.infoBox]}>
               <Ionicons style={{marginRight: 10, opacity: 0.5}} name="md-heart" size={15} color="#bccad0" />

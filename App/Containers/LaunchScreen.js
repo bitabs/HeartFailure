@@ -42,14 +42,15 @@ export default class LaunchScreen extends PureComponent<*, State> {
       }, {
         key: '2', icon: 'airplay'
       }],
-      selectedItem  : 'About',
-      isPressed     : false,
-      currentUser   : null,
-      modalVisible  : false,
-      loading       : false,
-      type          : "",
-      renderThis    : true,
-    };
+      selectedItem: 'About',
+      isPressed: false,
+      currentUser: null,
+      modalVisible: false,
+      loading: false,
+      type: "",
+      renderThis: true,
+      defaultView: null
+    }
   }
 
   componentDidMount() {
@@ -63,21 +64,13 @@ export default class LaunchScreen extends PureComponent<*, State> {
     });
   };
 
-  componentWillReceiveProps(nextProps) {
-    console.log(nextProps);
-  }
-
-  componentDidUpdate() {
-    // console.log("here")
-  }
-
-  // shouldComponentUpdate(nextProps, nextState) {
-  //   console.log(nextProps, nextState);
-  // }
-
   _handleIndexChange = index => { this.setState({ index }) };
 
   updateIndex = () => { this.setState({ index: this.state.index === 0 ? 1 : 0 }) };
+
+  updatePatientView = (patient) => { this.setState({
+    defaultView: patient
+  })};
 
   eliminateRender = () => { this.setState({ renderThis: false }) };
 
@@ -127,6 +120,8 @@ export default class LaunchScreen extends PureComponent<*, State> {
         style           = {{ backgroundColor: 'white' }}
         type            = {this.state.type}
         updateIndex     = {this.updateIndex.bind(this)}
+        patient         = {this.state.defaultView}
+        patientView     = {this.updatePatientView.bind(this)}
 
       />
     );

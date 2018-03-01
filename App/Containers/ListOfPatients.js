@@ -1,8 +1,10 @@
 import React, {Component} from 'react';
-import {View, ScrollView, Text, StyleSheet, Image} from "react-native";
+import {View, ScrollView, Text, StyleSheet, Image, TouchableOpacity, TouchableHighlight} from "react-native";
 import PatientBox from "./PatientBox";
 import User from '../Components/User';
+
 import PropTypes from 'prop-types';
+import Database from '../Components/Database'
 
 var _ = require('lodash');
 import firebase from 'react-native-firebase';
@@ -33,12 +35,27 @@ export default class ListOfPatients extends Component {
     })
   };
 
+
+  update = (patient) => {
+    this.props.updateIndex();
+    this.props.patientView(patient);
+  };
+
   render() {
     const patients = this.state.Patients;
     let $PatientsBox = patients ? (
       Object.keys(patients).map((uid, i) => {
         const patient = patients[uid];
-        return (<PatientBox uid={uid} Patient={patient} key={i}/>)
+        return (
+          <TouchableHighlight
+            activeOpacity={1.0}
+            underlayColor="rgba(253,138,94,0)"
+            onPress={() => this.update({uid,...patient})}
+            key={i}
+          >
+            <PatientBox uid={uid} Patient={patient} key={i}/>
+          </TouchableHighlight>
+        )
       })
     ) : null;
 
