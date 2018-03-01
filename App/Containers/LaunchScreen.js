@@ -1,14 +1,15 @@
-import React, { Component, PureComponent } from 'react'
-import {View, TouchableHighlight, StyleSheet} from 'react-native'
-import BLE from './BLE';
+import React, { PureComponent } from 'react'
+import {View, TouchableHighlight, StyleSheet, Text, Animated, AsyncStorage} from 'react-native'
 import Ionicons from 'react-native-vector-icons/Feather';
 import { TabViewAnimated, TabBar } from 'react-native-tab-view';
 import type { NavigationState } from 'react-native-tab-view/types';
 import SimplePage from './SimplePage';
+import Svg, { Line } from 'react-native-svg';
 /*
 * ======= Firebase Initialisation ======
 * */
 import firebase from 'react-native-firebase';
+import User from '../Components/User';
 import CustomModal from "../Components/CustomModal";
 
 // firebase config
@@ -28,91 +29,102 @@ type Route = {
 type State = NavigationState<Route>;
 
 export default class LaunchScreen extends PureComponent<*, State> {
+
   static title = 'Icon only top bar';
   static appbarElevation = 0;
 
   constructor(props) {
     super(props);
     this.state = {
-      index: 0, routes: [{ key: '1', icon: 'activity' }, { key: '2', icon: 'airplay' },],
+      index: 0,
+      routes: [{
+        key: '1', icon: 'activity'
+      }, {
+        key: '2', icon: 'airplay'
+      }],
       selectedItem: 'About',
-      data: [],
       isPressed: false,
+      currentUser: null,
       modalVisible: false,
-      loading: false
-    };
-    this.personsRef = firebase.app().database().ref().child('Persons');
-    this.listenForPersons     = this.listenForPersons.bind(this);
+      loading: false,
+      type: "",
+      renderThis: true,
+      defaultView: null
+    }
   }
 
   componentDidMount() {
-    this.listenForPersons(this.personsRef);
-  };
+    User().then(user => {
+      firebase.app().database().ref(`/Users/${user.uid}`).on('value', (snap) => {
 
-  listenForPersons = (personsRef) => {
-    personsRef.on('value', (snap) => {
-      var persons = [];
-      snap.forEach(child => {
-        persons.push({
-          name: child.val().name,
-          _key: child.key
+        this.setState({
+          type: snap.val().type
         })
       });
-
-      this.setState({
-        data: persons
-      });
-
     });
   };
 
-  _handleIndexChange = index => { this.setState({ index }); };
+  _handleIndexChange = index => { this.setState({ index }) };
+
+  updateIndex = () => { this.setState({ index: this.state.index === 0 ? 1 : 0 }) };
+
+  updatePatientView = (patient) => { this.setState({
+    defaultView: patient
+  })};
+
+  eliminateRender = () => { this.setState({ renderThis: false }) };
 
   _renderIcon = ({ route }) => { return <Ionicons name={route.icon} size={24} color="#bccad0" />; };
 
-  openModel = () => {
-    this.child.toggleModal();
-  };
+  openModel = () => { this.child.toggleModal();};
 
   _renderHeader = props => {
 
     return (
-      <View>
+      <View style={{elevation: 0.5, backgroundColor:'white'}}>
         <View style={styles.headerContainer}>
-          <TouchableHighlight onPress={() => this.props.navigation.navigate('DrawerToggle')} activeOpacity={1.0} underlayColor="rgba(253,138,94,0)">
-            <Ionicons style={{padding: 8}} name="menu" size={22} color="#bccad0"/>
+          <TouchableHighlight onPress={() => this.props.navigation.navigate('DrawerOpen')} activeOpacity={1.0} underlayColor="rgba(253,138,94,0)">
+
+            <Svg height="24" width="24">
+              <Line fill="none" stroke="#bccad0" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" x1="3" y1="12" x2="21" y2="12"/>
+              <Line fill="none" stroke="#bccad0" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" x1="10.208" y1="6" x2="21" y2="6"/>
+              <Line fill="none" stroke="#bccad0" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" x1="3" y1="18" x2="13.791" y2="18"/>
+            </Svg>
+
           </TouchableHighlight>
-          <TouchableHighlight activeOpacity={1} underlayColor="rgba(253,138,94,0)" onPress={() => this.openModel()}>
-            <Ionicons style={[styles.msgIcon, this.state.isPressed ? styles.testing : {}]} name="message-square" size={22} color="#bccad0"/>
-          </TouchableHighlight>
+
+          <View style={{position: 'relative'}}>
+            <TouchableHighlight activeOpacity={1} underlayColor="rgba(253,138,94,0)" onPress={() => {this.props.navigation.navigate('FooDrawerOpen')}}>
+              <Ionicons style={[styles.msgIcon, this.state.isPressed ? styles.testing : {}]} name="message-square" size={22} color="#bccad0"/>
+            </TouchableHighlight>
+
+            <View style={styles.notificationDot} />
+
+          </View>
         </View>
-        <View style={{width: '100%'}}>
-          <TabBar {...props} indicatorStyle={styles.indicator} renderIcon={this._renderIcon} style={styles.tabbar}/>
-        </View>
-        <CustomModal onRef={ref => this.child = ref}/>
+        <TabBar
+          {...props}
+          indicatorStyle={styles.indicator}
+          renderIcon={this._renderIcon}
+          style={styles.tabbar}
+        />
       </View>
     );
+    /*<CustomModal onRef={ref => this.child = ref}/>*/
   };
 
   _renderScene = ({ route }) => {
-    switch (route.key) {
-      case '1':
-        return (
-          <SimplePage
-            state={this.state}
-            style={{ backgroundColor: 'white' }}
-          />
-        );
-      case '2':
-        return (
-          <SimplePage
-            state={this.state}
-            style={{ backgroundColor: 'white' }}
-          />
-        );
-      default:
-        return null;
-    }
+    return (
+      <SimplePage
+        state           = {this.state}
+        style           = {{ backgroundColor: 'white' }}
+        type            = {this.state.type}
+        updateIndex     = {this.updateIndex.bind(this)}
+        patient         = {this.state.defaultView}
+        patientView     = {this.updatePatientView.bind(this)}
+
+      />
+    );
   };
 
   onMenuItemSelected = item => {
@@ -131,8 +143,9 @@ export default class LaunchScreen extends PureComponent<*, State> {
   };
 
   render() {
+
     return (
-      <TabViewAnimated
+        <TabViewAnimated
         style={[styles.container, this.props.style]}
         navigationState={this.state}
         renderScene={this._renderScene}
@@ -145,17 +158,26 @@ export default class LaunchScreen extends PureComponent<*, State> {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    justifyContent: 'space-between',
-    backgroundColor: '#F5FCFF',
+    flex: 1
   },
   tabbar: {
     backgroundColor: 'white',
     paddingTop: 10,
-    elevation: 0,
+    elevation: 0
+  },
+  notificationDot: {
+    position: 'absolute',
+    right: 7,
+    top: 5,
+    width: 12,
+    height: 12,
+    borderColor: 'white',
+    borderWidth: 3,
+    borderRadius: 100/2,
+    backgroundColor: '#E67D8F'
   },
   indicator: {
-    backgroundColor: 'rgba(152, 168, 171, 0)',
+    backgroundColor: 'rgba(152, 168, 171, 0)'
   },
   headerContainer: {
     height: 60,

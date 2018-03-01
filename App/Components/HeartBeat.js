@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
-import {Text, View} from "react-native";
+import CustomHeart from "./CustomHeart";
+
 
 export default class HeartBeat extends Component {
   constructor(props) {
@@ -16,9 +17,7 @@ export default class HeartBeat extends Component {
 
   render() {
     return (
-      <View>
-        <Text>This is HeartBeat component</Text>
-      </View>
+      <CustomHeart/>
     );
   }
 }
