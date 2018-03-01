@@ -4286,13 +4286,97 @@
     }
   },
   "DoctorsCommentsToPatients": {
-    "VoxHFgUEIwRFWg7JTKNXSSoFoMV2<=>E1kxLTE8UTXIG4topUhmVcfRdut2": {},
-    "VoxHFgUEIwRFWg7JTKNXSSoFoMV2<=>I5vEyeZwbyS6p1PKAUeDEnB7Bbr2": {},
-    "VoxHFgUEIwRFWg7JTKNXSSoFoMV2<=>SXMrXfBvexQUXfnVg5WWVwsKjpD2": {},
-    "VoxHFgUEIwRFWg7JTKNXSSoFoMV2<=>q7EbYl2zEfYh0GhS8AB6VtrhG6g1": {},
-    "VoxHFgUEIwRFWg7JTKNXSSoFoMV2<=>sLSfCQziLTTmoI3e74xTpWhnZoj2": {},
-    "VoxHFgUEIwRFWg7JTKNXSSoFoMV2<=>w14FKo72BieZwbxwUouTpN7UQm02": {},
-    "hFoWuyxv6Vbt8sEKA87T0720tXV2<=>w14FKo72BieZwbxwUouTpN7UQm02": {}
+    "VoxHFgUEIwRFWg7JTKNXSSoFoMV2<=>E1kxLTE8UTXIG4topUhmVcfRdut2": {
+      "messages": [
+        {
+          "msgText": "Can you please send me your ECG",
+          "timeStamp": "2018-02-15T06:24:44.124Z"
+        },
+        {
+          "msgText": "This is urgent, please get in touch to discuss your ECG result",
+          "timeStamp": "2018-02-15T06:24:44.124Z"
+        }
+      ],
+      "name": "Ernest Kamavuako"
+    },
+    "VoxHFgUEIwRFWg7JTKNXSSoFoMV2<=>I5vEyeZwbyS6p1PKAUeDEnB7Bbr2": {
+      "messages": [
+        {
+          "msgText": "Can you please send me your ECG",
+          "timeStamp": "2018-02-15T06:24:44.124Z"
+        },
+        {
+          "msgText": "This is urgent, please get in touch to discuss your ECG result",
+          "timeStamp": "2018-02-15T06:24:44.124Z"
+        }
+      ],
+      "name": "Ernest Kamavuako"
+    },
+    "VoxHFgUEIwRFWg7JTKNXSSoFoMV2<=>SXMrXfBvexQUXfnVg5WWVwsKjpD2": {
+      "messages": [
+        {
+          "msgText": "Can you please send me your ECG",
+          "timeStamp": "2018-02-15T06:24:44.124Z"
+        },
+        {
+          "msgText": "This is urgent, please get in touch to discuss your ECG result",
+          "timeStamp": "2018-02-15T06:24:44.124Z"
+        }
+      ],
+      "name": "Ernest Kamavuako"
+    },
+    "VoxHFgUEIwRFWg7JTKNXSSoFoMV2<=>q7EbYl2zEfYh0GhS8AB6VtrhG6g1": {
+      "messages": [
+        {
+          "msgText": "Can you please send me your ECG",
+          "timeStamp": "2018-02-15T06:24:44.124Z"
+        },
+        {
+          "msgText": "This is urgent, please get in touch to discuss your ECG result",
+          "timeStamp": "2018-02-15T06:24:44.124Z"
+        }
+      ],
+      "name": "Ernest Kamavuako"
+    },
+    "VoxHFgUEIwRFWg7JTKNXSSoFoMV2<=>sLSfCQziLTTmoI3e74xTpWhnZoj2": {
+      "messages": [
+        {
+          "msgText": "Can you please send me your ECG",
+          "timeStamp": "2018-02-15T06:24:44.124Z"
+        },
+        {
+          "msgText": "This is urgent, please get in touch to discuss your ECG result",
+          "timeStamp": "2018-02-15T06:24:44.124Z"
+        }
+      ],
+      "name": "Ernest Kamavuako"
+    },
+    "VoxHFgUEIwRFWg7JTKNXSSoFoMV2<=>w14FKo72BieZwbxwUouTpN7UQm02": {
+      "messages": [
+        {
+          "msgText": "Can you please send me your ECG",
+          "timeStamp": "2018-02-15T06:24:44.124Z"
+        },
+        {
+          "msgText": "This is urgent, please get in touch to discuss your ECG result",
+          "timeStamp": "2018-02-15T06:24:44.124Z"
+        }
+      ],
+      "name": "Ernest Kamavuako"
+    },
+    "hFoWuyxv6Vbt8sEKA87T0720tXV2<=>w14FKo72BieZwbxwUouTpN7UQm02": {
+      "messages": [
+        {
+          "msgText": "Can you please send me your ECG",
+          "timeStamp": "2018-02-15T06:24:44.124Z"
+        },
+        {
+          "msgText": "This is urgent, please get in touch to discuss your ECG result",
+          "timeStamp": "2018-02-15T06:24:44.124Z"
+        }
+      ],
+      "name": "Karla Stanlee"
+    }
   },
   "ECG": {
     "E1kxLTE8UTXIG4topUhmVcfRdut2": [
@@ -7401,17 +7485,68 @@
     }
   },
   "PatientsCommentsToDoctors": {
-    "w14FKo72BieZwbxwUouTpN7UQm02<=>3gOlvmX4WoP3734IdtoeVCzpEy22": {
-      "healthAlert": "",
-      "name": "Haaris"
+    "E1kxLTE8UTXIG4topUhmVcfRdut2<=>VoxHFgUEIwRFWg7JTKNXSSoFoMV2": {
+      "healthAlert": "Stable",
+      "messages": {
+        "2018-02-15T06:24:44.124Z": "Hi Dr Ernest, can I please book an appointment?",
+        "2018-02-15T06:24:44.123Z": "Hi there, please find the attach my reading. Can you please get back to me if it's something to worry about",
+        "2018-02-14T10:24:44.124Z": "How is it that my ECG reading is ok yet I'm unable to exercise?"
+      },
+      "name": "Stacy Jones"
+    },
+    "I5vEyeZwbyS6p1PKAUeDEnB7Bbr2<=>VoxHFgUEIwRFWg7JTKNXSSoFoMV2": {
+      "healthAlert": "Average",
+      "messages": {
+        "2018-02-15T06:24:44.124Z": "Hi Dr Ernest, I'd like to book an appointment sometime next week. Please get back to me anytime you're free",
+        "2018-02-15T06:24:44.123Z": "My chest is making rumbling sound and I'm worried if its something serious. Can I come anytime today?",
+        "2018-02-14T10:24:44.124Z": "Can we please reschedule the time; thanks!"
+      },
+      "name": "James Michael"
+    },
+    "SXMrXfBvexQUXfnVg5WWVwsKjpD2<=>VoxHFgUEIwRFWg7JTKNXSSoFoMV2": {
+      "healthAlert": "High",
+      "messages": {
+        "2018-02-15T06:24:44.124Z": "Can you please get back to me regarding my ECG test? I'm worried about my health.",
+        "2018-02-15T06:24:44.123Z": "There's a sever pain in my chest and I find breathing more difficult from last week. I don't know what is cause to be honest.",
+        "2018-02-14T10:24:44.124Z": "Is it possible if I can come today to see you about my ECG and heart test result which I got from the app?"
+      },
+      "name": "Levi Yeager"
+    },
+    "q7EbYl2zEfYh0GhS8AB6VtrhG6g1<=>VoxHFgUEIwRFWg7JTKNXSSoFoMV2": {
+      "healthAlert": "High",
+      "messages": {
+        "2018-02-16T16:24:44.124Z": "I'm trying to send my readings to you but its not working.",
+        "2018-02-16T09:24:44.124Z": "Is there any possibility for a follow up meeting today?",
+        "2018-02-14T06:24:44.124Z": "I'de like to meet you sometime today regarding my health. Please let me know when you are free"
+      },
+      "name": "Kate Flee"
+    },
+    "sLSfCQziLTTmoI3e74xTpWhnZoj2<=>hFoWuyxv6Vbt8sEKA87T0720tXV2": {
+      "healthAlert": "Stable",
+      "messages": {
+        "2018-02-16T09:24:44.124Z": "Can you please advice me when to do my ECG, and how long it will take for the result to come back? Thanks.",
+        "2018-02-16T09:24:44.122Z": "So the situation is actually quite complicated. Can I please come over to go through this issue please? Thanks.",
+        "2018-02-16T01:24:44.123Z": "That's great to hear, I hope you enjoy the weekend. Hope to seeing you soon."
+      },
+      "name": "George Dane"
     },
     "w14FKo72BieZwbxwUouTpN7UQm02<=>VoxHFgUEIwRFWg7JTKNXSSoFoMV2": {
-      "healthAlert": "",
-      "name": "Ernest Kamavuako"
+      "healthAlert": "Average",
+      "messages": {
+        "2018-02-15T06:24:44.122Z": "Hi Dr Ernest, can I please book an appointment?",
+        "2018-02-15T06:24:44.123Z": "Hi there, can I call you now?",
+        "2018-02-16T01:24:44.123Z": "Can we please reschedule the time; thanks!"
+      },
+      "name": "Naseebullah Ahmadi"
     },
     "w14FKo72BieZwbxwUouTpN7UQm02<=>hFoWuyxv6Vbt8sEKA87T0720tXV2": {
-      "healthAlert": "",
-      "name": "Karla Stanlee"
+      "healthAlert": "Average",
+      "messages": {
+        "2018-02-15T06:24:44.122Z": "Hi Dr Ernest, can I please book an appointment?",
+        "2018-02-15T06:24:44.123Z": "Hi there, can I call you now?",
+        "2018-02-16T01:24:44.123Z": "Can we please reschedule the time; thanks!"
+      },
+      "name": "Naseebullah Ahmadi"
     }
   },
   "Users": {
@@ -7424,16 +7559,11 @@
       "name": "Haaris",
       "profession": "Doctor",
       "type": "Doctor",
+      "Patients": {},
       "writePermission": true
     },
     "E1kxLTE8UTXIG4topUhmVcfRdut2": {
       "DOB": "02/06/1997",
-      "Doctors": {
-        "VoxHFgUEIwRFWg7JTKNXSSoFoMV2": {
-          "name": "Ernest Kamavuako",
-          "profession": "Doctor"
-        }
-      },
       "address": "122 Atherstone Court",
       "age": "20",
       "contactNumber": "07473693312",
@@ -7441,16 +7571,16 @@
       "name": "Stacy Jones",
       "profession": "Student",
       "type": "Patient",
-      "writePermission": false
-    },
-    "I5vEyeZwbyS6p1PKAUeDEnB7Bbr2": {
-      "DOB": "02/06/1997",
       "Doctors": {
         "VoxHFgUEIwRFWg7JTKNXSSoFoMV2": {
           "name": "Ernest Kamavuako",
           "profession": "Doctor"
         }
       },
+      "writePermission": false
+    },
+    "I5vEyeZwbyS6p1PKAUeDEnB7Bbr2": {
+      "DOB": "02/06/1997",
       "address": "122 Atherstone Court",
       "age": "20",
       "contactNumber": "07473693312",
@@ -7458,16 +7588,16 @@
       "name": "James Michael",
       "profession": "Dentist",
       "type": "Patient",
-      "writePermission": false
-    },
-    "SXMrXfBvexQUXfnVg5WWVwsKjpD2": {
-      "DOB": "02/06/1997",
       "Doctors": {
         "VoxHFgUEIwRFWg7JTKNXSSoFoMV2": {
           "name": "Ernest Kamavuako",
           "profession": "Doctor"
         }
       },
+      "writePermission": false
+    },
+    "SXMrXfBvexQUXfnVg5WWVwsKjpD2": {
+      "DOB": "02/06/1997",
       "address": "122 Atherstone Court",
       "age": "20",
       "contactNumber": "07473693312",
@@ -7475,9 +7605,23 @@
       "name": "Levi Yeager",
       "profession": "Frontend Developer",
       "type": "Patient",
+      "Doctors": {
+        "VoxHFgUEIwRFWg7JTKNXSSoFoMV2": {
+          "name": "Ernest Kamavuako",
+          "profession": "Doctor"
+        }
+      },
       "writePermission": false
     },
     "VoxHFgUEIwRFWg7JTKNXSSoFoMV2": {
+      "address": "122 Harrow Street",
+      "age": "30",
+      "contactNumber": "07473033312",
+      "dob": "20/12/1970",
+      "gender": "Female",
+      "name": "Ernest Kamavuako",
+      "profession": "Doctor",
+      "type": "Doctor",
       "Patients": {
         "E1kxLTE8UTXIG4topUhmVcfRdut2": {
           "name": "Stacy Jones",
@@ -7500,17 +7644,17 @@
           "profession": "Student"
         }
       },
+      "writePermission": true
+    },
+    "hFoWuyxv6Vbt8sEKA87T0720tXV2": {
       "address": "122 Harrow Street",
       "age": "30",
       "contactNumber": "07473033312",
       "dob": "20/12/1970",
       "gender": "Female",
-      "name": "Ernest Kamavuako",
-      "profession": "Doctor",
+      "name": "Karla Stanlee",
+      "profession": "FullStack Developer",
       "type": "Doctor",
-      "writePermission": true
-    },
-    "hFoWuyxv6Vbt8sEKA87T0720tXV2": {
       "Patients": {
         "sLSfCQziLTTmoI3e74xTpWhnZoj2": {
           "name": "George Dane",
@@ -7521,24 +7665,10 @@
           "profession": "Student"
         }
       },
-      "address": "122 Harrow Street",
-      "age": "30",
-      "contactNumber": "07473033312",
-      "dob": "20/12/1970",
-      "gender": "Female",
-      "name": "Karla Stanlee",
-      "profession": "FullStack Developer",
-      "type": "Doctor",
       "writePermission": true
     },
     "q7EbYl2zEfYh0GhS8AB6VtrhG6g1": {
       "DOB": "02/06/1997",
-      "Doctors": {
-        "VoxHFgUEIwRFWg7JTKNXSSoFoMV2": {
-          "name": "Ernest Kamavuako",
-          "profession": "Doctor"
-        }
-      },
       "address": "122 Atherstone Court",
       "age": "25",
       "contactNumber": "07473693312",
@@ -7546,16 +7676,16 @@
       "name": "Kate Flee",
       "profession": "Lecturer",
       "type": "Patient",
+      "Doctors": {
+        "VoxHFgUEIwRFWg7JTKNXSSoFoMV2": {
+          "name": "Ernest Kamavuako",
+          "profession": "Doctor"
+        }
+      },
       "writePermission": false
     },
     "sLSfCQziLTTmoI3e74xTpWhnZoj2": {
       "DOB": "02/06/1997",
-      "Doctors": {
-        "hFoWuyxv6Vbt8sEKA87T0720tXV2": {
-          "name": "Karla Stanlee",
-          "profession": "FullStack Developer"
-        }
-      },
       "address": "122 Atherstone Court",
       "age": "20",
       "contactNumber": "07473693312",
@@ -7563,15 +7693,24 @@
       "name": "George Dane",
       "profession": "Teacher",
       "type": "Patient",
+      "Doctors": {
+        "hFoWuyxv6Vbt8sEKA87T0720tXV2": {
+          "name": "Karla Stanlee",
+          "profession": "FullStack Developer"
+        }
+      },
       "writePermission": false
     },
     "w14FKo72BieZwbxwUouTpN7UQm02": {
       "DOB": "02/06/1997",
+      "address": "122 Atherstone Court",
+      "age": "20",
+      "contactNumber": "07473693312",
+      "gender": "Male",
+      "name": "Naseebullah Ahmadi",
+      "profession": "Student",
+      "type": "Patient",
       "Doctors": {
-        "3gOlvmX4WoP3734IdtoeVCzpEy22": {
-          "name": "Haaris",
-          "profession": "Doctor"
-        },
         "VoxHFgUEIwRFWg7JTKNXSSoFoMV2": {
           "name": "Ernest Kamavuako",
           "profession": "Doctor"
@@ -7581,13 +7720,6 @@
           "profession": "FullStack Developer"
         }
       },
-      "address": "122 Atherstone Court",
-      "age": "20",
-      "contactNumber": "07473693312",
-      "gender": "Male",
-      "name": "Naseebullah Ahmadi",
-      "profession": "Student",
-      "type": "Patient",
       "writePermission": false
     }
   }

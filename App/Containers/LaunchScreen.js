@@ -1,17 +1,16 @@
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import {View, TouchableHighlight, StyleSheet, Text, Animated, AsyncStorage} from 'react-native'
 import Ionicons from 'react-native-vector-icons/Feather';
 import { TabViewAnimated, TabBar } from 'react-native-tab-view';
 import type { NavigationState } from 'react-native-tab-view/types';
 import SimplePage from './SimplePage';
 import Svg, { Line } from 'react-native-svg';
-
 /*
 * ======= Firebase Initialisation ======
 * */
 import firebase from 'react-native-firebase';
+import User from '../Components/User';
 import CustomModal from "../Components/CustomModal";
-import MessagingComponent from "../Components/MessagingComponent";
 
 // firebase config
 const firebaseConfig = {
@@ -29,7 +28,7 @@ type Route = {
 
 type State = NavigationState<Route>;
 
-export default class LaunchScreen extends Component<*, State> {
+export default class LaunchScreen extends PureComponent<*, State> {
 
   static title = 'Icon only top bar';
   static appbarElevation = 0;
@@ -43,59 +42,41 @@ export default class LaunchScreen extends Component<*, State> {
       }, {
         key: '2', icon: 'airplay'
       }],
-      selectedItem  : 'About',
-      isPressed     : false,
-      currentUser   : null,
-      modalVisible  : false,
-      loading       : false,
-      userType      : "",
-      UID           : null,
-      Patients      : null,
-      Doctors       : null,
-    };
-    this.usersRef             = firebase.app().database().ref();
-    this.listenForPersons     = this.listenForPersons.bind(this);
+      selectedItem: 'About',
+      isPressed: false,
+      currentUser: null,
+      modalVisible: false,
+      loading: false,
+      type: "",
+      renderThis: true,
+      defaultView: null
+    }
   }
 
-  componentWillMount() {
-    this.listenForPersons(this.usersRef);
-  };
+  componentDidMount() {
+    User().then(user => {
+      firebase.app().database().ref(`/Users/${user.uid}`).on('value', (snap) => {
 
-  listenForPersons = (personsRef) => {
-    personsRef.on('value', (snap) => {
-      this.setState({
-        Patients  : snap.val().Patients,
-        Doctors   : snap.val().Doctors
-      }, () => {
-        this.currentUser().then(() => {
-          this.props.navigation.setParams({
-            data: [{Patients: this.state.Patients, DoctorUID: this.state.UID}]
-          });
-        }).catch(e => console.log(e));
+        this.setState({
+          type: snap.val().type
+        })
       });
     });
   };
 
   _handleIndexChange = index => { this.setState({ index }) };
 
-
   updateIndex = () => { this.setState({ index: this.state.index === 0 ? 1 : 0 }) };
 
+  updatePatientView = (patient) => { this.setState({
+    defaultView: patient
+  })};
+
+  eliminateRender = () => { this.setState({ renderThis: false }) };
 
   _renderIcon = ({ route }) => { return <Ionicons name={route.icon} size={24} color="#bccad0" />; };
 
   openModel = () => { this.child.toggleModal();};
-
-  currentUser = async () => {
-    var user = firebase.app().auth().currentUser;
-    if (user) {
-      this.setState({
-        userType    : this.state.Patients[user._user.uid] ? "Patient" : this.state.Doctors[user._user.uid] ? "Doctor" : "",
-        currentUser : this.state.Patients[user._user.uid] || this.state.Doctors[user._user.uid],
-        UID         : user._user.uid
-      })
-    }
-  };
 
   _renderHeader = props => {
 
@@ -135,12 +116,13 @@ export default class LaunchScreen extends Component<*, State> {
   _renderScene = ({ route }) => {
     return (
       <SimplePage
-        state       = {this.state}
-        style       = {{ backgroundColor: 'white' }}
-        userType    = {this.state.userType}
-        updateIndex = {this.updateIndex.bind(this)}
-        Patients    = {this.state.Patients}
-        Doctors     = {this.state.Doctors}
+        state           = {this.state}
+        style           = {{ backgroundColor: 'white' }}
+        type            = {this.state.type}
+        updateIndex     = {this.updateIndex.bind(this)}
+        patient         = {this.state.defaultView}
+        patientView     = {this.updatePatientView.bind(this)}
+
       />
     );
   };
@@ -161,6 +143,7 @@ export default class LaunchScreen extends Component<*, State> {
   };
 
   render() {
+
     return (
         <TabViewAnimated
         style={[styles.container, this.props.style]}

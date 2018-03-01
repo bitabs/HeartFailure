@@ -15,8 +15,9 @@ export default class Doctor extends Component {
         <Dashboard
           index       = {this.props.index}
           updateIndex = {this.props.updateIndex}
+          patientView = {this.props.patientView}
+          patient     = {this.props.patient}
           style       = {{backgroundColor: 'pink'}}
-          Patients    = {this.props.Patients}
         />
       </View>
     );
@@ -24,6 +25,5 @@ export default class Doctor extends Component {
 }
 
 Doctor.propTypes = {
-  index       : PropTypes.number.isRequired,
-  Patients    : PropTypes.object
+  index       : PropTypes.number.isRequired
 };

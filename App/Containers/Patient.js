@@ -15,7 +15,6 @@ export default class Patient extends Component {
   }
 
   render() {
-
     let ret = (this.props.index === 0 ?
         <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}} >
           <HeartBeat/>
@@ -40,6 +39,5 @@ const styles = StyleSheet.create({
 });
 
 Patient.propTypes = {
-  index   : PropTypes.number.isRequired,
-  Doctors : PropTypes.object
+  index   : PropTypes.number.isRequired
 };

@@ -23,7 +23,7 @@ export default class Login extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <LoginForm/>
+        <LoginForm navigation={this.props.navigation}  {...this.props}/>
       </View>
     );
   }

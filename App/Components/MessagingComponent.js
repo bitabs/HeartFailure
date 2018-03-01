@@ -3,15 +3,25 @@ import { NavigationActions } from "react-navigation";
 import {StyleSheet, ScrollView, View, Text, TextInput, Keyboard, TouchableWithoutFeedback} from "react-native";
 import MessageComponent from "./MessageComponent";
 import Ionicons from 'react-native-vector-icons/Feather';
-
+import firebase from 'react-native-firebase';
+import User from './User';
+import _ from 'lodash';
 
 export default class MessagingComponent extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {}
+    this.state = {
+      messageObject : null,
+      type      : null
+    };
 
+    this.fetchMessagesObject = this.fetchMessagesObject.bind(this);
   }
+
+  componentDidMount() {
+    this.fetchMessagesObject();
+  };
 
   navigateToScreen = (route) => () => {
     const navigateAction = NavigationActions.navigate({
@@ -20,32 +30,86 @@ export default class MessagingComponent extends Component {
     this.props.navigation.dispatch(navigateAction);
   };
 
-  messageComponent = () => {
-    const {routes: [{params: data}]} = this.props.navigation.state;
-    let patients = null;
-    if (data) {
+  fetchMessagesObject = () => {
+    User().then(user => {
+      firebase.app().database().ref(`/Users/${user.uid}`).on('value', (snap) => {
+        if (snap.val()) this.setState({ type: snap.val().type }, () => {});
 
-      const {data: [{Patients, DoctorUID}]} = data;
-      patients = Object.keys(Patients).map( (uuid, i) => {
-        const patient = Patients[uuid];
-        const {name, healthAlert} = patient;
-        const {patientsComments} = patient.doctors[DoctorUID];
+        this.messages = snap.val().type === "Doctor" ? (
+          firebase.app().database().ref('/PatientsCommentsToDoctors')
+        ) : (
+          firebase.app().database().ref('/DoctorsCommentsToPatients')
+        );
 
-        // console.log(patientsComments[patientsComments.length - 1]);
-        return (
-          <MessageComponent
-            name              = {name}
-            uid               = {uuid}
-            healthAlert       = {healthAlert}
-            comment           = {patientsComments[patientsComments.length - 1].msgText}
-            dateTime          = {patientsComments[patientsComments.length - 1].dateTime}
-            key               = {i}
-          />
-        )
+        this.initMessages  = this.initMessages.bind(this);
+        this.initMessages(this.messages, user);
       });
-    }
+    });
+  };
 
-    return patients;
+  initMessages = (messages, user) => {
+    messages.on('value', snap => {
+      const msgObj = snap.val();
+      if (msgObj) {
+        //console.log(msgObj);
+        this.setState({
+          messageObject: Object.keys(msgObj).map(($uid, i) => {
+            const person = msgObj[$uid];
+            const doctorsUIDMatch   = $uid.match( /<=>(.*)/)[1];
+            const patientsUIDMatch  = $uid.match(/(.*)<=>/)[1];
+
+            if (person.messages) {
+              const latest = Object.values(person.messages)[Object.keys(person.messages).length - 1];
+
+              return (
+                <MessageComponent
+                  name          = {person.name}
+                  uid           = {$uid.match( /<=>(.*)/)[1] ? ($uid.match( /(.*)<=>/)[1]) : $uid.match( /(.*)<=>/)[1] ? $uid.match( /<=>(.*)/)[1] : ""  }
+                  healthAlert   = {person.healthAlert || "S T A B L E"}
+                  comment       = {latest ? latest.msgText : ""}
+                  timeStamp     = {latest ? latest.timeStamp : ""}
+                  type          = {this.state.type}
+                  key           = {i}
+                />
+              );
+            }
+          })
+        })
+      }
+
+      // this.setState({
+      //   messageObject: Object.keys(msgObj).map(($uid, i) => {
+      //     const person = msgObj[$uid];
+      //     const latest = Object.values(person.messages)[Object.keys(person.messages).length - 1];
+      //
+      //     return (
+      //       <MessageComponent
+      //         name          = {person.name}
+      //         uid           = {this.state.type === "Doctor" ? $uid.match( /(.*)<=>/)[1] : $uid.match( /<=>(.*)/)[1] }
+      //         healthAlert   = {person.healthAlert || ""}
+      //         comment       = {latest.msgText || null}
+      //         timeStamp     = {latest.timeStamp}
+      //         type          = {this.state.type}
+      //         key           = {i}
+      //       />
+      //     );
+      //
+      //     // if ($uid.match( /<=>(.*)/)[1] === user.uid) {
+      //     //   return (
+      //     //     <MessageComponent
+      //     //       name         = {person.name}
+      //     //       uid          = {this.state.type === "Doctor" ? $uid.match( /(.*)<=>/)[1] : $uid.match( /<=>(.*)/)[1] }
+      //     //       healthAlert  = {person.healthAlert || ""}
+      //     //       comment      = {person.messages[person.messages.length - 1].msgText || null}
+      //     //       timeStamp    = {person.messages[person.messages.length - 1].timeStamp || null}
+      //     //       type     = {this.state.type}
+      //     //       key          = {i}
+      //     //     />
+      //     //   );
+      //     // }
+      //   })
+      // })
+    });
   };
 
   render () {
@@ -54,17 +118,10 @@ export default class MessagingComponent extends Component {
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
           <View style={{position: 'relative', marginBottom: 20}}>
             <Ionicons name="search" size={18} color="rgba(188,202,208, 0.5)" style={{position: 'absolute', left: 15, top: 16}} />
-            <TextInput
-              style={styles.searchInput}
-              placeholder="Search..."
-              underlineColorAndroid="transparent"
-              placeholderTextColor={"#bccad0"}
-            />
+            <TextInput style={styles.searchInput} placeholder="Search..." underlineColorAndroid="transparent" placeholderTextColor={"#bccad0"}/>
           </View>
         </TouchableWithoutFeedback>
-        <ScrollView showsVerticalScrollIndicator={false}>
-          {this.messageComponent()}
-        </ScrollView>
+        <ScrollView showsVerticalScrollIndicator={false}>{this.state.messageObject}</ScrollView>
       </View>
     );
   }

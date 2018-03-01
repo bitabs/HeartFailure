@@ -87,7 +87,7 @@ export default class PatientBox extends Component {
         name: 'Random data',
         data: (function() {
           let data = [];
-          data = $this.props.ecg;
+          data = $this.props.Patient.ecg;
           return data;
         }()),
         pointStart: Date.now() - 10 * 100,
@@ -96,8 +96,11 @@ export default class PatientBox extends Component {
     }
   };
 
-  render() {
 
+
+
+
+  render() {
     const opacity = this.animatedValue.interpolate({
       inputRange: [0, 0.5, 1],
       outputRange: [0, 0.5, 1]
@@ -105,6 +108,12 @@ export default class PatientBox extends Component {
 
     let returnThis = (
       <View style={[styles.box, {position: 'relative'}]}>
+        <Ionicons style={{
+          fontWeight: '100',
+          position: 'absolute',
+          top: 10,
+          right: 40
+        }} name="md-arrow-round-forward" size={25} color="#bccad0" />
         <View style={{flexWrap: 'wrap', alignItems: 'center'}}>
           <View style={{position: 'relative'}}>
             <Image style={styles.userImg} source={Images[this.props.uid]} resizeMode="contain"/>
@@ -113,28 +122,27 @@ export default class PatientBox extends Component {
               <Ionicons style={{fontWeight: '900'}} name="md-checkmark" size={15} color="white" />
             </View>
           </View>
-          <Text style={{marginTop: 10, fontSize: 16, color: '#909aae'}}>{this.props.name}</Text>
-          <Text style={{marginTop: 3, fontSize: 13, opacity: 0.5, color: 'rgba(144, 154, 174, 0.8)'}}>{this.props.profession}</Text>
+          <Text style={{marginTop: 10, fontSize: 16, color: '#909aae'}}>{this.props.Patient.name}</Text>
+          <Text style={{marginTop: 3, fontSize: 13, opacity: 0.5, color: 'rgba(144, 154, 174, 0.8)'}}>{this.props.Patient.profession}</Text>
         </View>
         <View>
           <Chart type={"day"} height={100} config={this.config()} component={"ListOfPatients"} showsHorizontalScrollIndicator={false} />
-
           <View style={styles.infoContainer}>
             <View style={[styles.infoBox]}>
               <Ionicons style={{marginRight: 10, opacity: 0.5}} name="md-heart" size={15} color="#bccad0" />
-              <Text style={{fontSize: 30, color: "#909aae"}}>{this.props.history.bpm}
+              <Text style={{fontSize: 30, color: "#909aae"}}>{this.props.Patient.health.bpm}
                 <Text style={{fontSize: 13, fontWeight: 'bold', color: 'rgba(144, 154, 174, 0.5)'}}>bpm</Text>
               </Text>
             </View>
             <View style={styles.infoBox}>
               <Ionicons style={{marginRight: 10, opacity: 0.5}} name="md-flame" size={15} color="#bccad0" />
-              <Text style={{fontSize: 30, color: "#909aae"}}>{this.props.history.calories}
+              <Text style={{fontSize: 30, color: "#909aae"}}>{this.props.Patient.health.calories}
                 <Text style={{fontSize: 13, fontWeight: 'bold', color: 'rgba(144, 154, 174, 0.5)'}}>cal</Text>
               </Text>
             </View>
             <View style={styles.infoBox}>
               <Ionicons style={{marginRight: 10, opacity: 0.5}} name="md-thermometer" size={15} color="#bccad0" />
-              <Text style={{fontSize: 30, color: "#909aae"}}>{this.props.history.thermometer}°</Text>
+              <Text style={{fontSize: 30, color: "#909aae"}}>{this.props.Patient.health.thermometer}°</Text>
             </View>
           </View>
 
@@ -191,11 +199,6 @@ const styles = StyleSheet.create({
 
 
 PatientBox.propTypes = {
-  uid         : PropTypes.string.isRequired,
-  name        : PropTypes.string.isRequired,
-  profilePic  : PropTypes.string.isRequired,
-  profession  : PropTypes.string.isRequired,
-  history     : PropTypes.object.isRequired,
-  ecg         : PropTypes.array.isRequired,
-  heartsound  : PropTypes.array.isRequired
+  uid    : PropTypes.string.isRequired,
+  Patient: PropTypes.object.isRequired
 };
