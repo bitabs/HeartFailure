@@ -37,7 +37,7 @@ export default class ListOfPatients extends Component {
 
 
   update = (patient) => {
-    this.props.updateIndex();
+    this.props.updateIndex('Doctor');
     this.props.patientView(patient);
   };
 

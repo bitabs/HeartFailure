@@ -6,12 +6,12 @@ import Statistics from "./Statistics";
 import Patient from "./Patient";
 import Doctor from "./Doctor";
 
-export default function CurrentStateIndicator({ state, style, type, updateIndex, patientView, patient}: *) {
+export default function CurrentStateIndicator({ state, style, type, updateIndex, patientView, doctorView, patient, doctor}: *) {
   return (
     <View style={[styles.page, style, type === "Doctor" ? {backgroundColor: '#f8f8f8'} : ""]}>
       {
         type === "Patient" ? (
-          <Patient index={state.index}/>
+          <Patient index={state.index} updateIndex={updateIndex} doctorView={doctorView} doctor={doctor}/>
         ) : (
           <Doctor index={state.index} updateIndex={updateIndex} patientView={patientView} patient={patient}/>
         )

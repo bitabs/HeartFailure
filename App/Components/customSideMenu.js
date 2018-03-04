@@ -117,31 +117,24 @@ class CustomSideMenu extends Component {
             </TouchableHighlight>
           </View>
 
-          <View style={styles.linkStack}>
-            <View style={styles.link}>
-              <TouchableHighlight
-                onPress={() => this.props.navigation.navigate('DoctorsScreen')}
-                style={styles.linkIcon} activeOpacity={1.0} underlayColor="rgba(253,138,94,0)">
-                <Ionicons name="user" size={22} color="#bccad0"/>
-              </TouchableHighlight>
-            </View>
-
-            <Text style={styles.linkFontColour}>Search</Text>
-
-          </View>
-
 
           {
             this.state.user ? (
-              <View style={styles.linkStack}>
-                <View style={styles.link}>
-                  <TouchableHighlight
-                    onPress={() => this.props.navigation.navigate('MyDoctors')}
-                    style={styles.linkIcon} activeOpacity={1.0} underlayColor="rgba(253,138,94,0)">
-                    <Ionicons name="user" size={22} color="#bccad0"/>
-                  </TouchableHighlight>
-                </View>
-                <Text style={styles.linkFontColour}>{this.state.user.type === "Patient" ? "My Doctors" : "My Patients"}</Text>
+              <View>
+                { this.state.user.type === "Patient" ? (
+                  <View style={styles.linkStack}>
+                    <View style={styles.link}>
+                      <TouchableHighlight
+                        onPress={() => this.props.navigation.navigate('DoctorsScreen')}
+                        style={styles.linkIcon} activeOpacity={1.0} underlayColor="rgba(253,138,94,0)">
+                        <Ionicons name="user" size={22} color="#bccad0"/>
+                      </TouchableHighlight>
+                    </View>
+
+                    <Text style={styles.linkFontColour}>Search</Text>
+                  </View>
+                ): null}
+
               </View>
             ): null
           }
@@ -151,6 +144,20 @@ class CustomSideMenu extends Component {
     );
   }
 }
+
+
+/*
+                    <View style={styles.linkStack}>
+                      <View style={styles.link}>
+                        <TouchableHighlight
+                          onPress={() => this.props.navigation.navigate('MyDoctors')}
+                          style={styles.linkIcon} activeOpacity={1.0} underlayColor="rgba(253,138,94,0)">
+                          <Ionicons name="user" size={22} color="#bccad0"/>
+                        </TouchableHighlight>
+                      </View>
+                      <Text style={styles.linkFontColour}>{this.state.user.type === "Patient" ? "My Doctors" : ""}</Text>
+                    </View>
+ */
 
 const styles = StyleSheet.create({
 

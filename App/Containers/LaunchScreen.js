@@ -57,19 +57,38 @@ export default class LaunchScreen extends PureComponent<*, State> {
     User().then(user => {
       firebase.app().database().ref(`/Users/${user.uid}`).on('value', (snap) => {
 
-        this.setState({
-          type: snap.val().type
-        })
+        if (snap.val()) {
+          if (snap.val().type === "Patient") {
+            this.setState(prevState => ({
+              type: snap.val().type,
+              routes: [...prevState.routes, {
+                key: '3', icon: 'users'
+              }, {
+                key: '4', icon: 'message-square'
+              }]
+            }));
+          }
+        }
       });
     });
   };
 
   _handleIndexChange = index => { this.setState({ index }) };
 
-  updateIndex = () => { this.setState({ index: this.state.index === 0 ? 1 : 0 }) };
+  updateIndex = route => {
+    if (route === "Patient") this.setState({
+      index: this.state.index === 2 ? 3 : 2
+    }); else if (route === "Doctor") this.setState({
+      index: this.state.index === 0 ? 1 : 0
+    })
+  };
 
   updatePatientView = (patient) => { this.setState({
     defaultView: patient
+  })};
+
+  updateDoctorView = doctor => { this.setState({
+    defaultView: doctor
   })};
 
   eliminateRender = () => { this.setState({ renderThis: false }) };
@@ -121,6 +140,8 @@ export default class LaunchScreen extends PureComponent<*, State> {
         type            = {this.state.type}
         updateIndex     = {this.updateIndex.bind(this)}
         patient         = {this.state.defaultView}
+        doctor          = {this.state.defaultView}
+        doctorView      = {this.updateDoctorView.bind(this)}
         patientView     = {this.updatePatientView.bind(this)}
 
       />
