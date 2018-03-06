@@ -119,6 +119,13 @@ export default class Profile extends Component {
         <ScrollView showsVerticalScrollIndicator={false}>
 
           <View style={styles.topSection}>
+            <Image blurRadius={10} source={require('../Images/backgroundImg.jpg')} style={{
+              position: 'absolute',
+              flex: 1,
+              width: Dimensions.get('window').width,
+              height: 320,
+              resizeMode: 'cover',
+            }} />
             <View style={[styles.topSection, styles.navigationBar]}>
 
               <TouchableHighlight onPress={() => this.props.navigation.navigate('DrawerOpen')} activeOpacity={1.0} underlayColor="rgba(253,138,94,0)">
@@ -152,12 +159,13 @@ export default class Profile extends Component {
           </View>
 
           <View style={styles.infoSection}>
+
             <View style={{flexDirection: 'column', marginBottom: 20, position: 'relative'}}>
               <Ionicons name={"feather"} size={18} color="#aab8be" style={{paddingLeft: 20}} />
               <View style={styles.profileDetails}>
                 <View style={styles.profileDetailsLeft}>
                   <Text style={styles.profileTextField}>
-                    <Text style={styles.fieldValue}>{user.name}</Text>
+                    <Text style={styles.fieldValue}>{user.name || "Not Specified"}</Text>
                     {'\n'}
                     <Text style={styles.fieldTitle}>
                       <Ionicons name={"at-sign"} size={11} color="rgba(188,202,208, 0.9)" />
@@ -166,7 +174,7 @@ export default class Profile extends Component {
                   </Text>
 
                   <Text style={styles.profileTextField}>
-                    <Text style={styles.fieldValue}>{user.profession}</Text>
+                    <Text style={styles.fieldValue}>{user.profession || "Not Specified"}</Text>
                     {'\n'}
                     <Text style={styles.fieldTitle}>
                       <Ionicons name={"at-sign"} size={11} color="rgba(188,202,208, 0.9)" />
@@ -175,7 +183,7 @@ export default class Profile extends Component {
                   </Text>
 
                   <Text style={styles.profileTextField}>
-                    <Text style={styles.fieldValue}>{user.age}</Text>
+                    <Text style={styles.fieldValue}>{user.age || "Not Specified"}</Text>
                     {'\n'}
                     <Text style={styles.fieldTitle}>
                       <Ionicons name={"at-sign"} size={11} color="rgba(188,202,208, 0.9)" />
@@ -186,7 +194,7 @@ export default class Profile extends Component {
                 </View>
                 <View style={styles.profileDetailsRight}>
                   <Text style={styles.profileTextField}>
-                    <Text style={styles.fieldValue}>{user.address}</Text>
+                    <Text style={styles.fieldValue}>{user.address || "Not Specified"}</Text>
                     {'\n'}
                     <Text style={styles.fieldTitle}>
                       <Ionicons name={"at-sign"} size={11} color="rgba(188,202,208, 0.9)" />
@@ -195,7 +203,7 @@ export default class Profile extends Component {
                   </Text>
 
                   <Text style={styles.profileTextField}>
-                    <Text style={styles.fieldValue}>{user.DOB}</Text>
+                    <Text style={styles.fieldValue}>{user.DOB || user.dob || "Not Specified"}</Text>
                     {'\n'}
                     <Text style={styles.fieldTitle}>
                       <Ionicons name={"at-sign"} size={11} color="rgba(188,202,208, 0.9)" />
@@ -216,10 +224,10 @@ export default class Profile extends Component {
               <View style={styles.bar} />
             </View>
 
-            <View style={{marginBottom: 20, position: 'relative'}}>
-              <Ionicons name={"clipboard"} size={18} color="#aab8be" style={{paddingLeft: 20}} />
-              {
-                user.Health ? (
+            {
+              user.Health ? (
+                <View style={{marginBottom: 20, position: 'relative'}}>
+                  <Ionicons name={"clipboard"} size={18} color="#aab8be" style={{paddingLeft: 20}} />
                   <View style={styles.healthContainer}>
                     <View>
                       <Text style={styles.healthTitle}>Temperature</Text>
@@ -247,10 +255,10 @@ export default class Profile extends Component {
                       </View>
                     </View>
                   </View>
-                ): null
-              }
-              <View style={styles.bar} />
-            </View>
+                  <View style={styles.bar} />
+                </View>
+              ): null
+            }
 
             {
               user.ECG ? (
@@ -279,11 +287,6 @@ export default class Profile extends Component {
 
           </View>
 
-
-
-          <TouchableHighlight style={styles.profileBtn}>
-            <Ionicons name={"user-plus"} size={20} color="#f3f3f3" />
-          </TouchableHighlight>
         </ScrollView>
       </View>
     ): null;
@@ -293,6 +296,23 @@ export default class Profile extends Component {
     )
   }
 }
+
+/*
+*
+*                   <View style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              width: Dimensions.get('window').width,
+              height: 300,
+              backgroundColor: 'rgba(188,202,208, 1)',
+              transform: [{'skewY': '-5deg'}]
+            }} />
+*
+    *       <TouchableHighlight style={styles.profileBtn}>
+            <Ionicons name={"user-plus"} size={20} color="#f3f3f3" />
+          </TouchableHighlight>*/
 
 
 const styles = StyleSheet.create({
@@ -306,13 +326,13 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     backgroundColor: 'rgba(188,202,208, 1)',
     padding:10,
-    paddingBottom: 50,
     position: 'relative',
   },
   navigationBar: {
     flexDirection: 'row',
     alignItems: 'stretch',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    backgroundColor: 'transparent'
   },
   imageContainer: {
     alignItems: 'center'

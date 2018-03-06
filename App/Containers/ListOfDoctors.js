@@ -30,10 +30,12 @@ export default class ListOfDoctors extends Component {
         User().then(user => {
           const doctors = snap.val()[user.uid].Doctors;
 
-          Object.keys(doctors).map(uid => {
+          Object.keys(doctors).map((uid,i) => {
             if (snap.val()) this.setState(prevState => ({
               Doctors: {...prevState.Doctors, [uid]: snap.val()[uid]}
-            }));
+            }), () => {
+              if (i === 0) this.props.doctorView({uid: uid, ...snap.val()[uid]});
+            });
           })
 
         })
@@ -45,10 +47,11 @@ export default class ListOfDoctors extends Component {
     //console.log(this.state.Doctors);
 
     const doctors = this.state.Doctors;
-    //console.log(doctors);
+
     let $DoctorBox = doctors ? (
       Object.keys(doctors).map((uid, i) => {
         const doctor = doctors[uid];
+        //if (i === 0 && doctor) this.props.doctorView({uid: uid, ...doctor});
         return (
           <DoctorBox uid={uid} Doctor={doctor} updateIndex={this.props.updateIndex} doctorView={this.props.doctorView} key={i}/>
         )

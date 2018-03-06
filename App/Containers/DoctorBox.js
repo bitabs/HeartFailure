@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, ScrollView, Text, StyleSheet, Image, Animated, Easing, TouchableHighlight} from "react-native";
+import {View, ScrollView, Text, StyleSheet, Image, Animated, Easing, TouchableHighlight, TouchableOpacity} from "react-native";
 import PropTypes from 'prop-types';
 import {Images} from './PreLoadImages';
 import Ionicons from 'react-native-vector-icons/Feather';
@@ -12,6 +12,7 @@ export default class DoctorBox extends Component {
       Doctor: this.props.Doctor,
       randomFav: null,
       wait: true,
+      clicked: false
     };
     this.animatedValue = new Animated.Value(1)
   }
@@ -52,7 +53,7 @@ export default class DoctorBox extends Component {
   };
 
 
-
+  toggleClick = () => this.setState({clicked: !this.state.clicked});
 
   render() {
     const opacity = this.animatedValue.interpolate({
@@ -137,23 +138,26 @@ export default class DoctorBox extends Component {
             }
 
             <View style={{marginTop: 10}}>
-              <TouchableHighlight
-                activeOpacity={1.0}
-                underlayColor="rgba(253,138,94,0)"
-                onPress={() => this.update({uid: this.props.uid,...this.props.Doctor})}
+              <TouchableOpacity
+                activeOpacity={1}
+                onPress={() => {
+                  this.update({uid: this.props.uid,...this.props.Doctor});
+                  this.toggleClick();
+                }}
                 style={[styles.messageBtn, {
                   padding: 15,
                   borderRadius: 5,
                   paddingTop: 10,
                   paddingBottom: 10,
+                  backgroundColor: "#f6f6f6",
                   //elevation: 1
                 }]}
               >
-                <View style={styles.messageBtn}>
+                <View style={[styles.messageBtn, {backgroundColor: "#f6f6f6",}]}>
                   <Ionicons style={{fontWeight: '900', marginRight: 5}} name="message-square" size={16} color="#bccad0" />
                   <Text style={{fontSize: 11, color: '#bccad0'}}>Send Message</Text>
                 </View>
-              </TouchableHighlight>
+              </TouchableOpacity>
             </View>
           </View>
         </View>
@@ -247,7 +251,8 @@ const styles = StyleSheet.create({
   messageBtn: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#f6f6f6',
+    //backgroundColor: this.state.clicked ? "red" : "f6f6f6",
+    // backgroundColor: '#f6f6f6',
     alignSelf: 'flex-start'
   }
 });

@@ -24,19 +24,21 @@ export default class DoctorInfo extends Component {
   }
 
   componentDidMount() {
-    User().then(user => {
-      this.setState({
-        doctorUid: user.uid,
-        randomFav: this.getRandomInt(0,4)
+    if (this.props.Doctor) {
+      User().then(user => {
+        this.setState({
+          doctorUid: user.uid,
+          randomFav: this.getRandomInt(0,4)
+        });
+        firebase.app().database().ref(`/Users/${user.uid}`).on('value', (snap) => {
+          if (snap.val()) {
+            const $user = snap.val();
+            Database.initialiseMessagesDB($user.name, "", this.props.Doctor.uid, $user.type).then(() => {});
+          }
+        });
       });
-      firebase.app().database().ref(`/Users/${user.uid}`).on('value', (snap) => {
-        if (snap.val()) {
-          const $user = snap.val();
-          Database.initialiseMessagesDB($user.name, "", this.props.Doctor.uid, $user.type).then(() => {});
-        }
-      });
-    });
-    this.getMessage("d");
+      this.getMessage("d");
+    }
   }
 
   sendMessage = (uid) => {
@@ -49,7 +51,6 @@ export default class DoctorInfo extends Component {
       });
     });
   };
-
 
   getMessage = (uid) => {
     let globalObj = null;
@@ -109,11 +110,8 @@ export default class DoctorInfo extends Component {
     const { Doctor } = this.props;
     let total = 0;
 
-    //console.log(this.state.messageObj);
-
     let Messages = this.state.messageObj ? Object.keys(this.state.messageObj).map((m, i) => {
       const person = this.state.messageObj[m];
-      //console.log(person);
       const obj = this.state.messageObj[m].messages;
       if (obj) {
         total += Object.values(obj).length;
@@ -138,67 +136,78 @@ export default class DoctorInfo extends Component {
       }}
     ) : null;
 
-    return(
-      <View>
-        <ScrollView showsVerticalScrollIndicator={false}>
-          <View style={styles.container}>
-            <Ionicons style={{position: 'absolute', top: 20, left: 20}} name={"arrow-left"} size={30} color="#cedde3" />
-            <View>
-              <View style={styles.profileTopContainer}>
-                <Image style={styles.userImg} source={Images[Doctor.uid]} resizeMode="contain"/>
-                <View style={{alignItems: 'flex-end', flexDirection:'column', justifyContent: 'space-between'}}>
-                  <Text style={{fontWeight: 'bold', fontSize: 16, color: '#bccad0'}}>Get to know me:</Text>
-                  <Text style={{color: '#bccad0', flexWrap: 'wrap', maxWidth: 100, textAlign: 'right'}} numberOfLines={2}>{Doctor.address}</Text>
-                  <View style={{flexDirection: 'column', alignItems: 'flex-end'}}>
-                    <View style={{flexDirection: 'row'}}>{this.favorite()}</View>
-                    <Text style={{fontWeight: 'bold', color: '#bccad0'}}>{this.state.randomFav}.00</Text>
-                  </View>
-                  <View style={{flexDirection: 'row'}}>
-                    <Svg width="29" height="20" viewBox="0 0 24 24">
-                      <Polyline fill="none" stroke="#E67D8F" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" points="18.814,6.815 9.445,16.185 5.186,11.926"/>
-                    </Svg>
-                    <Text style={{color: '#bccad0'}}>Verified</Text>
-                  </View>
+    let $Doctor = this.props.Doctor ? (
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <View style={styles.container}>
+          <Ionicons style={{position: 'absolute', top: 20, left: 20}} name={"arrow-left"} size={30} color="#cedde3" />
+          <View>
+            <View style={styles.profileTopContainer}>
+              <Image style={styles.userImg} source={Images[Doctor.uid]} resizeMode="contain"/>
+              <View style={{alignItems: 'flex-end', flexDirection:'column', justifyContent: 'space-between'}}>
+                <Text style={{fontWeight: 'bold', fontSize: 16, color: '#bccad0'}}>Get to know me:</Text>
+                <Text style={{color: '#bccad0', flexWrap: 'wrap', maxWidth: 100, textAlign: 'right'}} numberOfLines={2}>{Doctor.address}</Text>
+                <View style={{flexDirection: 'column', alignItems: 'flex-end'}}>
+                  <View style={{flexDirection: 'row'}}>{this.favorite()}</View>
+                  <Text style={{fontWeight: 'bold', color: '#bccad0'}}>{this.state.randomFav}.00</Text>
+                </View>
+                <View style={{flexDirection: 'row'}}>
+                  <Svg width="29" height="20" viewBox="0 0 24 24">
+                    <Polyline fill="none" stroke="#E67D8F" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" points="18.814,6.815 9.445,16.185 5.186,11.926"/>
+                  </Svg>
+                  <Text style={{color: '#bccad0'}}>Verified</Text>
                 </View>
               </View>
-
-              <View style={{alignItems: 'flex-start'}}>
-                <Text style={{fontSize: 23, color: '#bccad0', textAlign: 'left'}}>{Doctor.name}</Text>
-                <Text style={{color: '#cedde3'}}>{Doctor.profession}</Text>
-                <Text style={{color: '#3cecc8', fontWeight: 'bold', marginTop: 5}}>Online</Text>
-              </View>
-
-              <View style={{flexDirection: 'row', maxWidth: 310, height: 2, backgroundColor: '#bccad0', opacity: 0.1, marginTop: 20, marginBottom: 20}} />
             </View>
+
+            <View style={{alignItems: 'flex-start'}}>
+              <Text style={{fontSize: 23, color: '#bccad0', textAlign: 'left'}}>{Doctor.name}</Text>
+              <Text style={{color: '#cedde3'}}>{Doctor.profession}</Text>
+              <Text style={{color: '#3cecc8', fontWeight: 'bold', marginTop: 5}}>Online</Text>
+            </View>
+
+            <View style={{flexDirection: 'row', maxWidth: 310, height: 2, backgroundColor: '#bccad0', opacity: 0.1, marginTop: 20, marginBottom: 20}} />
           </View>
+        </View>
 
-          <View style={styles.commentsContainer}>
-            <Text style={{fontSize: 17, color: '#bccad0', textAlign: 'center'}}>Comments({total})</Text>
+        <View style={styles.commentsContainer}>
+          <Text style={{fontSize: 17, color: '#bccad0', textAlign: 'center'}}>Comments({total})</Text>
 
-            <View style={{position: 'relative'}}>
-              <TextInput
-                style={styles.searchInput}
-                placeholder="Comment"
-                underlineColorAndroid="transparent"
-                placeholderTextColor={"#bccad0"}
-                onChangeText={(text) => this.setState({message: text})}
-              />
+          <View style={{position: 'relative'}}>
+            <TextInput
+              style={styles.searchInput}
+              ref={input => { this.textInput = input }}
+              placeholder="Comment"
+              underlineColorAndroid="transparent"
+              placeholderTextColor={"#bccad0"}
+              onChangeText={(text) => this.setState({message: text})}
+            />
 
-              <View style={{
-                position: 'absolute', right: 20, top: 30, padding: 4, borderRadius: 300,
-                backgroundColor: '#E67D8F', elevation: 3,
+            <View style={{
+              position: 'absolute', right: 20, top: 30, padding: 4, borderRadius: 300,
+              backgroundColor: '#E67D8F', elevation: 3,
+            }}>
+              <TouchableOpacity onPress={() => {
+                this.sendMessage(Doctor.uid);
+                this.textInput.clear()
               }}>
-                <TouchableOpacity onPress={() => this.sendMessage(Doctor.uid)}>
-                  <Ionicons name={"chevron-right"} size={20} color="white" />
-                </TouchableOpacity>
-              </View>
-            </View>
-
-            <View style={styles.comments}>
-              {Messages}
+                <Ionicons name={"chevron-right"} size={20} color="white" />
+              </TouchableOpacity>
             </View>
           </View>
-        </ScrollView>
+
+          <View style={styles.comments}>
+            {
+              total > 0 ? Messages : <Text style={{fontSize: 12, color: '#bccad0', textAlign: 'center'}}>No Comments so far!</Text>
+            }
+          </View>
+        </View>
+      </ScrollView>
+    ):null;
+
+
+    return(
+      <View>
+        {$Doctor}
       </View>
     )
   }
@@ -228,6 +237,7 @@ const styles = StyleSheet.create({
   commentsContainer: {
     backgroundColor: 'white',
     padding: 30,
+    paddingTop: 0,
     flexDirection: 'column',
     //alignItems: 'center',
     //justifyContent: 'center'
