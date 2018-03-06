@@ -81,60 +81,6 @@ export default class MessagingComponent extends Component {
     });
   };
 
-
-  patientContext = (messageData, user) => {
-    const { Doctors } = this.state.user;
-    this.setState({
-      messageObject: Doctors ? Object.keys(Doctors).map(($uid,i) => {
-        const doctorFirebaseUID = `${$uid}<=>${user.uid}`;
-
-        if (messageData[doctorFirebaseUID]) {
-          const { healthAlert, messages, name, uid } = messageData[doctorFirebaseUID];
-          const latest = messages ? Object.values(messages)[Object.keys(messages).length - 1] : null;
-          if (latest) {
-            return (
-              <MessageComponent
-                name={name}
-                uid={uid}
-                healthAlert={healthAlert}
-                comment={latest ? latest.msgText : ""}
-                timeStamp={latest ? latest.timeStamp : ""}
-                type={this.state.type}
-                key={i}
-              />
-            );
-          }
-        }
-      }): null
-    });
-  };
-
-  doctorContext = (messageData, user) => {
-    const { Patients } = this.state.user;
-    this.setState({
-      messageObject: Patients ? Object.keys(Patients).map(($uid,i) => {
-        const patientFirebaseUID = `${$uid}<=>${user.uid}`;
-        const { healthAlert = "Stable", messages, name, uid } = messageData[patientFirebaseUID] || {};
-        if (healthAlert && messages && name && uid) {
-          const latest = Object.values(messages)[Object.keys(messages).length - 1];
-          return (
-            <MessageComponent
-              name={name}
-              uid={uid}
-              healthAlert={healthAlert}
-              comment={latest ? latest.msgText : ""}
-              timeStamp={latest ? latest.timeStamp : ""}
-              type={this.state.type}
-              key={i}
-            />
-          );
-        }
-      }): null
-    });
-  };
-
-
-
   render () {
     return (
       <View style={styles.sideMenuContainer}>
