@@ -36,6 +36,17 @@ export default class Database {
     });
   }
 
+  static async getHealth(user) {
+    return await new Promise((resolve, reject) => {
+      firebase.app().database().ref(`/Health/${user.uid}`).on('value', (snap) => {
+        if (snap.val())
+          resolve(snap.val());
+        else
+          reject();
+      });
+    });
+  }
+
   static setECG() {
     const ECG = [];
     User().then(user => {
@@ -66,17 +77,21 @@ export default class Database {
   static async initialiseMessagesDB(msgTo = "", health = "", uid, type) {
     User().then(user => {
       const db = type === "Patient" ? "PatientsCommentsToDoctors" : "DoctorsCommentsToPatients";
+      let health = null;
+      this.getHealth(user).then(h => health = h).catch(e => console.log(e));
+
       firebase.app().database().ref(`/${db}/${user.uid}<=>${uid}`).on('value', (snap) => {
         if (!snap.val()) {
           return firebase.app().database().ref(`/${db}/${user.uid}<=>${uid}`).set({
             name: msgTo,
             uid: user.uid,
-            healthAlert: health,
+            healthAlert: type === "Patient" ? (health ? health.healthAlert : "Not specified") : "",
           }).then(() => {
             console.log("Successfully initialised messageDB");
           }).catch(e => console.log(e));
         }
       });
+
     });
   }
 

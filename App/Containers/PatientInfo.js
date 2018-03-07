@@ -18,25 +18,48 @@ export default class PatientInfo extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      user: null,
       message: null,
       globalObj: null,
       messageObj: null,
       doctorUid: ""
     };
+
+    this.initialiseDB = this.initialiseDB.bind(this);
+    this.PCommentsRef = firebase.app().database().ref(`/PatientsCommentsToDoctors`);
+    this.DCommentsRef = firebase.app().database().ref(`/DoctorsCommentsToPatients`);
+
+    User().then(user => {
+      this.userRef = firebase.app().database().ref(`/Users/${user.uid}`);
+    });
   }
 
   componentDidMount() {
-    User().then(user => {
-      this.setState({doctorUid: user.uid});
-      firebase.app().database().ref(`/Users/${user.uid}`).on('value', (snap) => {
-        if (snap.val()) {
-          const $user = snap.val();
-          Database.initialiseMessagesDB($user.name, "", this.props.Patient.uid, $user.type).then(() => {});
-        }
+    if (this.props.Patient) {
+      User().then(user => {
+        this.setState({
+          user: user,
+          doctorUid: user.uid
+        }, () => {
+          this.initialiseDB(this.userRef);
+        });
       });
-    });
-    this.getMessage("d");
+    }
   }
+
+  initialiseDB = (userRef) => {
+    userRef.on('value', (snap) => {
+      if (snap.val()) {
+        this.setState(prevState => ({
+          user: {...prevState.user, ...snap.val()}
+        }), () => {
+          Database.initialiseMessagesDB(
+            snap.val().name, "", this.props.Patient.uid, snap.val().type
+          ).then(() => this.getMessage(this.PCommentsRef, this.DCommentsRef));
+        });
+      }
+    });
+  };
 
   config = () => {
     const $this = this;
@@ -106,26 +129,20 @@ export default class PatientInfo extends Component {
   };
 
   sendMessage = (uid) => {
-    User().then(user => {
-      firebase.app().database().ref(`/Users/${user.uid}`).on('value', (snap) => {
-        if (snap.val()) {
-          const $user = snap.val();
-          Database.setMessage(uid, $user.type, this.state.message);
-        }
-      });
-    });
+    const {user} = this.state;
+    if (user) Database.setMessage(uid, user.type, this.state.message);
   };
 
-  getMessage = (uid) => {
+  getMessage = (PatientsCommentsToDoctors, DoctorsCommentsToPatients) => {
     let globalObj = null;
 
-    firebase.app().database().ref(`/PatientsCommentsToDoctors`).on('value', (snap) => {
+    PatientsCommentsToDoctors.on('value', (snap) => {
       this.setState(prevState => ({
         globalObj: {...prevState.globalObj, ...snap.val()}
       }));
     });
 
-    firebase.app().database().ref(`/DoctorsCommentsToPatients`).on('value', (snap) => {
+    DoctorsCommentsToPatients.on('value', (snap) => {
       this.setState(prevState => ({
         globalObj: {...prevState.globalObj, ...snap.val()}
       }), () => {
@@ -135,22 +152,17 @@ export default class PatientInfo extends Component {
   };
 
   filterMsg = (Patient) => {
-    User().then(user => {
-      const uid = user.uid;
+    const { user } = this.state;
+    if (user) {
       let filtered = Object.keys(this.state.globalObj).reduce((acc, val) => {
-        const patientToDoctor = `${Patient.uid}<=>${uid}`;
-        const doctorToPatient = `${uid}<=>${Patient.uid}`;
-
-        if(val === patientToDoctor || val === doctorToPatient)  {
+        const patientToDoctor = `${Patient.uid}<=>${user.uid}`;
+        const doctorToPatient = `${user.uid}<=>${Patient.uid}`;
+        if(val === patientToDoctor || val === doctorToPatient)
           acc[val] = this.state.globalObj[val];
-        }
-        //console.log(toReturn);
         return acc;
       }, {});
-      if (filtered !== {}) {
-        this.setState({messageObj: filtered})
-      }
-    });
+      if (filtered !== {}) this.setState({messageObj: filtered})
+    }
   };
 
   render() {
@@ -182,11 +194,7 @@ export default class PatientInfo extends Component {
             </View>
           )
         })
-      }}
-    ) : null;
-
-    // if (this.state.messageObj)
-    //   console.log(Object.keys(this.state.messageObj).length)
+      }}) : null;
 
     const favorite = [1,2,3,4,5].map((e,i) => {
       return (

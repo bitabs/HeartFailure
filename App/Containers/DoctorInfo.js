@@ -21,48 +21,60 @@ export default class DoctorInfo extends Component {
       randomFav   : null,
       doctorUid   : ""
     };
+
+    this.initialiseDB = this.initialiseDB.bind(this);
+    this.PCommentsRef = firebase.app().database().ref(`/PatientsCommentsToDoctors`);
+    this.DCommentsRef = firebase.app().database().ref(`/DoctorsCommentsToPatients`);
+
+    User().then(user => {
+      this.userRef = firebase.app().database().ref(`/Users/${user.uid}`);
+    });
   }
 
   componentDidMount() {
     if (this.props.Doctor) {
       User().then(user => {
         this.setState({
+          user: user,
           doctorUid: user.uid,
           randomFav: this.getRandomInt(0,4)
-        });
-        firebase.app().database().ref(`/Users/${user.uid}`).on('value', (snap) => {
-          if (snap.val()) {
-            const $user = snap.val();
-            Database.initialiseMessagesDB($user.name, "", this.props.Doctor.uid, $user.type).then(() => {});
-          }
+        }, () => {
+          this.initialiseDB(this.userRef);
         });
       });
-      this.getMessage("d");
     }
   }
 
-  sendMessage = (uid) => {
-    User().then(user => {
-      firebase.app().database().ref(`/Users/${user.uid}`).on('value', (snap) => {
-        if (snap.val()) {
-          const $user = snap.val();
-          Database.setMessage(uid, $user.type, this.state.message);
-        }
-      });
+  initialiseDB = (userRef) => {
+    userRef.on('value', (snap) => {
+      if (snap.val()) {
+        this.setState(prevState => ({
+          user: {...prevState.user, ...snap.val()}
+        }), () => {
+          Database.initialiseMessagesDB(
+            snap.val().name, "", this.props.Doctor.uid, snap.val().type
+          ).then(() => this.getMessage(this.PCommentsRef, this.DCommentsRef));
+        });
+      }
     });
   };
 
-  getMessage = (uid) => {
-    let globalObj = null;
-    console.log("rendering now!");
 
-    firebase.app().database().ref(`/PatientsCommentsToDoctors`).on('value', (snap) => {
+  sendMessage = (uid) => {
+    const {user} = this.state;
+    if (user) Database.setMessage(uid, user.type, this.state.message);
+  };
+
+  getMessage = (PatientsCommentsToDoctors, DoctorsCommentsToPatients) => {
+    let globalObj = null;
+
+    PatientsCommentsToDoctors.on('value', (snap) => {
       this.setState(prevState => ({
         globalObj: {...prevState.globalObj, ...snap.val()}
       }), () => this.filterMsg(this.props.Doctor));
     });
 
-    firebase.app().database().ref(`/DoctorsCommentsToPatients`).on('value', (snap) => {
+    DoctorsCommentsToPatients.on('value', (snap) => {
       this.setState(prevState => ({
         globalObj: {...prevState.globalObj, ...snap.val()}
       }), () => this.filterMsg(this.props.Doctor));
@@ -70,22 +82,21 @@ export default class DoctorInfo extends Component {
   };
 
   filterMsg = (Doctor) => {
-    User().then(user => {
-      const uid = user.uid;
+    const { user } = this.state;
+    if (user) {
       let filtered = Object.keys(this.state.globalObj).reduce((acc, val) => {
-        const doctorToPatient = `${Doctor.uid}<=>${uid}`;
-        const patientToDoctor = `${uid}<=>${Doctor.uid}`;
 
-        if(val === patientToDoctor || val === doctorToPatient)  {
+        const doctorToPatient = `${Doctor.uid}<=>${user.uid}`;
+        const patientToDoctor = `${user.uid}<=>${Doctor.uid}`;
+
+        if(val === patientToDoctor || val === doctorToPatient)
           acc[val] = this.state.globalObj[val];
-        }
-        //console.log(toReturn);
+
         return acc;
-      }, {});
-      if (filtered !== {}) {
-        this.setState({messageObj: filtered})
-      }
-    });
+
+        }, {});
+      if (filtered !== {}) this.setState({messageObj: filtered})
+    }
   };
 
   /**
