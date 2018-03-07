@@ -49,6 +49,7 @@ export default class LaunchScreen extends PureComponent<*, State> {
       loading: false,
       type: "",
       renderThis: true,
+      viewCurrentUser: null,
       defaultView: null
     }
   }
@@ -57,18 +58,15 @@ export default class LaunchScreen extends PureComponent<*, State> {
     User().then(user => {
       firebase.app().database().ref(`/Users/${user.uid}`).on('value', (snap) => {
 
-        if (snap.val()) {
-          if (snap.val().type === "Patient") {
-            this.setState(prevState => ({
-              type: snap.val().type,
-              routes: [...prevState.routes, {
-                key: '3', icon: 'users'
-              }, {
-                key: '4', icon: 'message-square'
-              }]
-            }));
-          }
-        }
+        if (snap.val()) this.setState(prevState => ({
+          type: snap.val().type,
+          routes: snap.val().type === "Patient" ? [...prevState.routes, {
+            key: '3', icon: 'users'
+          }, {
+            key: '4', icon: 'message-square'
+          }]: prevState.routes
+        }));
+
       });
     });
   };
@@ -82,6 +80,10 @@ export default class LaunchScreen extends PureComponent<*, State> {
       index: this.state.index === 0 ? 1 : 0
     })
   };
+
+  updateUserView = (user) => { this.setState({
+    viewCurrentUser: user
+  })};
 
   updatePatientView = (patient) => { this.setState({
     defaultView: patient
@@ -136,14 +138,10 @@ export default class LaunchScreen extends PureComponent<*, State> {
     return (
       <SimplePage
         state           = {this.state}
-        style           = {{ backgroundColor: 'white' }}
         type            = {this.state.type}
         updateIndex     = {this.updateIndex.bind(this)}
-        patient         = {this.state.defaultView}
-        doctor          = {this.state.defaultView}
-        doctorView      = {this.updateDoctorView.bind(this)}
-        patientView     = {this.updatePatientView.bind(this)}
-
+        userView        = {this.updateUserView.bind(this)}
+        activeUser      = {this.state.viewCurrentUser}
       />
     );
   };
