@@ -160,6 +160,8 @@ export default class UserBox extends Component {
   stackedUsers = User => {
     let user = User.Patients || User.Doctors;
 
+    const {health = null} = User;
+
 
     const Users = User && user ? Object.keys(user).map((uid, i) => {
       if (i < 3) return (
@@ -177,8 +179,8 @@ export default class UserBox extends Component {
 
 
     return (
-      <View>
-        {Users ? (<View style={{marginTop: 10, position: 'relative', marginBottom: 10, height: 20}}>
+      <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 10}}>
+        {Users ? (<View style={{position: 'relative', marginBottom: 10, height: 20}}>
           <View style={{flexDirection: 'row', position: 'relative'}}>
             <View style={{position: 'relative'}}>
               {Users}
@@ -192,13 +194,24 @@ export default class UserBox extends Component {
             ): null}
           </View>
         </View>): null}
+
+        {health ? (
+          <View>
+            <Text style={{
+              padding: 5, paddingLeft: 20, paddingRight: 20, backgroundColor: this.tagColor(health.healthAlert), borderRadius: 5,
+              fontSize: 12, color: 'white', elevation: 2, fontWeight: 'bold'
+            }}>{health.healthAlert}</Text>
+          </View>
+        ): null}
+
+
       </View>
     );
   };
 
   UsersGeneralDetails = (name, profession, address) => {
     return (
-      <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+      <View style={{flexDirection: 'row', justifyContent: 'space-between', position: 'relative'}}>
         <View style={{flexWrap: 'wrap', maxWidth: 130, alignItems: 'flex-start'}}>
           <Text style={styles.name}>{name}</Text>
           <Text style={styles.profession}>{profession}</Text>
@@ -221,13 +234,21 @@ export default class UserBox extends Component {
     )
   };
 
+  tagColor = healthAlert => {
+    if (healthAlert === "Stable")
+      return "#44C8A6";
+    else if (healthAlert === "Average")
+      return "#FB8469";
+    else if (healthAlert === "High")
+      return "#E67D8F";
+    else
+      return 'white'
+  };
+
   UserLeftSection = (User, uid) => {
     const {health = null} = User;
-    const tagColor = ((healthAlert) => {
-      if (healthAlert === "Stable") return "#44C8A6";
-      if (healthAlert === "Average") return "#FB8469";
-      if (healthAlert === "High") return "#E67D8F";
-    })(health.healthAlert);
+
+    const tagColor = this.tagColor(health ? health.healthAlert : null);
 
     return (
       <View style={styles.leftContainer}>
@@ -244,47 +265,50 @@ export default class UserBox extends Component {
           </View>
         </View>
 
-
-        <View style={{width: '100%'}}>
-          <View style={{alignSelf: 'center'}}>
-            <Svg width="31.463" height="31.463" viewBox="0 0 31.463 31.463">
-              <Circle fill={"rgba(144, 154, 174, 0.4)"} cx="15.698" cy="2.644" r="2.644" />
-              <Path fill={'rgba(144, 154, 174, 0.4)'} d="M21.396,8.791c0,0,0.148-2.953-2.968-2.953h-5.403c-3.005,0-2.983,2.727-2.985,2.953l0.001,8.38
+        {
+          User && User.type === "Patient" ? (
+            <View style={{width: '100%'}}>
+              <View style={{alignSelf: 'center'}}>
+                <Svg width="31.463" height="31.463" viewBox="0 0 31.463 31.463">
+                  <Circle fill={"#e9e9e9"} cx="15.698" cy="2.644" r="2.644" />
+                  <Path fill={'#e9e9e9'} d="M21.396,8.791c0,0,0.148-2.953-2.968-2.953h-5.403c-3.005,0-2.983,2.727-2.985,2.953l0.001,8.38
 		c0.049,0.452,0.495,0.967,1.049,0.967c0.551,0,0.956-0.499,1.006-0.952l0.938,13.346c0.069,0.679,0.549,0.932,1.139,0.932
 		c0.589,0,1.068-0.253,1.137-0.932h0.833c0.072,0.679,0.55,0.932,1.137,0.932c0.591,0,1.07-0.253,1.141-0.932l0.966-13.354
 		c0,0.453,0.438,0.963,0.992,0.963c0.552,0,0.993-0.517,1.042-0.969L21.396,8.791z"/>
-            </Svg>
-          </View>
+                </Svg>
+              </View>
 
-          <View style={{marginTop: 10}}>
-            <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 5}}>
-              <Text style={{color: 'rgba(144, 154, 174, 0.5)', fontSize: 12, fontWeight: 'bold'}}>{health.height}cm</Text>
-              <Text style={{color: 'rgba(144, 154, 174, 0.5)', fontSize: 10}}>Height</Text>
-            </View>
-            <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 5}}>
-              <Text style={{color: 'rgba(144, 154, 174, 0.5)', fontSize: 12, fontWeight: 'bold'}}>{health.weight}cm</Text>
-              <Text style={{color: 'rgba(144, 154, 174, 0.5)', fontSize: 10}}>Weight</Text>
-            </View>
-            <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 5}}>
-              <Text style={{color: 'rgba(144, 154, 174, 0.5)', fontSize: 12, fontWeight: 'bold'}}>{health.age}</Text>
-              <Text style={{color: 'rgba(144, 154, 174, 0.5)', fontSize: 10}}>Age</Text>
-            </View>
-            <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 5}}>
-              <Text style={{color: 'rgba(144, 154, 174, 0.5)', fontSize: 12, fontWeight: 'bold'}}>{health.fat}%</Text>
-              <Text style={{color: 'rgba(144, 154, 174, 0.5)', fontSize: 10}}>Fat</Text>
-            </View>
-            <View style={{flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'flex-start', marginTop: 10}}>
-              <Text style={{color: 'rgba(144, 154, 174, 0.5)', fontSize: 12}}>Allergies</Text>
+              <View style={{marginTop: 10}}>
+                <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 5}}>
+                  <Text style={{color: '#e9e9e9', fontSize: 12, fontWeight: 'bold'}}>{health.height}cm</Text>
+                  <Text style={{color: '#e9e9e9', fontSize: 10}}>Height</Text>
+                </View>
+                <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 5}}>
+                  <Text style={{color: '#e9e9e9', fontSize: 12, fontWeight: 'bold'}}>{health.weight}cm</Text>
+                  <Text style={{color: '#e9e9e9', fontSize: 10}}>Weight</Text>
+                </View>
+                <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 5}}>
+                  <Text style={{color: '#e9e9e9', fontSize: 12, fontWeight: 'bold'}}>{health.age}</Text>
+                  <Text style={{color: '#e9e9e9', fontSize: 10}}>Age</Text>
+                </View>
+                <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 5}}>
+                  <Text style={{color: '#e9e9e9', fontSize: 12, fontWeight: 'bold'}}>{health.fat}%</Text>
+                  <Text style={{color: '#e9e9e9', fontSize: 10}}>Fat</Text>
+                </View>
+                <View style={{flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'flex-start', marginTop: 10}}>
+                  <Text style={{color: '#e9e9e9', fontSize: 12}}>Allergies</Text>
 
-              <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                {Object.values(health.allergies).map((allergy, i) => {
-                  if (i <= 1)
-                  return <Text key={i} style={{color: 'rgba(144, 154, 174, 0.5)', fontSize: 10}}>{allergy}{i !== 1 ? ', ' : ''}</Text>
-                })}
+                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                    {Object.values(health.allergies).map((allergy, i) => {
+                      if (i <= 1)
+                        return <Text key={i} style={{color: '#e9e9e9', fontSize: 10}}>{allergy}{i !== 1 ? ', ' : ''}</Text>
+                    })}
+                  </View>
+                </View>
               </View>
             </View>
-          </View>
-        </View>
+          ): null
+        }
       </View>
     )
   };
@@ -344,40 +368,39 @@ export default class UserBox extends Component {
     console.log(User);
 
     return(
-      <View style={[styles.box, {position: 'relative'}]}>
+      <View>
+        <View style={[styles.box, {position: 'relative'}]}>
+          <TouchableOpacity
+            activeOpacity={0.7}
+            onPress={() => this.update({uid: this.props.uid,...User})}
+            style={{alignSelf: 'flex-end', padding: 10, paddingRight: 0, paddingLeft: 30}}>
+            <Feather style={{fontWeight: '900'}} name="more-horizontal" size={15} color="#909aae" />
+          </TouchableOpacity>
 
-        <TouchableOpacity
-          activeOpacity={0.7}
-          onPress={() => this.update({uid: this.props.uid,...User})}
-          style={{alignSelf: 'flex-end', padding: 10, paddingRight: 0, paddingLeft: 30}}>
-          <Feather style={{fontWeight: '900'}} name="more-horizontal" size={15} color="#909aae" />
-        </TouchableOpacity>
-
-        <View style={{flexWrap: 'wrap', flexDirection: 'row', alignItems: 'flex-start'}}>
-          {this.UserLeftSection(User, this.props.uid)}
-          {this.UserRightSection(User)}
-        </View>
-
-        <View style={{
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          width: '100%',
-          alignItems: 'center',
-          paddingBottom: 20,
-        }}>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <Feather style={{fontWeight: '900'}} name="eye" size={15} color="rgba(144, 154, 174, 0.5)" />
-            <Text style={{marginLeft: 5, fontSize: 10, color: 'rgba(144, 154, 174, 0.5)'}}>{this.state.randomWatch}</Text>
+          <View style={{flexWrap: 'wrap', flexDirection: 'row', alignItems: 'flex-start'}}>
+            {this.UserLeftSection(User, this.props.uid)}
+            {this.UserRightSection(User)}
           </View>
 
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <Feather style={{fontWeight: '900'}} name="message-square" size={15} color="rgba(144, 154, 174, 0.5)" />
-            <Text style={{marginLeft: 5,  fontSize: 10, color: 'rgba(144, 154, 174, 0.5)'}}>{this.getRandomInt(0, 500)}</Text>
+          <View style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            width: '100%',
+            alignItems: 'center',
+            paddingBottom: 20,
+          }}>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <Feather style={{fontWeight: '900'}} name="eye" size={15} color="rgba(144, 154, 174, 0.5)" />
+              <Text style={{marginLeft: 5, fontSize: 10, color: 'rgba(144, 154, 174, 0.5)'}}>{this.state.randomWatch}</Text>
+            </View>
 
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <Feather style={{fontWeight: '900'}} name="message-square" size={15} color="rgba(144, 154, 174, 0.5)" />
+              <Text style={{marginLeft: 5,  fontSize: 10, color: 'rgba(144, 154, 174, 0.5)'}}>{this.getRandomInt(0, 500)}</Text>
+
+            </View>
           </View>
         </View>
-
-
         {this.state.wait ? (
           <Animated.View style={{position: 'absolute', top: 0, bottom: 0, left: 0, right: 0, backgroundColor: 'white', opacity} } />
         ): null}
@@ -478,8 +501,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(144, 154, 174, 0.8)',
     opacity: 0.5,
     borderRadius: 300,
-    height: 100,
-    width: 100,
+    height: 83,
+    width: 83,
   },
   messageBtn: {
     flexDirection: 'row',
