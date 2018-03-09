@@ -27,6 +27,73 @@ export default class Statistics extends Component {
   componentDidMount() {}
   componentWillUnmount() {}
 
+  config = () => {
+    return {
+      title: {
+        text: '',
+        style: {
+          display: 'none'
+        }
+      },
+      xAxis: {
+        title: {
+          text: ''
+        },
+        type: 'datetime',
+        dateTimeLabelFormats: {
+          day: '%e of %b'
+        },
+        lineWidth: 0,
+        minorGridLineWidth: 0,
+        minorTickLength: 0,
+        tickLength: 0,
+        lineColor: 'transparent',
+        labels: {
+          style: {
+            color: '#959bad'
+          }
+        },
+      },
+      yAxis: {
+        title: {
+          text: ''
+        },
+        labels: {
+          style: {
+            color: '#959bad'
+          }
+        },
+        gridLineColor: 'rgba(188, 202, 208, 0.5)'
+      },
+      legend: {
+        enabled: false
+      },
+      exporting: {
+        enabled: false
+      },
+      credits: {
+        enabled: false
+      },
+      plotOptions: {
+        series: {
+          color: '#E67D8F',
+          lineWidth: 2,
+          shadow: true
+        },
+        line: {
+          marker: {
+            enabled: true
+          }
+        }
+      },
+      series: [{
+        data: [29.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4],
+        pointStart: Date.UTC(2010, 0, 1),
+        pointInterval: 24 * 3600 * 1000 // one day
+      }]
+    }
+  };
+
   render() {
 
     // this.state.graphType.map(graph => console.log(graph));
@@ -43,7 +110,7 @@ export default class Statistics extends Component {
           <View style={styles.calendarBtnContainer}>
             {topBtns}
           </View>
-          <Chart style={styles.chartContainer} type={"day"}/>
+          <Chart style={styles.chartContainer} type={"day"} height={300} config={this.config()} component={"Statistics"}/>
           <View style={styles.calendarBtnContainer}>
             <Text style={styles.calculationContainer}>Min</Text>
             <Text style={styles.calculationContainer}>Max</Text>
@@ -54,28 +121,6 @@ export default class Statistics extends Component {
     );
   }
 }
-
-/*
-            <TouchableOpacity
-              style={[styles.touchableCalendarBtn, this.state.type === "Day" ? styles.activeTouchableCalendarBtn : '']}
-              onPress={() => this.setState({type: 'Day'})}
-            >
-              <Text style={[styles.calendarBtn, this.state.type === "Day" ? {color: 'white'} : {color: '#909aae'}]}>Day</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[styles.touchableCalendarBtn, this.state.type === "Month" ? styles.activeTouchableCalendarBtn : '']}
-              onPress={() => this.setState({type: 'Month'})}
-            >
-              <Text style={[styles.calendarBtn, this.state.type === "Month" ? {color: 'white'} : {color: '#909aae'}]}>Day</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[styles.touchableCalendarBtn, this.state.type === "Year" ? styles.activeTouchableCalendarBtn : '']}
-              onPress={() => this.setState({type: 'Year'})}
-            >
-              <Text style={[styles.calendarBtn, this.state.type === "Year" ? {color: 'white'} : {color: '#909aae'}]}>Day</Text>
-            </TouchableOpacity>
- */
-
 
 const styles = StyleSheet.create({
   container: {
