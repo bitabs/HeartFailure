@@ -78,7 +78,9 @@ export default class Database {
     User().then(user => {
       const db = type === "Patient" ? "PatientsCommentsToDoctors" : "DoctorsCommentsToPatients";
       let health = null;
-      this.getHealth(user).then(h => health = h).catch(e => console.log(e));
+
+      if (type === "Patient")
+        this.getHealth(user).then(h => health = h).catch(e => console.log(e));
 
       firebase.app().database().ref(`/${db}/${user.uid}<=>${uid}`).on('value', (snap) => {
         if (!snap.val()) {

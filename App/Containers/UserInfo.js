@@ -28,6 +28,7 @@ export default class UserInfo extends Component {
     };
 
     this.initialiseDB = this.initialiseDB.bind(this);
+    this.sendMessage = this.sendMessage.bind(this);
     this.PCommentsRef = firebase.app().database().ref(`/PatientsCommentsToDoctors`);
     this.DCommentsRef = firebase.app().database().ref(`/DoctorsCommentsToPatients`);
 
@@ -163,7 +164,9 @@ export default class UserInfo extends Component {
           acc[val] = this.state.globalObj[val];
         return acc;
       }, {});
-      if (filtered !== {}) this.setState({messageObj: filtered})
+      if (filtered !== {}) this.setState({messageObj: filtered}, () => {
+
+      })
     }
   };
 
@@ -187,7 +190,6 @@ export default class UserInfo extends Component {
 
   render() {
     const { User } = this.props;
-    console.log(User);
     let total = 0;
 
     let Messages = this.state.messageObj ? Object.keys(this.state.messageObj).map((m, i) => {

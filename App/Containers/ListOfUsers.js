@@ -1,10 +1,7 @@
 import React, {Component} from 'react';
 import {View, ScrollView, Text, StyleSheet, Image, TouchableOpacity, TouchableHighlight} from "react-native";
-import PatientBox from "./PatientBox";
 import User from '../Components/User';
-
 import PropTypes from 'prop-types';
-import Database from '../Components/Database'
 
 var _ = require('lodash');
 import firebase from 'react-native-firebase';
@@ -23,85 +20,91 @@ export default class ListOfUsers extends Component {
   }
 
   componentDidMount() {
-    User().then(user => {
-      this.userRef.on('value', (snap) => {
-        this.type = snap.val()[user.uid].type;
-        if (snap.val() && user) this.initialiseDashboard(
-          snap.val()[user.uid].type === "Patient" ? this.userRef : this.dashboardRef
-        );
-      })
-    });
+    this.initialiseDashboard(this.userRef, this.dashboardRef);
+    // User().then(user => {
+    //   this.userRef.on('value', (snap) => {
+    //     if (snap.val()) this.setState(prevState => ({
+    //       Users: {...prevState.Users, ...snap.val()[user.uid]}
+    //     }), () => console.log(this.state.Users))
+    //   });
+    //
+    //   this.dashboardRef.on('value', (snap) => {
+    //     if (snap.val() && this.state.Users) {
+    //       const { Patients } = this.state.Users;
+    //       Patients ? Object.keys(Patients).map((uid) => {
+    //         const patient = Patients[uid];
+    //         this.setState(prevState => ({
+    //           Users: {...prevState.Users, Patients: {...prevState.Users.Patients, [uid]: {...patient, ...snap.val()[user.uid][uid]}}}
+    //         }), () => console.log(this.state.Users))
+    //       }): null
+    //     }
+    //   })
+    // });
   }
 
 
-  initialiseDashboard = (ref) => {
-    ref.on('value', (snap) => {
-      if (snap.val()) {
-        User().then(user => {
-          if (this.type === "Doctor") {
-            this.setState({
-              Users: snap.val()[user.uid]
-            }, () => this.props.userView({uid: Object.keys(this.state.Users)[0], ...Object.values(this.state.Users)[0]}));
-          } else {
-            const doctors = snap.val()[user.uid].Doctors;
-            doctors ? Object.keys(doctors).map((uid, i) => {
-              if (snap.val()) this.setState(prevState => ({
-                Users: {...prevState.Users, [uid]: snap.val()[uid]}
-              }), () => {
-                if (i === 0) this.props.userView({uid: uid, ...snap.val()[uid]});
-              });
-            }): null
-          }
-        });
-      }
-    })
+  initialiseDashboard = (userRef, dashboardRef) => {
+    User().then(user => {
+      const { type, userView } = this.props;
 
-    // User().then(user => {
-    //   ref.on('value', (snap) => {
-    //     if (snap.val()) {
-    //       const {type} = user;
-    //       if (type === "Doctor") {
-    //         this.setState({
-    //           Users: snap.val()[user.uid]
-    //         });
-    //       } else {
-    //         const doctors = snap.val()[user.uid].Doctors;
-    //         Object.keys(doctors).map((uid,i) => {
-    //           if (snap.val()) this.setState(prevState => ({
-    //             Users: {...prevState.Users, [uid]: snap.val()[uid]}
-    //           }), () => {
-    //             if (i === 0) this.props.userView({uid: uid, ...snap.val()[uid]});
-    //           });
-    //         })
-    //       }
-    //     }
-    //   })
-    // })
+      if (type === "Patient") userRef.on('value', (snap) => {
+        if (snap.val()) {
+          const { Doctors = null } = snap.val()[user.uid] || null;
+
+          Doctors ? Object.keys(Doctors).map((uid, i) => {
+            this.setState(prevState => ({
+              Users: {...prevState.Users, [uid]: snap.val()[uid]}
+            }), () => {
+              if (i === 0) userView({
+                uid: uid, ...snap.val()[uid]
+              });
+            });
+          }) : null;
+        }
+      });
+
+      if (type === "Doctor") dashboardRef.child(user.uid).on('value', (snap) => {
+        if (snap.val()) this.setState({Users: snap.val()}, () => userView({
+          uid: Object.keys(this.state.Users)[0], ...Object.values(this.state.Users)[0]
+        }))
+      })
+    });
   };
 
   render() {
-    const users = this.state.Users;
-    let _UserBox = users ? Object.keys(users).map((uid, i) => {
-      const user = users[uid];
-      return (<UserBox
-        uid={uid}
-        type={this.props.type}
-        User={user}
-        updateIndex={this.props.updateIndex}
-        userView={this.props.userView}
-        key={i}/>
-      )
-    }): null;
-
+    const { Users = null } = this.state;
     return (
       <View style={styles.page}>
         <ScrollView showsVerticalScrollIndicator={false}>
-          {_UserBox}
+          {Users ? Object.keys(Users).map((uid, i) => {
+            const user = Users[uid];
+            return (
+              <UserBox
+                uid={uid}
+                type={this.props.type}
+                User={user}
+                updateIndex={this.props.updateIndex}
+                userView={this.props.userView}
+                key={i}
+              />
+            )
+          }): null}
         </ScrollView>
       </View>
     );
   }
 }
+
+/**
+ *  <UserBox
+ uid={uid}
+ type={this.props.type}
+ User={user}
+ updateIndex={this.props.updateIndex}
+ userView={this.props.userView}
+ key={i}
+ />
+ */
 
 const styles = StyleSheet.create({
   page: {
