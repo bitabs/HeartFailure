@@ -1,26 +1,29 @@
 import React, { Component } from 'react'
-import * as NavigationActions from "react-navigation";
+import {NavigationActions} from "react-navigation";
 import {Image, ScrollView, Text, TouchableHighlight, TouchableOpacity, View} from "react-native";
 import PropTypes from 'prop-types';
 import { StyleSheet } from 'react-native';
 import Ionicons from "react-native-vector-icons/Feather";
 import CustomModal from "./CustomModal";
 import firebase from 'react-native-firebase';
+
 import User from "./User";
+import {Images} from '../Containers/PreLoadImages';
 
 
 class CustomSideMenu extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      user: null
+      user: null,
+      uid: null
     };
   }
 
   componentDidMount() {
     User().then(user => {
       firebase.app().database().ref(`/Users/${user.uid}`).on('value', (snap) => {
-        if (snap.val()) this.setState({ user: snap.val() });
+        if (snap.val()) this.setState({uid: user.uid, user: snap.val() });
       });
     });
   }
@@ -79,16 +82,24 @@ class CustomSideMenu extends Component {
       </View>
     ): null;
 
+    let profPic = this.state.uid ? (
+      <TouchableOpacity onPress={() => this.props.navigation.navigate('Profile')}>
+        <Image style={styles.userImg} source={Images[this.state.uid]} resizeMode="contain"/>
+      </TouchableOpacity>
+    ): null;
+
+    let name = this.state.user ? (
+      <Text style={[styles.verticalCenter, styles.userName]}>{this.state.user.name}</Text>
+    ): null;
+
     return (
       <View style={styles.sideMenuContainer}>
         <ScrollView>
           <View style={styles.profileBlock}>
 
-            <TouchableOpacity onPress={() => this.props.navigation.navigate('Profile')}>
-              <Image style={styles.userImg} source={require('../Images/Naseebullah.jpg')} resizeMode="contain"/>
-            </TouchableOpacity>
+            {profPic}
 
-            <Text style={[styles.verticalCenter, styles.userName]}>Naseebullah</Text>
+            {name}
 
             <TouchableHighlight
               style={[styles.verticalCenter, styles.floatRight]}
@@ -117,31 +128,24 @@ class CustomSideMenu extends Component {
             </TouchableHighlight>
           </View>
 
-          <View style={styles.linkStack}>
-            <View style={styles.link}>
-              <TouchableHighlight
-                onPress={() => this.props.navigation.navigate('DoctorsScreen')}
-                style={styles.linkIcon} activeOpacity={1.0} underlayColor="rgba(253,138,94,0)">
-                <Ionicons name="user" size={22} color="#bccad0"/>
-              </TouchableHighlight>
-            </View>
-
-            <Text style={styles.linkFontColour}>Search</Text>
-
-          </View>
-
 
           {
             this.state.user ? (
-              <View style={styles.linkStack}>
-                <View style={styles.link}>
-                  <TouchableHighlight
-                    onPress={() => this.props.navigation.navigate('MyDoctors')}
-                    style={styles.linkIcon} activeOpacity={1.0} underlayColor="rgba(253,138,94,0)">
-                    <Ionicons name="user" size={22} color="#bccad0"/>
-                  </TouchableHighlight>
-                </View>
-                <Text style={styles.linkFontColour}>{this.state.user.type === "Patient" ? "My Doctors" : "My Patients"}</Text>
+              <View>
+                { this.state.user.type === "Patient" ? (
+                  <View style={styles.linkStack}>
+                    <View style={styles.link}>
+                      <TouchableHighlight
+                        onPress={() => this.props.navigation.navigate('DoctorsScreen')}
+                        style={styles.linkIcon} activeOpacity={1.0} underlayColor="rgba(253,138,94,0)">
+                        <Ionicons name="user" size={22} color="#bccad0"/>
+                      </TouchableHighlight>
+                    </View>
+
+                    <Text style={styles.linkFontColour}>Search</Text>
+                  </View>
+                ): null}
+
               </View>
             ): null
           }
@@ -151,6 +155,20 @@ class CustomSideMenu extends Component {
     );
   }
 }
+
+
+/*
+                    <View style={styles.linkStack}>
+                      <View style={styles.link}>
+                        <TouchableHighlight
+                          onPress={() => this.props.navigation.navigate('MyDoctors')}
+                          style={styles.linkIcon} activeOpacity={1.0} underlayColor="rgba(253,138,94,0)">
+                          <Ionicons name="user" size={22} color="#bccad0"/>
+                        </TouchableHighlight>
+                      </View>
+                      <Text style={styles.linkFontColour}>{this.state.user.type === "Patient" ? "My Doctors" : ""}</Text>
+                    </View>
+ */
 
 const styles = StyleSheet.create({
 

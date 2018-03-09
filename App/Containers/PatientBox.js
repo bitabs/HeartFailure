@@ -96,10 +96,6 @@ export default class PatientBox extends Component {
     }
   };
 
-
-
-
-
   render() {
     const opacity = this.animatedValue.interpolate({
       inputRange: [0, 0.5, 1],

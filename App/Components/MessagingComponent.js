@@ -1,114 +1,74 @@
 import React, { Component } from 'react'
-import { NavigationActions } from "react-navigation";
 import {StyleSheet, ScrollView, View, Text, TextInput, Keyboard, TouchableWithoutFeedback} from "react-native";
 import MessageComponent from "./MessageComponent";
 import Ionicons from 'react-native-vector-icons/Feather';
 import firebase from 'react-native-firebase';
 import User from './User';
-import _ from 'lodash';
 
 export default class MessagingComponent extends Component {
 
   constructor(props) {
     super(props);
+
     this.state = {
       messageObject : null,
-      type      : null
+      user          : null,
+      type          : null
     };
 
     this.fetchMessagesObject = this.fetchMessagesObject.bind(this);
+    this.initMessages  = this.initMessages.bind(this);
+    this.PCommentsRef = firebase.app().database().ref(`/PatientsCommentsToDoctors`);
+    this.DCommentsRef = firebase.app().database().ref(`/DoctorsCommentsToPatients`);
   }
 
   componentDidMount() {
-    this.fetchMessagesObject();
+    this.fetchMessagesObject(this.PCommentsRef, this.DCommentsRef);
   };
 
-  navigateToScreen = (route) => () => {
-    const navigateAction = NavigationActions.navigate({
-      routeName: route
-    });
-    this.props.navigation.dispatch(navigateAction);
-  };
-
-  fetchMessagesObject = () => {
+  fetchMessagesObject = (PatientsCommentsToDoctors, DoctorsCommentsToPatients) => {
     User().then(user => {
       firebase.app().database().ref(`/Users/${user.uid}`).on('value', (snap) => {
-        if (snap.val()) this.setState({ type: snap.val().type }, () => {});
-
-        this.messages = snap.val().type === "Doctor" ? (
-          firebase.app().database().ref('/PatientsCommentsToDoctors')
-        ) : (
-          firebase.app().database().ref('/DoctorsCommentsToPatients')
-        );
-
-        this.initMessages  = this.initMessages.bind(this);
-        this.initMessages(this.messages, user);
+        if (snap.val()) this.setState({ type: snap.val().type, user: snap.val() }, () => {
+          this.initMessages(
+            snap.val().type === "Doctor" ? PatientsCommentsToDoctors : DoctorsCommentsToPatients,
+            user, snap.val().type
+          );
+        });
       });
     });
   };
 
-  initMessages = (messages, user) => {
+  initMessages = (messages, user, type) => {
     messages.on('value', snap => {
-      const msgObj = snap.val();
-      if (msgObj) {
-        //console.log(msgObj);
-        this.setState({
-          messageObject: Object.keys(msgObj).map(($uid, i) => {
-            const person = msgObj[$uid];
-            const doctorsUIDMatch   = $uid.match( /<=>(.*)/)[1];
-            const patientsUIDMatch  = $uid.match(/(.*)<=>/)[1];
+      if (snap.val() && this.state.user) {
+        const Users = (type === "Patient") ? (this.state.user.Doctors || null) : (this.state.user.Patients || null);
+        const message = snap.val();
 
-            if (person.messages) {
-              const latest = Object.values(person.messages)[Object.keys(person.messages).length - 1];
+        if (Users) this.setState({
+          messageObject: Object.keys(Users).map(($uid,i) => {
+            const _uid = `${$uid}<=>${user.uid}`;
+            if (message[_uid] && message[_uid].messages) {
+              const { healthAlert, messages, name, uid } = message[_uid];
 
-              return (
-                <MessageComponent
-                  name          = {person.name}
-                  uid           = {$uid.match( /<=>(.*)/)[1] ? ($uid.match( /(.*)<=>/)[1]) : $uid.match( /(.*)<=>/)[1] ? $uid.match( /<=>(.*)/)[1] : ""  }
-                  healthAlert   = {person.healthAlert || "S T A B L E"}
-                  comment       = {latest ? latest.msgText : ""}
-                  timeStamp     = {latest ? latest.timeStamp : ""}
-                  type          = {this.state.type}
-                  key           = {i}
-                />
-              );
+              const [latest] = messages ? Object.values(messages).sort((a, b) => Date.parse(a.timeStamp) - Date.parse(b.timeStamp)).map(k => ({
+                timeStamp: k.timeStamp,
+                msgText: k.msgText
+              })).slice(-1) : null;
+
+              if (latest) {
+                return (
+                  <MessageComponent
+                    name={name} uid={uid} healthAlert={healthAlert || "Stable"}
+                    comment={latest ? latest.msgText : ""} timeStamp={latest ? latest.timeStamp : ""}
+                    type={this.state.type} key={i}
+                  />
+                );
+              }
             }
           })
-        })
+        });
       }
-
-      // this.setState({
-      //   messageObject: Object.keys(msgObj).map(($uid, i) => {
-      //     const person = msgObj[$uid];
-      //     const latest = Object.values(person.messages)[Object.keys(person.messages).length - 1];
-      //
-      //     return (
-      //       <MessageComponent
-      //         name          = {person.name}
-      //         uid           = {this.state.type === "Doctor" ? $uid.match( /(.*)<=>/)[1] : $uid.match( /<=>(.*)/)[1] }
-      //         healthAlert   = {person.healthAlert || ""}
-      //         comment       = {latest.msgText || null}
-      //         timeStamp     = {latest.timeStamp}
-      //         type          = {this.state.type}
-      //         key           = {i}
-      //       />
-      //     );
-      //
-      //     // if ($uid.match( /<=>(.*)/)[1] === user.uid) {
-      //     //   return (
-      //     //     <MessageComponent
-      //     //       name         = {person.name}
-      //     //       uid          = {this.state.type === "Doctor" ? $uid.match( /(.*)<=>/)[1] : $uid.match( /<=>(.*)/)[1] }
-      //     //       healthAlert  = {person.healthAlert || ""}
-      //     //       comment      = {person.messages[person.messages.length - 1].msgText || null}
-      //     //       timeStamp    = {person.messages[person.messages.length - 1].timeStamp || null}
-      //     //       type     = {this.state.type}
-      //     //       key          = {i}
-      //     //     />
-      //     //   );
-      //     // }
-      //   })
-      // })
     });
   };
 
