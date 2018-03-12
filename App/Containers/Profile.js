@@ -109,9 +109,6 @@ export default class Profile extends Component {
   };
 
   render() {
-
-    console.log(this.state.user);
-
     const user = this.state.user;
 
     const Profile = user ? (

@@ -1,16 +1,14 @@
-import React, { PureComponent } from 'react'
-import {View, TouchableHighlight, StyleSheet, Text, Animated, AsyncStorage} from 'react-native'
-import Ionicons from 'react-native-vector-icons/Feather';
-import { TabViewAnimated, TabBar } from 'react-native-tab-view';
-import type { NavigationState } from 'react-native-tab-view/types';
+import React, {PureComponent} from 'react'
+import {View, TouchableHighlight, StyleSheet, Text, Animated, AsyncStorage, StatusBar} from 'react-native'
+import Feather from 'react-native-vector-icons/Feather';
+import {TabViewAnimated, TabBar} from 'react-native-tab-view';
+import type {NavigationState} from 'react-native-tab-view/types';
 import SimplePage from './SimplePage';
-import Svg, { Line } from 'react-native-svg';
 /*
 * ======= Firebase Initialisation ======
 * */
 import firebase from 'react-native-firebase';
 import User from '../Components/User';
-import CustomModal from "../Components/CustomModal";
 
 // firebase config
 const firebaseConfig = {
@@ -29,49 +27,46 @@ type Route = {
 type State = NavigationState<Route>;
 
 export default class LaunchScreen extends PureComponent<*, State> {
-
   static title = 'Icon only top bar';
   static appbarElevation = 0;
 
   constructor(props) {
     super(props);
     this.state = {
-      index: 0,
-      routes: [{
-        key: '1', icon: 'activity'
-      }, {
-        key: '2', icon: 'airplay'
-      }],
-      selectedItem: 'About',
-      isPressed: false,
-      currentUser: null,
-      modalVisible: false,
-      loading: false,
-      type: "",
-      renderThis: true,
-      viewCurrentUser: null,
-      defaultView: null
-    }
+      index           : 0,
+      routes          : [{key: '1', icon: 'activity'}, {key: '2', icon: 'airplay'}, {key: '3', icon: 'users'}],
+      authUserUID     : null,
+      authUserType    : null,
+      modalVisible    : false,
+      viewCurrentUser : null,
+      defaultView     : null,
+    };
+    this.userRef = firebase.app().database().ref(`/Users/`);
+  }
+
+  componentWillUnmount() {
+    console.log("unmounting launchscreen")
   }
 
   componentDidMount() {
     User().then(user => {
-      firebase.app().database().ref(`/Users/${user.uid}`).on('value', (snap) => {
-
-        if (snap.val()) this.setState(prevState => ({
-          type: snap.val().type,
-          routes: snap.val().type === "Patient" ? [...prevState.routes, {
-            key: '3', icon: 'users'
-          }, {
-            key: '4', icon: 'message-square'
-          }]: prevState.routes
-        }));
-
-      });
-    });
+      this.userRef.child(user.uid).once('value').then(snap => {
+        console.log(snap.val());
+        if (snap.val()) {
+          this.setState({
+            authUserUID: user.uid,
+            authUserType: snap.val().type,
+            routes: snap.val().type === "Patient" ? [...this.state.routes,
+              {key: '1', icon: 'users'},
+              {key: '4', icon: 'message-square'}
+            ] : [...this.state.routes]
+          })
+        }
+      })
+    })
   };
 
-  _handleIndexChange = index => { this.setState({ index }) };
+  _handleIndexChange = index => this.setState({index});
 
   updateIndex = route => {
     if (route === "Patient") this.setState({
@@ -81,94 +76,46 @@ export default class LaunchScreen extends PureComponent<*, State> {
     })
   };
 
-  updateUserView = (user) => { this.setState({
-    viewCurrentUser: user
-  })};
+  updateUserView = user => this.setState({viewCurrentUser: user});
 
-  updatePatientView = (patient) => { this.setState({
-    defaultView: patient
-  })};
+  _renderIcon = ({route}) => <Feather name={route.icon} size={24} color="#bccad0"/>;
 
-  updateDoctorView = doctor => { this.setState({
-    defaultView: doctor
-  })};
+  _renderHeader = props => (<View style={[styles.headerContainer, {justifyContent: 'space-between', backgroundColor: 'white', elevation: 0.3}]}>
+    <Feather name="activity" size={20} color="#8F9CAE" />
+    <View style={{position: 'relative'}}>
+      <TouchableHighlight activeOpacity={1} underlayColor="rgba(253,138,94,0)" onPress={() => {
+        this.props.navigation.navigate('FooDrawerOpen')
+      }}>
+        <Feather style={styles.msgIcon} name="message-square" size={22} color="#bccad0"/>
+      </TouchableHighlight>
+      <View style={styles.notificationDot}/>
+    </View>
+  </View>);
 
-  eliminateRender = () => { this.setState({ renderThis: false }) };
+  _renderFooter = props => (<View style={{elevation: 20, backgroundColor: 'white', paddingBottom: 5}}>
+    <TabBar {...props} indicatorStyle={styles.indicator} renderIcon={this._renderIcon} style={styles.tabbar}/>
+  </View>);
 
-  _renderIcon = ({ route }) => { return <Ionicons name={route.icon} size={24} color="#bccad0" />; };
-
-  openModel = () => { this.child.toggleModal();};
-
-  _renderHeader = props => {
-
-    return (
-      <View style={{elevation: 0.5, backgroundColor:'white'}}>
-        <View style={styles.headerContainer}>
-          <TouchableHighlight onPress={() => this.props.navigation.navigate('DrawerOpen')} activeOpacity={1.0} underlayColor="rgba(253,138,94,0)">
-
-            <Svg height="24" width="24">
-              <Line fill="none" stroke="#bccad0" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" x1="3" y1="12" x2="21" y2="12"/>
-              <Line fill="none" stroke="#bccad0" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" x1="10.208" y1="6" x2="21" y2="6"/>
-              <Line fill="none" stroke="#bccad0" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" x1="3" y1="18" x2="13.791" y2="18"/>
-            </Svg>
-
-          </TouchableHighlight>
-
-          <View style={{position: 'relative'}}>
-            <TouchableHighlight activeOpacity={1} underlayColor="rgba(253,138,94,0)" onPress={() => {this.props.navigation.navigate('FooDrawerOpen')}}>
-              <Ionicons style={[styles.msgIcon, this.state.isPressed ? styles.testing : {}]} name="message-square" size={22} color="#bccad0"/>
-            </TouchableHighlight>
-
-            <View style={styles.notificationDot} />
-
-          </View>
-        </View>
-        <TabBar
-          {...props}
-          indicatorStyle={styles.indicator}
-          renderIcon={this._renderIcon}
-          style={styles.tabbar}
-        />
-      </View>
-    );
-    /*<CustomModal onRef={ref => this.child = ref}/>*/
-  };
-
-  _renderScene = ({ route }) => {
-    return (
-      <SimplePage
-        state           = {this.state}
-        type            = {this.state.type}
-        updateIndex     = {this.updateIndex.bind(this)}
-        userView        = {this.updateUserView.bind(this)}
-        activeUser      = {this.state.viewCurrentUser}
-      />
-    );
-  };
-
-  onMenuItemSelected = item => {
-    this.setState({
-      selectedItem: item,
-    });
-  };
-
-  _onHideUnderlay = () => {
-    this.setState({ isPressed: false });
-  };
-
-  _onShowUnderlay = () => {
-    this.setState({ isPressed: true });
-
-  };
+  _renderScene = ({route}) => (<SimplePage
+    authUserUID={this.state.authUserUID}
+    authUserType={this.state.authUserType}
+    index={this.state.index}
+    updateIndex={this.updateIndex.bind(this)}
+    userView={this.updateUserView.bind(this)}
+    activeUser={this.state.viewCurrentUser}
+    navigation={this.props.navigation}
+  />);
 
   render() {
-
     return (
-        <TabViewAnimated
-        style={[styles.container, this.props.style]}
+      <TabViewAnimated
+        style={styles.container}
         navigationState={this.state}
         renderScene={this._renderScene}
-        renderHeader={this._renderHeader}
+        renderHeader={!(
+          this.state.index === 0 && this.state.authUserType === "Patient"
+        ) && !(this.state.index === 2 && this.state.authUserType === "Doctor") ? this._renderHeader : null}
+        renderFooter={this._renderFooter}
         onIndexChange={this._handleIndexChange}
       />
     );
@@ -192,7 +139,7 @@ const styles = StyleSheet.create({
     height: 12,
     borderColor: 'white',
     borderWidth: 3,
-    borderRadius: 100/2,
+    borderRadius: 100 / 2,
     backgroundColor: '#E67D8F'
   },
   indicator: {
