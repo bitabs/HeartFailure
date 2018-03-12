@@ -13,43 +13,43 @@ import Feather from "react-native-vector-icons/Feather";
 import EditUser from "./EditUser";
 import firebase from 'react-native-firebase';
 import {Field, reduxForm} from "redux-form";
+import User from '../Components/User';
+
 
 class PatientMainScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      User: null,
-      ECG: null,
-      Health: null,
-      width: null,
-      height: null,
-      bpm: 0,
-      viewMoreBtn: true,
-      editView: false
+      User        : null,
+      ECG         : null,
+      Health      : null,
+      width       : null,
+      height      : null,
+      bpm         : 0,
+      viewMoreBtn : true,
+      editView    : false
     };
     this.fetchData = this.fetchData.bind(this);
-  }
-
-  componentDidMount() {
-    this._isMounted = true;
-    const { userRef, ecgRef, healthRef, uid } = this.props;
-    this.fetchData(userRef, ecgRef, healthRef, uid)
-    // User().then(user => {
-    //   this.user    = firebase.app().database().ref(`/Users/${user.uid}`);
-    //   this.ecg     = firebase.app().database().ref(`/ECG/${user.uid}`);
-    //   this.health  = firebase.app().database().ref(`/Health/${user.uid}`);
-    //   this.fetchData(this.user, this.ecg, this.health)
-    // })
   }
 
   componentWillUnmount() {
     this._isMounted = false;
   }
 
-  fetchData = (userRef, ecgRef, healthRef, uid) => {
-    userRef.on('value', snap => this._isMounted ? this.setState({User: snap.val()[uid]}): null);
-    // ecgRef.on('value', snap => this.setState({ECG: snap.val()[uid]}));
-    // healthRef.on('value', snap => this.setState({Health: snap.val()[uid]}));
+  componentDidMount() {
+    this._isMounted = true;
+    User().then(user => {
+      this.userRef    = firebase.app().database().ref(`/Users/${user.uid}`);
+      this.ecgRef     = firebase.app().database().ref(`/ECG/${user.uid}`);
+      this.healthRef  = firebase.app().database().ref(`/Health/${user.uid}`);
+      this.fetchData(this.userRef, this.ecgRef, this.healthRef, user);
+    });
+  }
+
+  fetchData = (userRef, ecgRef, healthRef, authUser) => {
+    userRef.on('value', snap => this._isMounted ? this.setState({User: {...snap.val(), uid: authUser.uid}}) : null);
+    ecgRef.on('value', snap => this._isMounted ? this.setState({ECG: snap.val()}) : null);
+    healthRef.once('value', snap => this._isMounted ? this.setState({Health: snap.val()}) : null);
   };
 
   applyLetterSpacing = (string, count = 1) => string.split('').join('\u200A'.repeat(count));
@@ -62,9 +62,7 @@ class PatientMainScreen extends Component {
     }
   };
 
-  save = success => {
-    //if (this._isMounted) this.setState({editView: success});
-  };
+  save = success => this.setState({editView: success});
 
   config = () => {
     const $this = this;
@@ -419,17 +417,6 @@ class PatientMainScreen extends Component {
     }
   })();
 
-  /**
-   * Returns a random integer between min (inclusive) and max (inclusive)
-   * Using Math.round() will give you a non-uniform distribution!
-   */
-  getRandomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
-
-  saveEdit = (newData) => {
-    const {userRef, uid} = this.props;
-    Database.updateUserTable(userRef, uid, newData);
-  };
-
   renderInput = ({multiline, style, maxLength, secureTextEntry, password, placeholder, input: {onChange, ...restInput}}) => {
     return (
       <TextInput
@@ -447,59 +434,68 @@ class PatientMainScreen extends Component {
     )
   };
 
-  about = (User, uid, userRef) => {
-
-    const { handleSubmit } = this.props;
-    const notSpecified = "Not Specified";
+  about = User => {
+    const notSpecified = "Not specified";
+    const { handleSubmit } = this.props, {
+      uid,
+      name          = notSpecified,
+      bio           = notSpecified,
+      profession    = notSpecified,
+      age           = notSpecified,
+      DOB           = notSpecified,
+      address       = notSpecified,
+      contactNumber = notSpecified
+    } = User, { editView } = this.state;
 
     return (
       <View style={[styles.box, {minHeight: 250}]}>
-        {this._isMounted && !this.state.editView ? (
-          <View style={{position: 'relative'}}>
+        {!editView ? (
+          <View>
             <View style={{borderBottomWidth: 1, borderBottomColor: 'rgba(188,202,208, 0.15)', paddingBottom: 20, marginRight: 5}}>
               <TouchableOpacity
                 style={{alignSelf: 'flex-end', marginBottom: 1, padding: 10, backgroundColor: '#6482e6', borderRadius: 300,
                   elevation: 4, marginRight: 5
                 }}
+                onPress={() => this.save(true)}
               >
                 <Feather name={'edit-2'} size={17} color='white' />
               </TouchableOpacity>
-              <Text style={styles.boxTitle}>{this.applyLetterSpacing(`About ${User.name.split(" ")[0] || notSpecified}`).toUpperCase()}</Text>
+              <Text style={styles.boxTitle}>{this.applyLetterSpacing(`About ${name.split(" ")[0]}`).toUpperCase()}</Text>
               <View style={{marginBottom: 20}}>
-                <Text numberOfLines={5} style={styles.mainText}>{User.bio || notSpecified}</Text>
+                <Text numberOfLines={5} style={styles.mainText}>{bio}</Text>
               </View>
 
               <Text style={[styles.subHead, {fontSize: 12}]}>CONTACT INFORMATION</Text>
               <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 5}}>
                 <View>
                   <View style={{marginBottom: 10}}>
-                    <Text style={styles.mainText}>{User.name || notSpecified}</Text>
+                    <Text style={styles.mainText}>{name}</Text>
                     <Text style={styles.subHead}>@NAME</Text>
                   </View>
 
                   <View style={{marginBottom: 10}}>
-                    <Text style={styles.mainText}>{User.profession || notSpecified}</Text>
+                    <Text style={styles.mainText}>{profession}</Text>
                     <Text style={styles.subHead}>@PROFESSION</Text>
                   </View>
 
                   <View style={{marginBottom: 10}}>
-                    <Text style={styles.mainText}>{User.age || notSpecified}</Text>
+                    <Text style={styles.mainText}>{age}</Text>
                     <Text style={styles.subHead}>@AGE</Text>
                   </View>
                 </View>
                 <View>
                   <View style={{marginBottom: 10}}>
-                    <Text numberOfLines={1} style={[styles.mainText, {flexWrap: 'wrap', maxWidth: 190}]}>{User.address || notSpecified}</Text>
+                    <Text numberOfLines={1} style={[styles.mainText, {flexWrap: 'wrap', maxWidth: 190}]}>{address}</Text>
                     <Text style={styles.subHead}>@ADDRESS</Text>
                   </View>
 
                   <View style={{marginBottom: 10}}>
-                    <Text style={styles.mainText}>{User.dob || User.DOB || notSpecified}</Text>
+                    <Text style={styles.mainText}>{DOB}</Text>
                     <Text style={styles.subHead}>@DATE OF BIRTH</Text>
                   </View>
 
                   <View style={{marginBottom: 10}}>
-                    <Text style={styles.mainText}>{User.contactNumber || notSpecified}</Text>
+                    <Text style={styles.mainText}>{contactNumber}</Text>
                     <Text style={styles.subHead}>@CONTACT NUMBER</Text>
                   </View>
                 </View>
@@ -520,7 +516,10 @@ class PatientMainScreen extends Component {
                     style={{alignSelf: 'flex-end', marginBottom: 1, padding: 10, backgroundColor: '#6482e6', borderRadius: 300,
                       elevation: 4
                     }}
-                    onPress={handleSubmit(this.saveEdit)}
+                    onPress={handleSubmit(saveEdit => {
+                      Database.updateUserTable(uid, saveEdit);
+                      this.save(false);
+                    })}
                   >
                     <Feather name={'check'} size={17} color='white' />
                   </TouchableOpacity>
@@ -566,16 +565,17 @@ class PatientMainScreen extends Component {
   };
 
   connections = User => {
-
     const {Doctors = null, Patients = null} = User;
     const user = (Doctors || Patients) ? Object.keys(Doctors || Patients) : null;
     return (
       <View style={styles.box}>
         <View>
-          <Text style={styles.boxTitle}>{user ? user.length : 0} {this.applyLetterSpacing("Connections").toUpperCase()}</Text>
+          <Text style={styles.boxTitle}>
+            {user ? user.length : 0} {this.applyLetterSpacing("Connections").toUpperCase()}</Text>
         </View>
         <View style={[styles.socialIcons, {flexWrap: 'wrap'}]}>
-          {user ? user.map((uid, i) => {
+          {
+            user ? user.map((uid, i) => {
               if (i <= 3) {
                 const $user = (Doctors && Doctors[uid]) || (Patients && Patients[uid]);
                 return (
@@ -612,10 +612,10 @@ class PatientMainScreen extends Component {
 
                   </View>
                 )
-              } else {
-                if (!this.state.viewMoreBtn) {
-                  const $user = (Doctors && Doctors[uid]) || (Patients && Patients[uid]);
-                  return <View style={styles.connection} key={i}>
+              } else if (!this.state.viewMoreBtn) {
+                const $user = (Doctors && Doctors[uid]) || (Patients && Patients[uid]);
+                return (
+                  <View style={styles.connection} key={i}>
                     <View style={{position: 'relative', marginBottom: 10}}>
                       <Image
                         style={[styles.userImg, {
@@ -640,16 +640,24 @@ class PatientMainScreen extends Component {
                                  size={10} color="white"/>
                       </View>
                     </View>
-                    <Text style={{fontWeight: 'bold', fontSize: 11, color: '#a1a2a7'}}>{$user.name.split(" ")[0] || "Not specified"}</Text>
+                    <Text style={{
+                      fontWeight: 'bold',
+                      fontSize: 11,
+                      color: '#a1a2a7'
+                    }}>{$user.name.split(" ")[0] || "Not specified"}</Text>
+
                   </View>
-                }
+                )
               }
-            }): <Text style={[styles.subHead, {fontStyle: 'italic', opacity: 0.5, fontSize: 12, fontWeight: 'normal'}]}>No connections so far</Text>}
+            }): <Text>No Connections</Text>
+          }
         </View>
-        {user && user.length >= 3 ? (
+        {
+          user && user.length >= 3 ? (
             <View>
               <TouchableOpacity
                 style={{alignSelf: 'center', margin: 10, padding: 10, backgroundColor: '#6482e6', borderRadius: 300, elevation: 2}}
+                onPress={() => this.setState({viewMoreBtn: !this.state.viewMoreBtn})}
               >
                 <Feather name={this.state.viewMoreBtn ? "plus" : "minus"} size={15} color={"white"} />
               </TouchableOpacity>
@@ -661,147 +669,152 @@ class PatientMainScreen extends Component {
     )
   };
 
-  $ECG = ecg => {
-
+  $ECG = (ecg, type) => {
     return (
       <View style={[styles.box, {padding: 0, marginBottom: 10}]}>
-        <View>
-          <View style={{padding: 30, paddingBottom: 0}}>
-            <Text style={styles.boxTitle}>{this.applyLetterSpacing("Electrocardiograph").toUpperCase()}</Text>
-          </View>
-
+        {ecg && type === "Patient"  ? (
           <View>
-            <Text style={{fontSize: 50, color: '#7D8292', textAlign: 'center'}}><Text style={{color: '#d0d4db'}}>0</Text>59
-            </Text>
-            <Text style={{fontSize: 15, color: '#e0e1e8', textAlign: 'center'}}>b e a t s   p e r   m i n u t e</Text>
-
-          </View>
-          <ECG height={130} width={Dimensions.get('window').width - 10}/>
-        </View>
-
-        <View style={{paddingBottom: 0}}>
-
-          <View style={{paddingLeft: 0, flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'flex-start'}}>
-            <View style={{margin: 0}}>
-              <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                <Feather name={"activity"} size={18} color="#aab8be" style={{paddingLeft: 20}} />
-                <Text style={{fontSize: 17, color: '#aab8be', textAlign: 'center', paddingLeft: 10}}>Electrocardiograph</Text>
+            <View>
+              <View style={{padding: 30, paddingBottom: 0}}>
+                <Text style={styles.boxTitle}>{this.applyLetterSpacing("Electrocardiograph").toUpperCase()}</Text>
               </View>
-              <View style={[styles.healthContainer, styles.infoSection, {padding: 0, paddingTop: 15, paddingBottom: 25}]}>
-                <Chart type={"day"} height={160} width={(Dimensions.get('window').width)} config={this.config()} component={"Statistics"}/>
+
+              <View>
+                <Text style={{fontSize: 50, color: '#7D8292', textAlign: 'center'}}><Text style={{color: '#d0d4db'}}>0</Text>59
+                </Text>
+                <Text style={{fontSize: 15, color: '#e0e1e8', textAlign: 'center'}}>b e a t s   p e r   m i n u t e</Text>
+
               </View>
+              <ECG height={130} width={Dimensions.get('window').width - 10}/>
             </View>
-            <View style={{margin: 0}}>
-              <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                <Feather name={"heart"} size={18} color="#aab8be" style={{paddingLeft: 20}} />
-                <Text style={{fontSize: 17, color: '#aab8be', textAlign: 'center', paddingLeft: 10}}>Heart Sound</Text>
+            <View style={{paddingBottom: 0}}>
+
+              <View style={{paddingLeft: 0, flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'flex-start'}}>
+                <View style={{margin: 0}}>
+                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                    <Feather name={"activity"} size={18} color="#aab8be" style={{paddingLeft: 20}} />
+                    <Text style={{fontSize: 17, color: '#aab8be', textAlign: 'center', paddingLeft: 10}}>Electrocardiograph</Text>
+                  </View>
+                  <View style={[styles.healthContainer, styles.infoSection, {padding: 0, paddingTop: 15, paddingBottom: 25}]}>
+                    <Chart type={"day"} height={160} width={(Dimensions.get('window').width)} config={this.config()} component={"Statistics"}/>
+                  </View>
+                </View>
+                <View style={{margin: 0}}>
+                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                    <Feather name={"heart"} size={18} color="#aab8be" style={{paddingLeft: 20}} />
+                    <Text style={{fontSize: 17, color: '#aab8be', textAlign: 'center', paddingLeft: 10}}>Heart Sound</Text>
+                  </View>
+                  <View style={[styles.healthContainer, styles.infoSection, {padding: 0, paddingTop: 15, paddingBottom: 25}]}>
+                    <Chart type={"day"} height={160} width={(Dimensions.get('window').width)} config={this.config()} component={"Statistics"}/>
+                  </View>
+                </View>
               </View>
-              <View style={[styles.healthContainer, styles.infoSection, {padding: 0, paddingTop: 15, paddingBottom: 25}]}>
-                <Chart type={"day"} height={160} width={(Dimensions.get('window').width)} config={this.config()} component={"Statistics"}/>
-              </View>
+
             </View>
           </View>
-
-        </View>
+        ): <Text>No ECG yet</Text>}
       </View>
     )
   };
 
-  $Health = (Health) => {
-
+  $Health = (health, type) => {
     return (
       <View style={[styles.box, {padding: 10, marginBottom: 10}]}>
-        <View style={{flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between'}}>
+        {health && type === "Patient" ? (
+          <View style={{flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between'}}>
 
-          <View style={styles.singleHealthContainer}>
-            <View style={{padding: 10}}>
-              <Text style={[styles.boxTitle, {fontSize: 55, fontWeight: 'normal', textAlign: 'left'}]}>
-                {Health.thermometer || 0}<Text style={{color: '#d0d4db'}}>°</Text>{'\n'}
-                <Text style={[styles.boxTitle, {fontSize: 13, fontWeight: 'normal'}]}>Temperature</Text>
-              </Text>
+            <View style={styles.singleHealthContainer}>
+              <View style={{padding: 10}}>
+                <Text style={[styles.boxTitle, {fontSize: 55, fontWeight: 'normal', textAlign: 'left'}]}>
+                  {health.thermometer || 0}<Text style={{color: '#d0d4db'}}>°</Text>{'\n'}
+                  <Text style={[styles.boxTitle, {fontSize: 13, fontWeight: 'normal'}]}>Temperature</Text>
+                </Text>
+              </View>
+              <Chart type={"day"} height={50} width={130} config={this.temperature} component={"Statistics"}/>
             </View>
-            <Chart type={"day"} height={50} width={130} config={this.temperature} component={"Statistics"}/>
-          </View>
 
-          <View style={styles.singleHealthContainer}>
-            <View style={{padding: 10}}>
-              <Text style={[styles.boxTitle, {fontSize: 55, fontWeight: 'normal', textAlign: 'left'}]}>
-                {Health.calories || 0}<Text style={{color: '#d0d4db', fontSize: 25}}>cal</Text>{'\n'}
-                <Text style={[styles.boxTitle, {fontSize: 13, fontWeight: 'normal'}]}>Calories burned</Text>
-              </Text>
+            <View style={styles.singleHealthContainer}>
+              <View style={{padding: 10}}>
+                <Text style={[styles.boxTitle, {fontSize: 55, fontWeight: 'normal', textAlign: 'left'}]}>
+                  {health.calories || 0}<Text style={{color: '#d0d4db', fontSize: 25}}>cal</Text>{'\n'}
+                  <Text style={[styles.boxTitle, {fontSize: 13, fontWeight: 'normal'}]}>Calories burned</Text>
+                </Text>
+              </View>
+              <Chart type={"day"} height={50} width={130} config={this.calroiesBurned} component={"Statistics"}/>
             </View>
-            <Chart type={"day"} height={50} width={130} config={this.calroiesBurned} component={"Statistics"}/>
-          </View>
 
-          <View style={styles.singleHealthContainer}>
-            <View style={{padding: 10}}>
-              <Text style={[styles.boxTitle, {fontSize: 55, fontWeight: 'normal', textAlign: 'left'}]}>
-                {Health.fat}<Text style={{color: '#d0d4db', fontSize: 25}}>%</Text>{'\n'}
-                <Text style={[styles.boxTitle, {fontSize: 13, fontWeight: 'normal'}]}>Fat burned</Text>
-              </Text>
+            <View style={styles.singleHealthContainer}>
+              <View style={{padding: 10}}>
+                <Text style={[styles.boxTitle, {fontSize: 55, fontWeight: 'normal', textAlign: 'left'}]}>
+                  {health.fat}<Text style={{color: '#d0d4db', fontSize: 25}}>%</Text>{'\n'}
+                  <Text style={[styles.boxTitle, {fontSize: 13, fontWeight: 'normal'}]}>Fat burned</Text>
+                </Text>
+              </View>
+              <Chart type={"day"} height={50} width={130} config={this.fatBurned} component={"Statistics"}/>
             </View>
-            <Chart type={"day"} height={50} width={130} config={this.fatBurned} component={"Statistics"}/>
-          </View>
 
-          <View style={styles.singleHealthContainer}>
-            <View style={{padding: 10}}>
-              <Text style={[styles.boxTitle, {fontSize: 55, fontWeight: 'normal', textAlign: 'left'}]}>
-                {Health.bpm}<Text style={{color: '#d0d4db', fontSize: 25}}>bpm</Text>{'\n'}
-                <Text style={[styles.boxTitle, {fontSize: 13, fontWeight: 'normal'}]}>Heart rate</Text>
-              </Text>
+            <View style={styles.singleHealthContainer}>
+              <View style={{padding: 10}}>
+                <Text style={[styles.boxTitle, {fontSize: 55, fontWeight: 'normal', textAlign: 'left'}]}>
+                  {health.bpm}<Text style={{color: '#d0d4db', fontSize: 25}}>bpm</Text>{'\n'}
+                  <Text style={[styles.boxTitle, {fontSize: 13, fontWeight: 'normal'}]}>Heart rate</Text>
+                </Text>
+              </View>
+              <Chart type={"day"} height={50} width={130} config={this.heartRate} component={"Statistics"}/>
             </View>
-            <Chart type={"day"} height={50} width={130} config={this.heartRate} component={"Statistics"}/>
           </View>
-        </View>
+        ): <Text>No Health</Text>}
       </View>
     )
   };
 
   render() {
     const
-      { userRef, ecgRef, healthRef, uid }  = this.props,
-      { User, ECG, Health }                = this.state;
+      { User, ECG, Health } = this.state;
 
     return (
       <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', padding: 20, paddingBottom: 0, paddingTop: 0}}>
-          <View>
-            <View style={styles.imageContainer}>
-              <View style={[styles.imgCircleContainer, !Images[uid] ? {elevation: 1}: null  ]}>
-                {Images[uid] ? (
-                  <Image style={styles.userImg} source={Images[uid || ""]} resizeMode="contain"/>
-                ): <Feather name={"user"} size={20} color={'#bccad0'} />}
-                <View style={[styles.imgOverlay, !Images[uid] ? {backgroundColor: 'white', opacity: 0} : null ]} />
+        {User ? (
+          <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', padding: 20, paddingBottom: 0, paddingTop: 0}}>
+            <View>
+              <View style={styles.imageContainer}>
+                <View style={[styles.imgCircleContainer, !Images[User.uid] ? {elevation: 1}: null ]}>
+                  {Images[User.uid] ? (
+                    <Image style={styles.userImg} source={Images[User.uid]} resizeMode="contain"/>
+                  ): <Feather name={"user"} size={20} color={"#bccad0"} />}
+                  <View style={[styles.imgOverlay, !Images[User.uid] ? { backgroundColor: 'white', opacity: 0  } : null ]} />
+                </View>
               </View>
             </View>
-          </View>
 
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <View>
-              <TouchableOpacity
-                onPress={() => {this.props.navigation.navigate('FooDrawerOpen')}}
-                style={{position: 'relative', backgroundColor: 'white', borderRadius: 300, padding: 15, elevation: 1}}>
-                <View style={{position: 'relative'}}>
-                  <Feather name={"message-square"} size={17} color="#bccad0"/>
-                  <View style={styles.notificationDot} />
-                </View>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <View>
+                <TouchableOpacity
+                  onPress={() => {this.props.navigation.navigate('FooDrawerOpen')}}
+                  style={{position: 'relative', backgroundColor: 'white', borderRadius: 300, padding: 15, elevation: 1}}>
+                  <View style={{position: 'relative'}}>
+                    <Feather name={"message-square"} size={17} color="#bccad0"/>
+                    <View style={styles.notificationDot} />
+                  </View>
+                </TouchableOpacity>
+              </View>
+
+              <TouchableOpacity style={{marginLeft: 25}} onPress={() => this.signOutUser()}>
+                <Text style={{color: '#a1a2a7', fontWeight: 'bold', fontSize: 10}}>L O G O U T</Text>
               </TouchableOpacity>
             </View>
-
-            <TouchableOpacity style={{marginLeft: 25}} onPress={() => this.signOutUser()}>
-              <Text style={{color: '#a1a2a7', fontWeight: 'bold', fontSize: 10}}>L O G O U T</Text>
-            </TouchableOpacity>
           </View>
-        </View>
+        ): null}
         <View style={{flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-start'}}>
           <View style={[styles.middleContainer, {width: this.state.width <= 412 ? '95%' : 550}]}>
-            {User ? this.about(User, uid, userRef) : null}
+
+            {User ? this.about(User) : null}
 
             {User ? this.connections(User) : null}
 
-            {User && ECG ? this.$ECG(ECG) : null}
+            {User && User.type === "Patient" ? this.$ECG(ECG, User.type) : null}
 
-            {User && Health ? this.$Health(Health) : null}
+            {User && User.type === "Patient" ? this.$Health(Health, User.type) : null}
           </View>
         </View>
       </ScrollView>
@@ -850,6 +863,14 @@ class PatientMainScreen extends Component {
     // );
   }
 }
+
+/*
+            {loggedInUser ? this.connections(loggedInUser) : null}
+
+            {loggedInUser && ECG ? this.$ECG(ECG) : null}
+
+            {loggedInUser && Health ? this.$Health(Health) : null}
+ */
 
 export default reduxForm({
   form: 'testdasd'

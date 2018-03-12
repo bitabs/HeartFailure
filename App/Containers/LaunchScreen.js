@@ -1,16 +1,14 @@
-import React, { PureComponent, Component } from 'react'
+import React, {PureComponent} from 'react'
 import {View, TouchableHighlight, StyleSheet, Text, Animated, AsyncStorage, StatusBar} from 'react-native'
-import Ionicons from 'react-native-vector-icons/Feather';
-import { TabViewAnimated, TabBar } from 'react-native-tab-view';
-import type { NavigationState } from 'react-native-tab-view/types';
+import Feather from 'react-native-vector-icons/Feather';
+import {TabViewAnimated, TabBar} from 'react-native-tab-view';
+import type {NavigationState} from 'react-native-tab-view/types';
 import SimplePage from './SimplePage';
-import Svg, { Line } from 'react-native-svg';
 /*
 * ======= Firebase Initialisation ======
 * */
 import firebase from 'react-native-firebase';
 import User from '../Components/User';
-import CustomModal from "../Components/CustomModal";
 
 // firebase config
 const firebaseConfig = {
@@ -28,8 +26,7 @@ type Route = {
 
 type State = NavigationState<Route>;
 
-export default class LaunchScreen extends Component<*, State> {
-
+export default class LaunchScreen extends PureComponent<*, State> {
   static title = 'Icon only top bar';
   static appbarElevation = 0;
 
@@ -37,114 +34,77 @@ export default class LaunchScreen extends Component<*, State> {
     super(props);
     this.state = {
       index           : 0,
-      routes          : [{key: '1', icon: 'activity'}, {key: '2', icon: 'airplay'}],
-      CurrentUserUID  : null,
-      loggedInUser     : null,
+      routes          : [{key: '1', icon: 'activity'}, {key: '2', icon: 'airplay'}, {key: '3', icon: 'users'}],
+      authUserUID     : null,
+      authUserType    : null,
       modalVisible    : false,
-      loading         : false,
-      type            : "",
       viewCurrentUser : null,
       defaultView     : null,
-      CombinedComments: null
     };
-    this.userRef    = firebase.app().database().ref(`/Users/`);
-    this.ecgRef     = firebase.app().database().ref(`/ECG/`);
-    this.healthRef  = firebase.app().database().ref(`/Health/`);
-    this.dashRef    = firebase.app().database().ref(`/Dashboard/`);
-    this.PCRef      = firebase.app().database().ref(`/PatientsCommentsToDoctors/`);
-    this.DCRef      = firebase.app().database().ref(`/DoctorsCommentsToPatients/`);
-
-
-    this.initFooter = this.initFooter.bind(this);
+    this.userRef = firebase.app().database().ref(`/Users/`);
   }
 
   componentWillUnmount() {
-    this._isMounted = false;
+    console.log("unmounting launchscreen")
   }
 
   componentDidMount() {
-    this._isMounted = true;
-    this.initFooter(this.userRef);
-  };
-
-  initFooter = (userRef) => {
     User().then(user => {
-      userRef.child(user.uid).on('value', (snap) => {
-        if (snap.val() && this._isMounted) {
+      this.userRef.child(user.uid).once('value').then(snap => {
+        console.log(snap.val());
+        if (snap.val()) {
           this.setState({
-            type            : snap.val().type,
-            loggedInUser    : snap.val(),
-            CurrentUserUID  : user.uid,
-            routes          : snap.val().type === "Patient" ? [...this.state.routes, {
-              key: '3', icon: 'users'}, {key: '4', icon: 'message-square'
-            }]: [...this.state.routes, {
-              key: '3', icon: 'users'
-            }]
-          });
+            authUserUID: user.uid,
+            authUserType: snap.val().type,
+            routes: snap.val().type === "Patient" ? [...this.state.routes,
+              {key: '1', icon: 'users'},
+              {key: '4', icon: 'message-square'}
+            ] : [...this.state.routes]
+          })
         }
-      });
-    });
+      })
+    })
   };
 
-  _handleIndexChange = index => { this.setState({ index }) };
+  _handleIndexChange = index => this.setState({index});
 
   updateIndex = route => {
     if (route === "Patient") this.setState({
       index: this.state.index === 2 ? 3 : 2
     }); else if (route === "Doctor") this.setState({
-      index: this.state.index === 1 ? 2 : 1
+      index: this.state.index === 0 ? 1 : 0
     })
   };
 
-  updateUserView = user => this.setState({ viewCurrentUser: user });
+  updateUserView = user => this.setState({viewCurrentUser: user});
 
-  _renderIcon = ({ route }) => { return <Ionicons name={route.icon} size={24} color="#bccad0" />; };
+  _renderIcon = ({route}) => <Feather name={route.icon} size={24} color="#bccad0"/>;
 
-  _renderHeader = props => {
-    return (
-      <View style={styles.headerContainer}>
-        <View style={{position: 'relative'}}>
-          <TouchableHighlight activeOpacity={1} underlayColor="rgba(253,138,94,0)" onPress={() => {this.props.navigation.navigate('FooDrawerOpen')}}>
-            <Ionicons style={[styles.msgIcon, this.state.isPressed ? styles.testing : {}]} name="message-square" size={22} color="#bccad0"/>
-          </TouchableHighlight>
-          <View style={styles.notificationDot} />
-        </View>
-      </View>
-    )
-  };
+  _renderHeader = props => (<View style={[styles.headerContainer, {justifyContent: 'space-between', backgroundColor: 'white', elevation: 0.3}]}>
+    <Feather name="activity" size={20} color="#8F9CAE" />
+    <View style={{position: 'relative'}}>
+      <TouchableHighlight activeOpacity={1} underlayColor="rgba(253,138,94,0)" onPress={() => {
+        this.props.navigation.navigate('FooDrawerOpen')
+      }}>
+        <Feather style={styles.msgIcon} name="message-square" size={22} color="#bccad0"/>
+      </TouchableHighlight>
+      <View style={styles.notificationDot}/>
+    </View>
+  </View>);
 
-  _renderFooter = props => {
-    return (
-      <View style={{elevation: 20, backgroundColor:'white', paddingBottom: 5}}>
-        <TabBar
-          {...props}
-          indicatorStyle={styles.indicator}
-          renderIcon={this._renderIcon}
-          style={styles.tabbar}
-        />
-      </View>
-    );
-  };
+  _renderFooter = props => (<View style={{elevation: 20, backgroundColor: 'white', paddingBottom: 5}}>
+    <TabBar {...props} indicatorStyle={styles.indicator} renderIcon={this._renderIcon} style={styles.tabbar}/>
+  </View>);
 
-  _renderScene = ({ route }) => {
-    return (
-      <SimplePage
-        state         = {this.state}
-        userRef       = {this.userRef}
-        ecgRef        = {this.ecgRef}
-        healthRef     = {this.healthRef}
-        dashRef       = {this.dashRef}
-        loggedInUser  = {this.state.loggedInUser}
-        uid           = {this.state.CurrentUserUID}
-        updateIndex   = {this.updateIndex.bind(this)}
-        userView      = {this.updateUserView.bind(this)}
-        activeUser    = {this.state.viewCurrentUser}
-        navigation    = {this.props.navigation}
-        PCRef         = {this.PCRef}
-        DCRef         = {this.DCRef}
-      />
-    );
-  };
+  _renderScene = ({route}) => (<SimplePage
+    authUserUID={this.state.authUserUID}
+    authUserType={this.state.authUserType}
+    index={this.state.index}
+    updateIndex={this.updateIndex.bind(this)}
+    userView={this.updateUserView.bind(this)}
+    activeUser={this.state.viewCurrentUser}
+    navigation={this.props.navigation}
+  />);
 
   render() {
     return (
@@ -152,7 +112,9 @@ export default class LaunchScreen extends Component<*, State> {
         style={styles.container}
         navigationState={this.state}
         renderScene={this._renderScene}
-        renderHeader={this.state.index >= 1 ? this._renderHeader : null}
+        renderHeader={!(
+          this.state.index === 0 && this.state.authUserType === "Patient"
+        ) && !(this.state.index === 2 && this.state.authUserType === "Doctor") ? this._renderHeader : null}
         renderFooter={this._renderFooter}
         onIndexChange={this._handleIndexChange}
       />
@@ -177,7 +139,7 @@ const styles = StyleSheet.create({
     height: 12,
     borderColor: 'white',
     borderWidth: 3,
-    borderRadius: 100/2,
+    borderRadius: 100 / 2,
     backgroundColor: '#E67D8F'
   },
   indicator: {

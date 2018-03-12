@@ -3,50 +3,16 @@ import moment from 'moment';
 import User from './User';
 
 export default class Database {
-  constructor() {}
+  constructor() {
 
-
-  static createNewUser = newUser => {
-    User().then(user => {
-      firebase.app().database().ref(`/Users/${user.uid}`).set(newUser).then(() => {
-        console.log("Successfully created new user in User table");
-      }).catch(e => console.log(e));
-    })
-  };
-
-  static updateUserTable(userRef, uid, inputValues) {
-    const {
-      address       = null,
-      age           = null,
-      bio           = null,
-      contactNumber = null,
-      dob           = null,
-      gender        = null,
-      name          = null,
-      profession    = null,
-    } = inputValues;
-
-    console.log(inputValues);
-
-    userRef.child(uid).update(inputValues).then(() => console.log("successfully Updated User!")).catch(e => console.log(e));
-
-
-    // User().then(user => {
-    //   firebase.app().database().ref(`/Users/${user.uid}`).set({
-    //     DOB               : "sd",
-    //     address           : "asd",
-    //     age               : "asdasd",
-    //     contactNumber     : "as",
-    //     gender            : "",
-    //     profession        : "",
-    //     name              : "testing",
-    //     bio               : "",
-    //     type              : "Patient"
-    //   }).then(() => {
-    //     console.log("successfully Updated User!");
-    //   }).catch(e => console.log(e));
-    // });
+    this.refs = firebase.app().database();
   }
+
+  static createNewUser = (uid, newUser) =>
+    firebase.app().database().ref(`/Users/${uid}`).set(newUser).catch(e => console.log(e));
+
+  static updateUserTable = (uid, inputValues) =>
+    firebase.app().database().ref(`/Users/${uid}`).update(inputValues).catch(e => console.log(e));
 
   // static setHealth() {
   //   const health = {
@@ -73,6 +39,7 @@ export default class Database {
       });
     });
   }
+
   //
   // static setECG() {
   //   const ECG = [];
@@ -109,7 +76,7 @@ export default class Database {
         return ref.child(`${loggedInUserUid}<=>${activeUserUid}`).set({
           name: msgTo,
           uid: loggedInUserUid,
-          healthAlert: health ? health.healthAlert :  "Not Specified",
+          healthAlert: health ? health.healthAlert : "Not Specified",
         }).then(() => {
           console.log("Successfully initialised messageDB");
         }).catch(e => console.log(e));

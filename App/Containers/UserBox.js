@@ -128,16 +128,6 @@ export default class UserBox extends Component {
     }
   };
 
-  async fetch(refs) {
-    return new Promise.all(refs.map(async $ref => {
-      return new Promise((resolve, reject) => {
-        $ref.on('value', snap => {
-          if (snap.val()) resolve(snap.val()); else reject();
-        })
-      });
-    }))
-  }
-
   /**
    * Returns a random integer between min (inclusive) and max (inclusive)
    * Using Math.round() will give you a non-uniform distribution!
@@ -181,7 +171,7 @@ export default class UserBox extends Component {
 
   stackedUsers = User => {
     if (!this._isMounted) return;
-    let user = User.Patients || User.Doctors;
+    let user = User && (User.Patients || User.Doctors);
 
     const {health = null} = User;
 
@@ -473,8 +463,8 @@ export default class UserBox extends Component {
 
 const styles = StyleSheet.create({
   box: {
-    marginTop: 10,
-    marginBottom: 10,
+    // marginTop: 10,
+    marginBottom: 20,
     alignItems: 'flex-start',
     backgroundColor: 'white',
     paddingTop: 10,

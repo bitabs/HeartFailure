@@ -13,68 +13,51 @@ export default class ListOfUsers extends Component {
     this.state = {
       Users: null,
     };
+    this.userRef = firebase.app().database().ref(`/Users/`);
+    this.dashRef = firebase.app().database().ref(`/Dashboard/`);
     this.initialiseDashboard = this.initialiseDashboard.bind(this);
   }
 
+  componentWillUnmount() {
+    this._isMounted = false;
+  }
+
   componentDidMount() {
-    const {uid, type, userRef, dashRef, userView} = this.props;
-    this.initialiseDashboard(uid, type, userRef, dashRef, userView);
+    this._isMounted = true;
+    const {authUserType, authUserUID, userView} = this.props;
+
+    this.initialiseDashboard(authUserUID, authUserType, this.userRef, this.dashRef, userView);
   }
 
 
-  initialiseDashboard = (uid, type, userRef, dashRef, userView) => {
-    if (type === "Patient") userRef.on('value', snap => {
-      const { Doctors = null } = snap.val()[uid];
-      Doctors ? Object.keys(Doctors).map((uid, i) => {
-        this.setState(prevState => ({
-          Users: {...prevState.Users, [uid]: snap.val()[uid]}
-        }), () => {
-          if (i === 0) userView({
-            uid: uid, ...snap.val()[uid]
-          });
-        });
-      }) : null;
+  fetchDashBoard = async (dashRef, authUserUID) => new Promise((resolve, reject) => {
+    dashRef.child(authUserUID).on('value', snap => snap.val() ? resolve(snap.val()) : reject())
+  });
 
+
+  initialiseDashboard = (authUserUID, authUserType, userRef, dashRef, userView) => {
+    if (authUserType === "Patient") userRef.on('value', snap => {
+      const {Doctors = null} = snap.val() && snap.val()[authUserUID];
+      Doctors ? Object.keys(Doctors).map((uid, i) => {
+        if (this._isMounted) {
+          this.setState(prevState => ({Users: {...prevState.Users, [uid]: snap.val()[uid]}}), () => {
+            if (i === 0) userView({uid: uid, ...snap.val()[uid]});
+          });
+        }
+      }) : null;
     });
 
-    if (type === "Doctor") dashRef.child(uid).on('value', snap => {
-      if (snap.val()) this.setState({Users: snap.val()}, () => userView({
-        uid: Object.keys(this.state.Users)[0], ...Object.values(this.state.Users)[0]
-      }))
-    })
-
-
-
-    // User().then(user => {
-    //   const { type, userView } = this.props;
-    //
-    //   if (type === "Patient") userRef.on('value', (snap) => {
-    //     if (snap.val()) {
-    //       const { Doctors = null } = snap.val()[user.uid] || null;
-    //
-    //       Doctors ? Object.keys(Doctors).map((uid, i) => {
-    //         this.setState(prevState => ({
-    //           Users: {...prevState.Users, [uid]: snap.val()[uid]}
-    //         }), () => {
-    //           if (i === 0) userView({
-    //             uid: uid, ...snap.val()[uid]
-    //           });
-    //         });
-    //       }) : null;
-    //     }
-    //   });
-    //
-    //   if (type === "Doctor") dashboardRef.child(user.uid).on('value', (snap) => {
-    //     if (snap.val()) this.setState({Users: snap.val()}, () => userView({
-    //       uid: Object.keys(this.state.Users)[0], ...Object.values(this.state.Users)[0]
-    //     }))
-    //   })
-    // });
+    if (authUserType === "Doctor") {
+      dashRef.child(authUserUID).on('value', snap => {
+        if (snap.val() && this._isMounted) {
+          this.setState({Users: snap.val()}, () => userView({uid: Object.keys(this.state.Users)[0], ...Object.values(this.state.Users)[0]}))
+        }
+      })
+    }
   };
 
   render() {
-    const { Users = null } = this.state;
-    const {uid, type, userRef, dashRef, userView, updateIndex, loggedInUser, PCRef, DCRef, healthRef, CurrentUserUID} = this.props;
+    const {Users = null} = this.state, {authUserType, authUserUID, updateIndex, userView} = this.props;
 
     return (
       <View style={styles.page}>
@@ -84,19 +67,15 @@ export default class ListOfUsers extends Component {
             return (
               <UserBox
                 uid={uid}
-                CurrentUserUID={CurrentUserUID}
-                type={type}
+                authUserUID={authUserUID}
+                type={authUserType}
                 User={user}
-                PCRef = {PCRef}
-                DCRef = {DCRef}
-                healthRef={healthRef}
-                loggedInUser={loggedInUser}
                 updateIndex={updateIndex}
                 userView={userView}
-                key={i}
+                key={uid}
               />
             )
-          }): null}
+          }) : null}
         </ScrollView>
       </View>
     );
