@@ -61,15 +61,11 @@ export default class BLE extends Component {
     //this.connect();
 
     BleManager.connect(RFDuinoID).then(() => {
-      console.log("connected");
       return BleManager.retrieveServices(RFDuinoID)
     }).then(() => {
-      console.log("retrieveServices");
       return BleManager.startNotification(RFDuinoID, '00002220-0000-1000-8000-00805F9B34FB', '00002221-0000-1000-8000-00805F9B34FB');
     }).then(() => {
-      return NativeAppEventEmitter.addListener('BleManagerDidUpdateValueForCharacteristic', data => {
-        console.log("BLE Update Value: ", data.value);
-      })
+      return NativeAppEventEmitter.addListener('BleManagerDidUpdateValueForCharacteristic', data => {})
     }).catch(e => console.log(e));
   }
 
@@ -77,26 +73,15 @@ export default class BLE extends Component {
     if (Platform.OS === 'android' && Platform.Version >= 23) {
       PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION).then((result) => {
         if (result) {
-          console.log("Permission is OK");
         } else {
-          PermissionsAndroid.requestPermission(PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION).then((result) => {
-            if (result) {
-              console.log("User accept");
-            } else {
-              console.log("User refuse");
-            }
-          });
+          PermissionsAndroid.requestPermission(PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION).then((result) => {});
         }
       });
     }
-  }
+  };
 
   handleAppStateChange(nextAppState) {
-    if (this.state.appState.match(/inactive|background/) && nextAppState === 'active') {
-      console.log('App has come to the foreground!')
-      BleManager.getConnectedPeripherals([]).then((peripheralsArray) => {
-        console.log('Connected peripherals: ' + peripheralsArray.length);
-      });
+    if (this.state.appState.match(/inactive|background/) && nextAppState === 'active') {BleManager.getConnectedPeripherals([]).then((peripheralsArray) => {});
     }
     this.setState({appState: nextAppState});
   }

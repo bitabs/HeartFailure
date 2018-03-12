@@ -16,7 +16,7 @@ const onSignUp = (creds) => {
 
   //console.log("props123 ", values, nav);
   firebase.auth().createUserWithEmailAndPassword(email, password).then((user) => {
-    Database.setUser(userToBeRegistered);
+    Database.createNewUser(userToBeRegistered);
   }).catch(err => {
     const { code, message } = err;
   });

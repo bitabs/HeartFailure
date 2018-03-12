@@ -1,105 +1,61 @@
 import React, {Component} from 'react';
 import {View, Text, StyleSheet, FlatList} from 'react-native';
-import ECG from "./ECG";
-import HeartBeat from "../Components/HeartBeat";
 import Statistics from "./Statistics";
 import ListOfUsers from "./ListOfUsers";
 import UserInfo from "./UserInfo";
-
+import PatientMainScreen from "./PatientMainScreen";
 
 export default class SimplePage extends Component {
   constructor(props) {
     super(props);
     this.state = {};
-
     this.View = this.View.bind(this);
   }
 
   componentDidMount() {
-    this.View();
+    this._isMounted = true;
   }
 
-  View = () => {
+  componentWillUnmount() {
+    this._isMounted = false;
+  }
 
-  };
-
-  Patient = () => {
+  View = (navigation, authUserUID, authUserType, index, updateIndex, userView, activeUser) => {
+    if (!this._isMounted) return;
     let toReturn = null;
-    let index = this.props.state.index;
 
-    if (this.props.type === "Patient") {
-      if (index === 0) {
-        toReturn = (
-          <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-            <HeartBeat/>
-            <ECG height={230} width={380}/>
-          </View>
-        );
-      } else if (index === 1) {
-        toReturn = (<Statistics/>);
-      } else if (index === 2) {
-        toReturn = (<ListOfUsers updateIndex={this.props.updateIndex} userView={this.props.userView} type={this.props.type}/>)
+    if ((authUserType === "Patient" && index === 0) || (authUserType === "Doctor" && index === 2))
+      toReturn = <PatientMainScreen authUserUID={authUserUID} authUserType={authUserType} navigation={navigation} />;
 
-      } else if (index === 3) {
-        toReturn = (<UserInfo User={this.props.activeUser}/>)
-      }
-    }
+    if (authUserType === "Patient" && index === 1)
+      toReturn = <Statistics />;
+
+    if ((authUserType === "Patient" && index === 2) || (authUserType === "Doctor" && index === 0))
+      toReturn = (<ListOfUsers authUserType={authUserType} authUserUID={authUserUID} updateIndex={updateIndex} userView={userView}/>);
+
+    if ((authUserType === "Patient" && index === 3) || (authUserType === "Doctor" && index === 1)  )
+      toReturn = (<UserInfo index={index} User={activeUser} authUserUID={authUserUID} authUserType={authUserType}/>);
 
     return toReturn;
-  };
-
-  Doctor = () => {
-    let toReturn = null;
-    let index = this.props.state.index;
-    if (this.props.type === "Doctor") {
-      if (index === 0) {
-        toReturn = (
-          <ListOfUsers
-            updateIndex = {this.props.updateIndex}
-            userView    = {this.props.userView}
-            type        = {this.props.type}
-          />
-        );
-      } else if (index === 1) {
-        toReturn = (
-          <UserInfo
-            User={this.props.activeUser}
-          />
-        );
-      }
-    }
-
-    return toReturn;
-    //
-    //
-    //
-    // switch (this.props.state.index) {
-    //   case 0:
-    //     return (
-    //       <ListOfUsers
-    //         updateIndex = {this.props.updateIndex}
-    //         userView    = {this.props.userView}
-    //       />
-    //     );
-    //
-    //   case 1:
-    //     return (
-    //       <UserInfo
-    //         User={this.props.activeUser}
-    //       />
-    //     );
-    //
-    //   default: return(null);
-    // }
   };
 
   render() {
+    const {
+      navigation, authUserUID, authUserType,
+      index, updateIndex, userView, activeUser
+    } = this.props;
     return (
-      <View style={styles.page}>
-        {
-          this.props.type === "Patient" ? this.Patient() : this.Doctor()
-        }
-      </View>
+      <View style={styles.page}>{
+        this.View (
+          navigation,
+          authUserUID,
+          authUserType,
+          index,
+          updateIndex,
+          userView,
+          activeUser
+        )
+      }</View>
     );
   }
 }
@@ -107,8 +63,7 @@ export default class SimplePage extends Component {
 const styles = StyleSheet.create({
   page: {
     flex: 1,
-    alignItems: 'center',
-    backgroundColor: 'white',
-    justifyContent: 'center',
+    alignItems: 'stretch',
+    backgroundColor: '#f3f3f3',
   }
 });

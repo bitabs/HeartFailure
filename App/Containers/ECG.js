@@ -45,7 +45,7 @@ export default class ECG extends Component {
     let Highcharts = 'Highcharts';
     let conf = {
       chart: {
-        type: 'spline',
+        type: 'line',
         animation: Highcharts.svg, // don't animate in old IE
         marginRight: 10,
         events: {
@@ -85,7 +85,7 @@ export default class ECG extends Component {
       plotOptions: {
         series: {
           color: 'rgba(188, 202, 208, 0.5)',
-          lineWidth: 2.5
+          lineWidth: 1.5
         }
       },
       yAxis: {
@@ -108,6 +108,7 @@ export default class ECG extends Component {
         enabled: false
       },
       series: [{
+        type: 'spline',
         name: 'Random data',
         data: (function() {
           let data = [];

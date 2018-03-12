@@ -41,8 +41,8 @@ export default class Chart extends Component {
     return(
       <ChartView
         style={{height: this.props.height, width: this.props.width || Dimensions.get('window').width}}
-        config={this.state.config}
-        options={this.state.options}
+        config={this.props.config}
+        options={this.props.options}
         scalesPageToFit={false}
         automaticallyAdjustContentInsets={false}
         showsHorizontalScrollIndicator={false}
