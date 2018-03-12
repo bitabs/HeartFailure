@@ -13,66 +13,52 @@ export default class ListOfUsers extends Component {
     this.state = {
       Users: null,
     };
-
+    this.userRef = firebase.app().database().ref(`/Users/`);
+    this.dashRef = firebase.app().database().ref(`/Dashboard/`);
     this.initialiseDashboard = this.initialiseDashboard.bind(this);
-    this.userRef      = firebase.app().database().ref('/Users');
-    this.dashboardRef = firebase.app().database().ref('/Dashboard');
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
   }
 
   componentDidMount() {
-    this.initialiseDashboard(this.userRef, this.dashboardRef);
-    // User().then(user => {
-    //   this.userRef.on('value', (snap) => {
-    //     if (snap.val()) this.setState(prevState => ({
-    //       Users: {...prevState.Users, ...snap.val()[user.uid]}
-    //     }), () => console.log(this.state.Users))
-    //   });
-    //
-    //   this.dashboardRef.on('value', (snap) => {
-    //     if (snap.val() && this.state.Users) {
-    //       const { Patients } = this.state.Users;
-    //       Patients ? Object.keys(Patients).map((uid) => {
-    //         const patient = Patients[uid];
-    //         this.setState(prevState => ({
-    //           Users: {...prevState.Users, Patients: {...prevState.Users.Patients, [uid]: {...patient, ...snap.val()[user.uid][uid]}}}
-    //         }), () => console.log(this.state.Users))
-    //       }): null
-    //     }
-    //   })
-    // });
+    this._isMounted = true;
+    const {authUserType, authUserUID, userView} = this.props;
+
+    this.initialiseDashboard(authUserUID, authUserType, this.userRef, this.dashRef, userView);
   }
 
 
-  initialiseDashboard = (userRef, dashboardRef) => {
-    User().then(user => {
-      const { type, userView } = this.props;
+  fetchDashBoard = async (dashRef, authUserUID) => new Promise((resolve, reject) => {
+    dashRef.child(authUserUID).on('value', snap => snap.val() ? resolve(snap.val()) : reject())
+  });
 
-      if (type === "Patient") userRef.on('value', (snap) => {
-        if (snap.val()) {
-          const { Doctors = null } = snap.val()[user.uid] || null;
 
-          Doctors ? Object.keys(Doctors).map((uid, i) => {
-            this.setState(prevState => ({
-              Users: {...prevState.Users, [uid]: snap.val()[uid]}
-            }), () => {
-              if (i === 0) userView({
-                uid: uid, ...snap.val()[uid]
-              });
-            });
-          }) : null;
+  initialiseDashboard = (authUserUID, authUserType, userRef, dashRef, userView) => {
+    if (authUserType === "Patient") userRef.on('value', snap => {
+      const {Doctors = null} = snap.val() && snap.val()[authUserUID];
+      Doctors ? Object.keys(Doctors).map((uid, i) => {
+        if (this._isMounted) {
+          this.setState(prevState => ({Users: {...prevState.Users, [uid]: snap.val()[uid]}}), () => {
+            if (i === 0) userView({uid: uid, ...snap.val()[uid]});
+          });
         }
-      });
-
-      if (type === "Doctor") dashboardRef.child(user.uid).on('value', (snap) => {
-        if (snap.val()) this.setState({Users: snap.val()}, () => userView({
-          uid: Object.keys(this.state.Users)[0], ...Object.values(this.state.Users)[0]
-        }))
-      })
+      }) : null;
     });
+
+    if (authUserType === "Doctor") {
+      dashRef.child(authUserUID).on('value', snap => {
+        if (snap.val() && this._isMounted) {
+          this.setState({Users: snap.val()}, () => userView({uid: Object.keys(this.state.Users)[0], ...Object.values(this.state.Users)[0]}))
+        }
+      })
+    }
   };
 
   render() {
-    const { Users = null } = this.state;
+    const {Users = null} = this.state, {authUserType, authUserUID, updateIndex, userView} = this.props;
+
     return (
       <View style={styles.page}>
         <ScrollView showsVerticalScrollIndicator={false}>
@@ -81,30 +67,20 @@ export default class ListOfUsers extends Component {
             return (
               <UserBox
                 uid={uid}
-                type={this.props.type}
+                authUserUID={authUserUID}
+                type={authUserType}
                 User={user}
-                updateIndex={this.props.updateIndex}
-                userView={this.props.userView}
-                key={i}
+                updateIndex={updateIndex}
+                userView={userView}
+                key={uid}
               />
             )
-          }): null}
+          }) : null}
         </ScrollView>
       </View>
     );
   }
 }
-
-/**
- *  <UserBox
- uid={uid}
- type={this.props.type}
- User={user}
- updateIndex={this.props.updateIndex}
- userView={this.props.userView}
- key={i}
- />
- */
 
 const styles = StyleSheet.create({
   page: {
