@@ -6,8 +6,6 @@ import Loading from "../Containers/Loading";
 import CustomSideMenu from "../Components/customSideMenu";
 import MessagingComponent from "../Components/MessagingComponent";
 import SignUp from "../Containers/SignUp";
-import Profile from "../Containers/Profile";
-import EditProfile from "../Containers/EditProfile";
 import Cardiologists from "../Containers/Cardiologists";
 import ViewMyDoctors from "../Containers/ViewMyDoctors";
 
@@ -44,26 +42,20 @@ const DrawerExample = DrawerNavigator({
 export const $LaunchScreen = DrawerNavigator({
   Home: {screen: DrawerExample}
 },{
-  contentComponent: CustomSideMenu
+  //contentComponent: CustomSideMenu
 });
 
-export const $Profile = DrawerNavigator({
-  Profile: {screen:  Profile}
-},{
-  contentComponent: CustomSideMenu
-});
+// export const $Doctors = DrawerNavigator({
+//   Profile: {screen:  Cardiologists}
+// },{
+//   contentComponent: CustomSideMenu
+// });
 
-export const $Doctors = DrawerNavigator({
-  Profile: {screen:  Cardiologists}
-},{
-  contentComponent: CustomSideMenu
-});
-
-export const $MyDoctors = DrawerNavigator({
-  Profile: {screen:  ViewMyDoctors}
-},{
-  contentComponent: CustomSideMenu
-});
+// export const $MyDoctors = DrawerNavigator({
+//   Profile: {screen:  ViewMyDoctors}
+// },{
+//   contentComponent: CustomSideMenu
+// });
 
 
 
@@ -71,18 +63,12 @@ export const SignedIn = StackNavigator({
   LaunchScreen: {
     screen: $LaunchScreen
   },
-  Profile: {
-    screen: $Profile
-  },
-  EditProfile: {
-    screen: EditProfile
-  },
-  DoctorsScreen: {
-    screen: $Doctors
-  },
-  MyDoctors: {
-    screen: $MyDoctors
-  }
+  // DoctorsScreen: {
+  //   screen: $Doctors
+  // },
+  // MyDoctors: {
+  //   screen: $MyDoctors
+  // }
 }, {
   headerMode: "none",
   mode: "modal",

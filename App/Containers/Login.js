@@ -16,7 +16,6 @@ export default class Login extends Component {
   }
 
   buttonPress() {
-    console.log('called');
     this.props.navigation.navigate('drawerStack');
   }
 

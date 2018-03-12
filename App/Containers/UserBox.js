@@ -6,11 +6,11 @@ import {
 import Chart from "./Chart";
 import PropTypes from 'prop-types';
 import {Images} from './PreLoadImages';
-
+import Database from '../Components/Database';
 import Feather from 'react-native-vector-icons/Feather';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-import Svg, { Polygon, Circle, Path } from 'react-native-svg';
+import Svg, {Polygon, Circle, Path} from 'react-native-svg';
 
 export default class UserBox extends Component {
   constructor(props) {
@@ -20,22 +20,31 @@ export default class UserBox extends Component {
       randomFav: null,
       randomWatch: null,
       totalMessages: null,
+      Users: null,
       wait: true,
       star: "9,4.958 10.313,7.618 13.25,8.048 11.125,10.119 11.627,13.042 9,11.66 6.374,13.042 6.875,10.119 4.75,8.048 7.688,7.618"
     };
     this.animatedValue = new Animated.Value(1);
   }
 
+  componentWillUnmount() {
+    this._isMounted = false;
+    console.log("unmoutning in UserBox");
+  }
+
   componentDidMount() {
+    this._isMounted = true;
+    if (!this._isMounted) return;
+
     this.setState({
-      randomFav: this.getRandomInt(0,4),
+      randomFav: this.getRandomInt(0, 4),
       randomWatch: this.getRandomInt(0, 500)
     });
 
     this.spin();
   }
 
-  spin () {
+  spin() {
     this.animatedValue.setValue(1);
     Animated.timing(
       this.animatedValue,
@@ -45,7 +54,7 @@ export default class UserBox extends Component {
         delay: 100,
         easing: Easing.linear
       }
-    ).start( () => this.setState({wait: false}));
+    ).start(() => this.setState({wait: false}));
   }
 
   config = () => {
@@ -81,7 +90,7 @@ export default class UserBox extends Component {
             }
           },
           events: {
-            click: function() {
+            click: function () {
               this.setState(this.state === 'select' ? '' : 'select');
             }
           }
@@ -90,7 +99,7 @@ export default class UserBox extends Component {
       yAxis: {
         visible: false
       },
-      tooltip: { enabled: false },
+      tooltip: {enabled: false},
       scrollbar: {
         enabled: false
       },
@@ -105,7 +114,7 @@ export default class UserBox extends Component {
       },
       series: [{
         name: 'Random data',
-        data: (function() {
+        data: (function () {
           let data = [];
 
           if ($this.props.User && $this.props.User.ecg)
@@ -119,6 +128,16 @@ export default class UserBox extends Component {
     }
   };
 
+  async fetch(refs) {
+    return new Promise.all(refs.map(async $ref => {
+      return new Promise((resolve, reject) => {
+        $ref.on('value', snap => {
+          if (snap.val()) resolve(snap.val()); else reject();
+        })
+      });
+    }))
+  }
+
   /**
    * Returns a random integer between min (inclusive) and max (inclusive)
    * Using Math.round() will give you a non-uniform distribution!
@@ -128,26 +147,29 @@ export default class UserBox extends Component {
   };
 
   update = (user) => {
+    if (!this._isMounted) return;
     console.log(this.props.type);
     this.props.updateIndex(this.props.type);
     this.props.userView(user);
+
   };
 
   stars = () => {
+    if (!this._isMounted) return;
     return (
       <View style={{marginTop: 10}}>
         <View style={{flexDirection: 'row'}}>
           <Text style={{fontWeight: 'bold', color: '#97a4aa', marginRight: 5}}>{this.state.randomFav}.00</Text>
-          {[1,2,3,4,5].map((e,i) => {
+          {[1, 2, 3, 4, 5].map((e, i) => {
             return (
               <Svg height="15" width="15" key={i}>
                 <Polygon
-                  fill            = {i < this.state.randomFav ? "#E67D8F" : '#f1f1f1'}
-                  stroke          = {i < this.state.randomFav ? "#E67D8F" : '#f1f1f1'}
-                  strokeWidth     = "2"
-                  strokeLinecap   = "round"
-                  strokeLinejoin  = "round"
-                  points          = {this.state.star}
+                  fill={i < this.state.randomFav ? "#E67D8F" : '#f1f1f1'}
+                  stroke={i < this.state.randomFav ? "#E67D8F" : '#f1f1f1'}
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  points={this.state.star}
                 />
               </Svg>
             )
@@ -158,6 +180,7 @@ export default class UserBox extends Component {
   };
 
   stackedUsers = User => {
+    if (!this._isMounted) return;
     let user = User.Patients || User.Doctors;
 
     const {health = null} = User;
@@ -170,10 +193,10 @@ export default class UserBox extends Component {
             borderRadius: 300,
             height: 25,
             width: 25,
-          }} source={Images[uid]} resizeMode="contain" key={i}/>
+          }} source={Images[uid]} resizeMode="contain"/>
         </View>
       )
-    }): null;
+    }) : null;
 
     const more = Users && Object.keys(Users).length > 3;
 
@@ -186,23 +209,37 @@ export default class UserBox extends Component {
               {Users}
             </View>
             {more ? (
-              <View style={[styles.imgCircleContainer, {position: 'absolute', left: 56, backgroundColor: 'white', } ]}>
-                <View style={{width: 25, height: 25, backgroundColor: '#f8f8f8', borderRadius: 300, alignItems: 'center', justifyContent: 'center'}}>
+              <View style={[styles.imgCircleContainer, {position: 'absolute', left: 56, backgroundColor: 'white',}]}>
+                <View style={{
+                  width: 25,
+                  height: 25,
+                  backgroundColor: '#f8f8f8',
+                  borderRadius: 300,
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}>
                   <Text style={{fontSize: 10, fontWeight: 'bold'}}>+{Object.keys(Users).length - 3}</Text>
                 </View>
               </View>
-            ): null}
+            ) : null}
           </View>
-        </View>): null}
+        </View>) : null}
 
         {health ? (
           <View>
             <Text style={{
-              padding: 5, paddingLeft: 20, paddingRight: 20, backgroundColor: this.tagColor(health.healthAlert), borderRadius: 5,
-              fontSize: 12, color: 'white', elevation: 2, fontWeight: 'bold'
+              padding: 8,
+              paddingLeft: 20,
+              paddingRight: 20,
+              backgroundColor: this.tagColor(health.healthAlert),
+              borderRadius: 5,
+              fontSize: 12,
+              color: 'white',
+              // elevation: 2,
+              fontWeight: 'bold'
             }}>{health.healthAlert}</Text>
           </View>
-        ): null}
+        ) : null}
 
 
       </View>
@@ -210,6 +247,7 @@ export default class UserBox extends Component {
   };
 
   UsersGeneralDetails = (name, profession, address) => {
+    if (!this._isMounted) return;
     return (
       <View style={{flexDirection: 'row', justifyContent: 'space-between', position: 'relative'}}>
         <View style={{flexWrap: 'wrap', maxWidth: 130, alignItems: 'flex-start'}}>
@@ -217,24 +255,31 @@ export default class UserBox extends Component {
           <Text style={styles.profession}>{profession}</Text>
         </View>
         <View style={{alignSelf: 'flex-start', marginTop: 5, flexDirection: 'row', alignItems: 'center'}}>
-          <Feather style={{fontWeight: '900', marginRight: 5}} name="map-pin" size={10} color="#909aae" />
-          <Text numberOfLines={1} style={{fontSize: 10, color: '#909aae', flexWrap: 'wrap', maxWidth: 100}}>{address || "Not Specified"}</Text>
+          <Feather style={{fontWeight: '900', marginRight: 5}} name="map-pin" size={10} color="#909aae"/>
+          <Text numberOfLines={1} style={{
+            fontSize: 10,
+            color: '#909aae',
+            flexWrap: 'wrap',
+            maxWidth: 100
+          }}>{address || "Not Specified"}</Text>
         </View>
       </View>
     )
   };
 
   ECG = User => {
+    if (!this._isMounted) return;
     return (
       User && User.ecg ? (
         <View style={{alignItems: 'center', padding: 0}}>
           <Chart type={"day"} height={100} width={"100%"} config={this.config()} component={"Statistics"}/>
         </View>
-      ): null
+      ) : null
     )
   };
 
   tagColor = healthAlert => {
+    if (!this._isMounted) return;
     if (healthAlert === "Stable")
       return "#44C8A6";
     else if (healthAlert === "Average")
@@ -246,6 +291,7 @@ export default class UserBox extends Component {
   };
 
   UserLeftSection = (User, uid) => {
+    if (!this._isMounted) return;
     const {health = null} = User;
 
     const tagColor = this.tagColor(health ? health.healthAlert : null);
@@ -258,10 +304,10 @@ export default class UserBox extends Component {
             backgroundColor: tagColor
           }]}>
             <Image style={styles.userImg} source={Images[uid]} resizeMode="contain"/>
-            <View style={styles.imgOverlay} />
+            <View style={styles.imgOverlay}/>
           </View>
           <View style={styles.verified}>
-            <Feather style={{fontWeight: '900'}} name="check" size={15} color="white" />
+            <Feather style={{fontWeight: '900'}} name="check" size={15} color="white"/>
           </View>
         </View>
 
@@ -270,7 +316,7 @@ export default class UserBox extends Component {
             <View style={{width: '100%'}}>
               <View style={{alignSelf: 'center'}}>
                 <Svg width="31.463" height="31.463" viewBox="0 0 31.463 31.463">
-                  <Circle fill={"#e9e9e9"} cx="15.698" cy="2.644" r="2.644" />
+                  <Circle fill={"#e9e9e9"} cx="15.698" cy="2.644" r="2.644"/>
                   <Path fill={'#e9e9e9'} d="M21.396,8.791c0,0,0.148-2.953-2.968-2.953h-5.403c-3.005,0-2.983,2.727-2.985,2.953l0.001,8.38
 		c0.049,0.452,0.495,0.967,1.049,0.967c0.551,0,0.956-0.499,1.006-0.952l0.938,13.346c0.069,0.679,0.549,0.932,1.139,0.932
 		c0.589,0,1.068-0.253,1.137-0.932h0.833c0.072,0.679,0.55,0.932,1.137,0.932c0.591,0,1.07-0.253,1.141-0.932l0.966-13.354
@@ -279,41 +325,52 @@ export default class UserBox extends Component {
               </View>
 
               <View style={{marginTop: 10}}>
-                <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 5}}>
+                <View
+                  style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 5}}>
                   <Text style={{color: '#e9e9e9', fontSize: 12, fontWeight: 'bold'}}>{health.height}cm</Text>
                   <Text style={{color: '#e9e9e9', fontSize: 10}}>Height</Text>
                 </View>
-                <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 5}}>
+                <View
+                  style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 5}}>
                   <Text style={{color: '#e9e9e9', fontSize: 12, fontWeight: 'bold'}}>{health.weight}cm</Text>
                   <Text style={{color: '#e9e9e9', fontSize: 10}}>Weight</Text>
                 </View>
-                <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 5}}>
+                <View
+                  style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 5}}>
                   <Text style={{color: '#e9e9e9', fontSize: 12, fontWeight: 'bold'}}>{health.age}</Text>
                   <Text style={{color: '#e9e9e9', fontSize: 10}}>Age</Text>
                 </View>
-                <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 5}}>
+                <View
+                  style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 5}}>
                   <Text style={{color: '#e9e9e9', fontSize: 12, fontWeight: 'bold'}}>{health.fat}%</Text>
                   <Text style={{color: '#e9e9e9', fontSize: 10}}>Fat</Text>
                 </View>
-                <View style={{flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'flex-start', marginTop: 10}}>
+                <View style={{
+                  flexDirection: 'column',
+                  alignItems: 'flex-start',
+                  justifyContent: 'flex-start',
+                  marginTop: 10
+                }}>
                   <Text style={{color: '#e9e9e9', fontSize: 12}}>Allergies</Text>
 
                   <View style={{flexDirection: 'row', alignItems: 'center'}}>
                     {Object.values(health.allergies).map((allergy, i) => {
                       if (i <= 1)
-                        return <Text key={i} style={{color: '#e9e9e9', fontSize: 10}}>{allergy}{i !== 1 ? ', ' : ''}</Text>
+                        return <Text key={i}
+                                     style={{color: '#e9e9e9', fontSize: 10}}>{allergy}{i !== 1 ? ', ' : ''}</Text>
                     })}
                   </View>
                 </View>
               </View>
             </View>
-          ): null
+          ) : null
         }
       </View>
     )
   };
 
   UserRightSection = User => {
+    if (!this._isMounted) return;
 
     const {health = null} = User;
 
@@ -328,31 +385,32 @@ export default class UserBox extends Component {
 
         {health ? (
           <View>
-            <Text style={{color: 'rgba(144, 154, 174, 0.5)', fontSize: 15, marginTop: 10, fontWeight: 'bold'}}>Health Summary</Text>
+            <Text style={{color: 'rgba(144, 154, 174, 0.5)', fontSize: 15, marginTop: 10, fontWeight: 'bold'}}>Health
+              Summary</Text>
 
             <View style={{flexDirection: 'row', alignItems: 'center', marginTop: 20, justifyContent: 'space-between'}}>
               <View style={{flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
-                <Ionicons style={{fontWeight: '900'}} name="md-heart" size={17} color="rgba(144, 154, 174, 0.5)" />
+                <Ionicons style={{fontWeight: '900'}} name="md-heart" size={17} color="rgba(144, 154, 174, 0.5)"/>
                 <Text style={{color: 'rgba(144, 154, 174, 0.5)', fontSize: 20}}>{health.bpm}
                   <Text style={{fontSize: 13}}> bpm</Text>
                 </Text>
               </View>
 
               <View style={{flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
-                <Ionicons style={{fontWeight: '900'}} name="md-flame" size={17} color="rgba(144, 154, 174, 0.5)" />
-                <Text style={{color: 'rgba(144, 154, 174, 0.5)', fontSize: 20 }}>{health.calories}
+                <Ionicons style={{fontWeight: '900'}} name="md-flame" size={17} color="rgba(144, 154, 174, 0.5)"/>
+                <Text style={{color: 'rgba(144, 154, 174, 0.5)', fontSize: 20}}>{health.calories}
                   <Text style={{fontSize: 13}}> cal</Text>
                 </Text>
               </View>
 
               <View style={{flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
-                <Ionicons style={{fontWeight: '900'}} name="md-thermometer" size={17} color="rgba(144, 154, 174, 0.5)" />
-                <Text style={{color: 'rgba(144, 154, 174, 0.5)', fontSize: 20 }}>{health.thermometer}°
+                <Ionicons style={{fontWeight: '900'}} name="md-thermometer" size={17} color="rgba(144, 154, 174, 0.5)"/>
+                <Text style={{color: 'rgba(144, 154, 174, 0.5)', fontSize: 20}}>{health.thermometer}°
                 </Text>
               </View>
             </View>
           </View>
-        ):null}
+        ) : null}
 
         {this.ECG(User)}
 
@@ -362,19 +420,17 @@ export default class UserBox extends Component {
 
   render() {
     const
-      opacity   = this.animatedValue.interpolate({inputRange: [0, 0.5, 1], outputRange: [0, 0.5, 1]}),
-      { User }  = this.props;
+      opacity = this.animatedValue.interpolate({inputRange: [0, 0.5, 1], outputRange: [0, 0.5, 1]}),
+      {User} = this.props;
 
-    console.log(User);
-
-    return(
+    return (
       <View>
         <View style={[styles.box, {position: 'relative'}]}>
           <TouchableOpacity
             activeOpacity={0.7}
-            onPress={() => this.update({uid: this.props.uid,...User})}
+            onPress={() => this.update({uid: this.props.uid, ...User})}
             style={{alignSelf: 'flex-end', padding: 10, paddingRight: 0, paddingLeft: 30}}>
-            <Feather style={{fontWeight: '900'}} name="more-horizontal" size={15} color="#909aae" />
+            <Feather style={{fontWeight: '900'}} name="more-horizontal" size={15} color="#909aae"/>
           </TouchableOpacity>
 
           <View style={{flexWrap: 'wrap', flexDirection: 'row', alignItems: 'flex-start'}}>
@@ -390,20 +446,26 @@ export default class UserBox extends Component {
             paddingBottom: 20,
           }}>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <Feather style={{fontWeight: '900'}} name="eye" size={15} color="rgba(144, 154, 174, 0.5)" />
-              <Text style={{marginLeft: 5, fontSize: 10, color: 'rgba(144, 154, 174, 0.5)'}}>{this.state.randomWatch}</Text>
+              <Feather style={{fontWeight: '900'}} name="eye" size={15} color="rgba(144, 154, 174, 0.5)"/>
+              <Text
+                style={{marginLeft: 5, fontSize: 10, color: 'rgba(144, 154, 174, 0.5)'}}>{this.state.randomWatch}</Text>
             </View>
 
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <Feather style={{fontWeight: '900'}} name="message-square" size={15} color="rgba(144, 154, 174, 0.5)" />
-              <Text style={{marginLeft: 5,  fontSize: 10, color: 'rgba(144, 154, 174, 0.5)'}}>{this.getRandomInt(0, 500)}</Text>
+              <Feather style={{fontWeight: '900'}} name="message-square" size={15} color="rgba(144, 154, 174, 0.5)"/>
+              <Text style={{
+                marginLeft: 5,
+                fontSize: 10,
+                color: 'rgba(144, 154, 174, 0.5)'
+              }}>{this.getRandomInt(0, 500)}</Text>
 
             </View>
           </View>
         </View>
         {this.state.wait ? (
-          <Animated.View style={{position: 'absolute', top: 0, bottom: 0, left: 0, right: 0, backgroundColor: 'white', opacity} } />
-        ): null}
+          <Animated.View
+            style={{position: 'absolute', top: 0, bottom: 0, left: 0, right: 0, backgroundColor: 'white', opacity}}/>
+        ) : null}
       </View>
     );
   }
@@ -468,8 +530,8 @@ const styles = StyleSheet.create({
     paddingRight: 20
   },
   infoBox: {
-    flexDirection:'row',
-    alignItems:'center',
+    flexDirection: 'row',
+    alignItems: 'center',
     justifyContent: 'space-between',
     position: 'relative'
   },
@@ -513,7 +575,7 @@ const styles = StyleSheet.create({
 
 
 UserBox.propTypes = {
-  uid         : PropTypes.string.isRequired,
-  User        : PropTypes.object.isRequired,
-  updateIndex : PropTypes.func.isRequired
+  uid: PropTypes.string.isRequired,
+  User: PropTypes.object.isRequired,
+  updateIndex: PropTypes.func.isRequired
 };

@@ -21,138 +21,136 @@ class CustomSideMenu extends Component {
   }
 
   componentDidMount() {
-    User().then(user => {
-      firebase.app().database().ref(`/Users/${user.uid}`).on('value', (snap) => {
-        if (snap.val()) this.setState({uid: user.uid, user: snap.val() });
-      });
-    });
+    // User().then(user => {
+    //   firebase.app().database().ref(`/Users/${user.uid}`).on('value', (snap) => {
+    //     if (snap.val()) this.setState({uid: user.uid, user: snap.val() });
+    //   });
+    // });
   }
 
-  navigateToScreen = (route) => () => {
-    const navigateAction = NavigationActions.navigate({
-      routeName: route
-    });
-    this.props.navigation.dispatch(navigateAction);
-  };
-
-  openModel = () => {
-    this.child.toggleModal() // do stuff
-  };
-
-  signOutUser = async () => {
-    try {
-      await firebase.auth().signOut();
-    } catch (e) {
-      console.log(e);
-    }
-  };
+  // navigateToScreen = (route) => () => {
+  //   const navigateAction = NavigationActions.navigate({
+  //     routeName: route
+  //   });
+  //   this.props.navigation.dispatch(navigateAction);
+  // };
+  //
+  // openModel = () => {
+  //   this.child.toggleModal() // do stuff
+  // };
+  //
+  // signOutUser = async () => {
+  //   try {
+  //     await firebase.auth().signOut();
+  //   } catch (e) {}
+  // };
 
   render () {
-
-    let userType = this.state.user ? (
-      <View>
-        {
-          this.state.user.type === "Patient" ? (
-            <View>
-              <View style={styles.linkStack}>
-                <View style={styles.link}>
-                  <TouchableHighlight style={styles.linkIcon} activeOpacity={1.0} underlayColor="rgba(253,138,94,0)">
-                    <Ionicons name="bar-chart-2" size={22} color="#bccad0"/>
-                  </TouchableHighlight>
-                </View>
-
-                <Text style={styles.linkFontColour}>View History</Text>
-
-              </View>
-
-              <View style={styles.linkStack}>
-                <View style={styles.link}>
-                  <TouchableHighlight style={styles.linkIcon} activeOpacity={1.0} underlayColor="rgba(253,138,94,0)">
-                    <Ionicons name="activity" size={22} color="#bccad0"/>
-                  </TouchableHighlight>
-                </View>
-
-                <Text style={styles.linkFontColour}>ECG & Heart Sound</Text>
-
-              </View>
-            </View>
-
-          ): null
-        }
-      </View>
-    ): null;
-
-    let profPic = this.state.uid ? (
-      <TouchableOpacity onPress={() => this.props.navigation.navigate('Profile')}>
-        <Image style={styles.userImg} source={Images[this.state.uid]} resizeMode="contain"/>
-      </TouchableOpacity>
-    ): null;
-
-    let name = this.state.user ? (
-      <Text style={[styles.verticalCenter, styles.userName]}>{this.state.user.name}</Text>
-    ): null;
-
-    return (
-      <View style={styles.sideMenuContainer}>
-        <ScrollView>
-          <View style={styles.profileBlock}>
-
-            {profPic}
-
-            {name}
-
-            <TouchableHighlight
-              style={[styles.verticalCenter, styles.floatRight]}
-              activeOpacity={1.0}
-              underlayColor="rgba(253,138,94,0)"
-              onPress={() => this.signOutUser()}
-            >
-              <Ionicons name="log-out" size={16} color="#bccad0"/>
-            </TouchableHighlight>
-            <CustomModal onRef={ref => this.child = ref}/>
-          </View>
-
-          <View style={styles.linkStack}>
-            <View style={styles.link}>
-              <TouchableHighlight
-                onPress={() => this.props.navigation.navigate('Home')}
-                style={styles.linkIcon} activeOpacity={1.0} underlayColor="rgba(253,138,94,0)">
-                <Ionicons name="home" size={22} color="#bccad0"/>
-              </TouchableHighlight>
-            </View>
-
-            <TouchableHighlight
-              onPress={() => this.props.navigation.navigate('Home')}
-              style={styles.linkIcon} activeOpacity={1.0} underlayColor="rgba(253,138,94,0)">
-              <Text style={styles.linkFontColour}>Home</Text>
-            </TouchableHighlight>
-          </View>
-
-
-          {
-            this.state.user ? (
-              <View>
-                { this.state.user.type === "Patient" ? (
-                  <View style={styles.linkStack}>
-                    <View style={styles.link}>
-                      <TouchableHighlight
-                        onPress={() => this.props.navigation.navigate('DoctorsScreen')}
-                        style={styles.linkIcon} activeOpacity={1.0} underlayColor="rgba(253,138,94,0)">
-                        <Ionicons name="user" size={22} color="#bccad0"/>
-                      </TouchableHighlight>
-                    </View>
-
-                    <Text style={styles.linkFontColour}>Search</Text>
-                  </View>
-                ): null}
-
-              </View>
-            ): null
-          }
-
-        </ScrollView>
-      </View>
-    );
+    return null;
+    // let userType = this.state.user ? (
+    //   <View>
+    //     {
+    //       this.state.user.type === "Patient" ? (
+    //         <View>
+    //           <View style={styles.linkStack}>
+    //             <View style={styles.link}>
+    //               <TouchableHighlight style={styles.linkIcon} activeOpacity={1.0} underlayColor="rgba(253,138,94,0)">
+    //                 <Ionicons name="bar-chart-2" size={22} color="#bccad0"/>
+    //               </TouchableHighlight>
+    //             </View>
+    //
+    //             <Text style={styles.linkFontColour}>View History</Text>
+    //
+    //           </View>
+    //
+    //           <View style={styles.linkStack}>
+    //             <View style={styles.link}>
+    //               <TouchableHighlight style={styles.linkIcon} activeOpacity={1.0} underlayColor="rgba(253,138,94,0)">
+    //                 <Ionicons name="activity" size={22} color="#bccad0"/>
+    //               </TouchableHighlight>
+    //             </View>
+    //
+    //             <Text style={styles.linkFontColour}>ECG & Heart Sound</Text>
+    //
+    //           </View>
+    //         </View>
+    //
+    //       ): null
+    //     }
+    //   </View>
+    // ): null;
+    //
+    // let profPic = this.state.uid ? (
+    //   <TouchableOpacity onPress={() => this.props.navigation.navigate('Profile')}>
+    //     <Image style={styles.userImg} source={Images[this.state.uid]} resizeMode="contain"/>
+    //   </TouchableOpacity>
+    // ): null;
+    //
+    // let name = this.state.user ? (
+    //   <Text style={[styles.verticalCenter, styles.userName]}>{this.state.user.name}</Text>
+    // ): null;
+    //
+    // return (
+    //   <View style={styles.sideMenuContainer}>
+    //     <ScrollView>
+    //       <View style={styles.profileBlock}>
+    //
+    //         {profPic}
+    //
+    //         {name}
+    //
+    //         <TouchableHighlight
+    //           style={[styles.verticalCenter, styles.floatRight]}
+    //           activeOpacity={1.0}
+    //           underlayColor="rgba(253,138,94,0)"
+    //           onPress={() => this.signOutUser()}
+    //         >
+    //           <Ionicons name="log-out" size={16} color="#bccad0"/>
+    //         </TouchableHighlight>
+    //         <CustomModal onRef={ref => this.child = ref}/>
+    //       </View>
+    //
+    //       <View style={styles.linkStack}>
+    //         <View style={styles.link}>
+    //           <TouchableHighlight
+    //             onPress={() => this.props.navigation.navigate('Home')}
+    //             style={styles.linkIcon} activeOpacity={1.0} underlayColor="rgba(253,138,94,0)">
+    //             <Ionicons name="home" size={22} color="#bccad0"/>
+    //           </TouchableHighlight>
+    //         </View>
+    //
+    //         <TouchableHighlight
+    //           onPress={() => this.props.navigation.navigate('Home')}
+    //           style={styles.linkIcon} activeOpacity={1.0} underlayColor="rgba(253,138,94,0)">
+    //           <Text style={styles.linkFontColour}>Home</Text>
+    //         </TouchableHighlight>
+    //       </View>
+    //
+    //
+    //       {
+    //         this.state.user ? (
+    //           <View>
+    //             { this.state.user.type === "Patient" ? (
+    //               <View style={styles.linkStack}>
+    //                 <View style={styles.link}>
+    //                   <TouchableHighlight
+    //                     onPress={() => this.props.navigation.navigate('DoctorsScreen')}
+    //                     style={styles.linkIcon} activeOpacity={1.0} underlayColor="rgba(253,138,94,0)">
+    //                     <Ionicons name="user" size={22} color="#bccad0"/>
+    //                   </TouchableHighlight>
+    //                 </View>
+    //
+    //                 <Text style={styles.linkFontColour}>Search</Text>
+    //               </View>
+    //             ): null}
+    //
+    //           </View>
+    //         ): null
+    //       }
+    //
+    //     </ScrollView>
+    //   </View>
+    // );
   }
 }
 

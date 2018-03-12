@@ -37,7 +37,7 @@ export default class ViewMyDoctors extends Component {
     return this.state.doctors ? (
       Object.keys(this.state.doctors).map((uid, i) => {
         return (
-          <View style={styles.doctorContainer} key={uid}>
+          <View style={styles.doctorContainer} key={i}>
             <View style={styles.imgCircleContainer}>
               <View>
                 <Image style={styles.userImg} source={require('../Images/Naseebullah.jpg')} resizeMode="contain"/>
