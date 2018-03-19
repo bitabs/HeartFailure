@@ -132,9 +132,7 @@ export default class UserBox extends Component {
    * Returns a random integer between min (inclusive) and max (inclusive)
    * Using Math.round() will give you a non-uniform distribution!
    */
-  getRandomInt = (min, max) => {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  };
+  getRandomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
   update = (user) => {
     if (!this._isMounted) return;
@@ -242,7 +240,7 @@ export default class UserBox extends Component {
       <View style={{flexDirection: 'row', justifyContent: 'space-between', position: 'relative'}}>
         <View style={{flexWrap: 'wrap', maxWidth: 130, alignItems: 'flex-start'}}>
           <Text style={styles.name}>{name}</Text>
-          <Text style={styles.profession}>{profession}</Text>
+          <Text style={styles.profession}>{profession || "Not Specified"}</Text>
         </View>
         <View style={{alignSelf: 'flex-start', marginTop: 5, flexDirection: 'row', alignItems: 'center'}}>
           <Feather style={{fontWeight: '900', marginRight: 5}} name="map-pin" size={10} color="#909aae"/>
@@ -268,6 +266,9 @@ export default class UserBox extends Component {
     )
   };
 
+  random = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+
+
   tagColor = healthAlert => {
     if (!this._isMounted) return;
     if (healthAlert === "Stable")
@@ -282,7 +283,11 @@ export default class UserBox extends Component {
 
   UserLeftSection = (User, uid) => {
     if (!this._isMounted) return;
-    const {health = null} = User;
+    console.log(User);
+    let health = null;
+
+    if (User && User.type === "Patient")
+      health = User.health;
 
     const tagColor = this.tagColor(health ? health.healthAlert : null);
 
@@ -290,11 +295,18 @@ export default class UserBox extends Component {
       <View style={styles.leftContainer}>
 
         <View style={{marginBottom: 20}}>
+
           <View style={[styles.imgRound, {
             backgroundColor: tagColor
+          }, {
+            backgroundColor: !Images[uid] ? "#E67D8F" : null
           }]}>
-            <Image style={styles.userImg} source={Images[uid]} resizeMode="contain"/>
-            <View style={styles.imgOverlay}/>
+            {Images[uid] ? (
+              <View>
+                <Image style={styles.userImg} source={Images[uid]} resizeMode="contain"/>
+                <View style={styles.imgOverlay}/>
+              </View>
+            ) : <Feather name={"user"} size={40} color={"white"}/>}
           </View>
           <View style={styles.verified}>
             <Feather style={{fontWeight: '900'}} name="check" size={15} color="white"/>
@@ -302,12 +314,12 @@ export default class UserBox extends Component {
         </View>
 
         {
-          User && User.type === "Patient" ? (
+          User && User.type === "Patient" && health ? (
             <View style={{width: '100%'}}>
               <View style={{alignSelf: 'center'}}>
                 <Svg width="31.463" height="31.463" viewBox="0 0 31.463 31.463">
-                  <Circle fill={"#e9e9e9"} cx="15.698" cy="2.644" r="2.644"/>
-                  <Path fill={'#e9e9e9'} d="M21.396,8.791c0,0,0.148-2.953-2.968-2.953h-5.403c-3.005,0-2.983,2.727-2.985,2.953l0.001,8.38
+                  <Circle fill={"rgba(144, 154, 174, 0.5)"} cx="15.698" cy="2.644" r="2.644"/>
+                  <Path fill={'rgba(144, 154, 174, 0.5)'} d="M21.396,8.791c0,0,0.148-2.953-2.968-2.953h-5.403c-3.005,0-2.983,2.727-2.985,2.953l0.001,8.38
 		c0.049,0.452,0.495,0.967,1.049,0.967c0.551,0,0.956-0.499,1.006-0.952l0.938,13.346c0.069,0.679,0.549,0.932,1.139,0.932
 		c0.589,0,1.068-0.253,1.137-0.932h0.833c0.072,0.679,0.55,0.932,1.137,0.932c0.591,0,1.07-0.253,1.141-0.932l0.966-13.354
 		c0,0.453,0.438,0.963,0.992,0.963c0.552,0,0.993-0.517,1.042-0.969L21.396,8.791z"/>
@@ -316,24 +328,24 @@ export default class UserBox extends Component {
 
               <View style={{marginTop: 10}}>
                 <View
-                  style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 5}}>
-                  <Text style={{color: '#e9e9e9', fontSize: 12, fontWeight: 'bold'}}>{health.height}cm</Text>
-                  <Text style={{color: '#e9e9e9', fontSize: 10}}>Height</Text>
+                  style={styles.leftHealthInfo}>
+                  <Text style={styles.leftHealthFont}>{health.height}cm</Text>
+                  <Text style={styles.leftHealthTitle}>Height</Text>
                 </View>
                 <View
-                  style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 5}}>
-                  <Text style={{color: '#e9e9e9', fontSize: 12, fontWeight: 'bold'}}>{health.weight}cm</Text>
-                  <Text style={{color: '#e9e9e9', fontSize: 10}}>Weight</Text>
+                  style={styles.leftHealthInfo}>
+                  <Text style={styles.leftHealthFont}>{health.weight}cm</Text>
+                  <Text style={styles.leftHealthTitle}>Weight</Text>
                 </View>
                 <View
-                  style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 5}}>
-                  <Text style={{color: '#e9e9e9', fontSize: 12, fontWeight: 'bold'}}>{health.age}</Text>
-                  <Text style={{color: '#e9e9e9', fontSize: 10}}>Age</Text>
+                  style={styles.leftHealthInfo}>
+                  <Text style={styles.leftHealthFont}>{health.age}</Text>
+                  <Text style={styles.leftHealthTitle}>Age</Text>
                 </View>
                 <View
-                  style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 5}}>
-                  <Text style={{color: '#e9e9e9', fontSize: 12, fontWeight: 'bold'}}>{health.fat}%</Text>
-                  <Text style={{color: '#e9e9e9', fontSize: 10}}>Fat</Text>
+                  style={styles.leftHealthInfo}>
+                  <Text style={styles.leftHealthFont}>{health.fat}%</Text>
+                  <Text style={styles.leftHealthTitle}>Fat</Text>
                 </View>
                 <View style={{
                   flexDirection: 'column',
@@ -341,13 +353,13 @@ export default class UserBox extends Component {
                   justifyContent: 'flex-start',
                   marginTop: 10
                 }}>
-                  <Text style={{color: '#e9e9e9', fontSize: 12}}>Allergies</Text>
+                  <Text style={{color: 'rgba(144, 154, 174, 0.5)', fontSize: 12}}>Allergies</Text>
 
                   <View style={{flexDirection: 'row', alignItems: 'center'}}>
                     {Object.values(health.allergies).map((allergy, i) => {
                       if (i <= 1)
                         return <Text key={i}
-                                     style={{color: '#e9e9e9', fontSize: 10}}>{allergy}{i !== 1 ? ', ' : ''}</Text>
+                                     style={styles.leftHealthTitle}>{allergy}{i !== 1 ? ', ' : ''}</Text>
                     })}
                   </View>
                 </View>
@@ -362,7 +374,10 @@ export default class UserBox extends Component {
   UserRightSection = User => {
     if (!this._isMounted) return;
 
-    const {health = null} = User;
+    let health = null;
+
+    if (User && User.type === "Patient")
+      health = User.health;
 
     return (
       <View style={styles.rightContainer}>
@@ -375,25 +390,25 @@ export default class UserBox extends Component {
 
         {health ? (
           <View>
-            <Text style={{color: 'rgba(144, 154, 174, 0.5)', fontSize: 15, marginTop: 10, fontWeight: 'bold'}}>Health
+            <Text style={styles.healthSummaryTitle}>Health
               Summary</Text>
 
-            <View style={{flexDirection: 'row', alignItems: 'center', marginTop: 20, justifyContent: 'space-between'}}>
-              <View style={{flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
+            <View style={styles.healthSummaryContainer}>
+              <View style={styles.healthSummaryInstance}>
                 <Ionicons style={{fontWeight: '900'}} name="md-heart" size={17} color="rgba(144, 154, 174, 0.5)"/>
                 <Text style={{color: 'rgba(144, 154, 174, 0.5)', fontSize: 20}}>{health.bpm}
                   <Text style={{fontSize: 13}}> bpm</Text>
                 </Text>
               </View>
 
-              <View style={{flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
+              <View style={styles.healthSummaryInstance}>
                 <Ionicons style={{fontWeight: '900'}} name="md-flame" size={17} color="rgba(144, 154, 174, 0.5)"/>
                 <Text style={{color: 'rgba(144, 154, 174, 0.5)', fontSize: 20}}>{health.calories}
                   <Text style={{fontSize: 13}}> cal</Text>
                 </Text>
               </View>
 
-              <View style={{flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
+              <View style={styles.healthSummaryInstance}>
                 <Ionicons style={{fontWeight: '900'}} name="md-thermometer" size={17} color="rgba(144, 154, 174, 0.5)"/>
                 <Text style={{color: 'rgba(144, 154, 174, 0.5)', fontSize: 20}}>{health.thermometer}°
                 </Text>
@@ -403,7 +418,6 @@ export default class UserBox extends Component {
         ) : null}
 
         {this.ECG(User)}
-
       </View>
     );
   };
@@ -411,47 +425,66 @@ export default class UserBox extends Component {
   render() {
     const
       opacity = this.animatedValue.interpolate({inputRange: [0, 0.5, 1], outputRange: [0, 0.5, 1]}),
-      {User} = this.props;
+      {uid, authUserUID, type, User, toFollow, opositeTable} = this.props;
 
     return (
       <View>
-        <View style={[styles.box, {position: 'relative'}]}>
-          <TouchableOpacity
-            activeOpacity={0.7}
-            onPress={() => this.update({uid: this.props.uid, ...User})}
-            style={{alignSelf: 'flex-end', padding: 10, paddingRight: 0, paddingLeft: 30}}>
-            <Feather style={{fontWeight: '900'}} name="more-horizontal" size={15} color="#909aae"/>
-          </TouchableOpacity>
+        <View style={[styles.box, {position: 'relative', paddingBottom: toFollow ? 20: 0}]}>
+
+          {toFollow ? (
+            <TouchableOpacity
+              activeOpacity={0.7}
+              onPress={() => Database.followUser(authUserUID, uid, opositeTable, {name: User.name || "Not Specified", profession: User.profession || "Not Specified"})}
+              style={{alignSelf: 'flex-end', padding: 10, paddingRight: 0, paddingLeft: 30}}>
+              <Feather style={{fontWeight: '900'}} name="plus-circle" size={15} color="#909aae"/>
+            </TouchableOpacity>
+          ):(
+            <TouchableOpacity
+              activeOpacity={0.7}
+              onPress={() => this.update({uid: this.props.uid, ...User})}
+              style={{alignSelf: 'flex-end', padding: 10, paddingRight: 0, paddingLeft: 30}}>
+              <Feather style={{fontWeight: '900'}} name="more-horizontal" size={15} color="#909aae"/>
+            </TouchableOpacity>
+          )}
 
           <View style={{flexWrap: 'wrap', flexDirection: 'row', alignItems: 'flex-start'}}>
-            {this.UserLeftSection(User, this.props.uid)}
-            {this.UserRightSection(User)}
+            {User ? this.UserLeftSection(User, this.props.uid): null}
+            {User ? this.UserRightSection(User): null}
           </View>
 
-          <View style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            width: '100%',
-            alignItems: 'center',
-            paddingBottom: 20,
-          }}>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <Feather style={{fontWeight: '900'}} name="eye" size={15} color="rgba(144, 154, 174, 0.5)"/>
-              <Text
-                style={{marginLeft: 5, fontSize: 10, color: 'rgba(144, 154, 174, 0.5)'}}>{this.state.randomWatch}</Text>
-            </View>
 
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <Feather style={{fontWeight: '900'}} name="message-square" size={15} color="rgba(144, 154, 174, 0.5)"/>
-              <Text style={{
-                marginLeft: 5,
-                fontSize: 10,
-                color: 'rgba(144, 154, 174, 0.5)'
-              }}>{this.getRandomInt(0, 500)}</Text>
+          {!toFollow ? (
+            <View style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              width: '100%',
+              alignItems: 'center',
+              paddingBottom: 20,
+            }}>
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <Feather style={{fontWeight: '900'}} name="eye" size={15} color="rgba(144, 154, 174, 0.5)"/>
+                <Text
+                  style={{
+                    marginLeft: 5,
+                    fontSize: 10,
+                    color: 'rgba(144, 154, 174, 0.5)'
+                  }}>{this.state.randomWatch}</Text>
+              </View>
 
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <Feather style={{fontWeight: '900'}} name="message-square" size={15}
+                         color="rgba(144, 154, 174, 0.5)"/>
+                <Text style={{
+                  marginLeft: 5,
+                  fontSize: 10,
+                  color: 'rgba(144, 154, 174, 0.5)'
+                }}>{this.getRandomInt(0, 500)}</Text>
+
+              </View>
             </View>
-          </View>
+          ): null}
         </View>
+
         {this.state.wait ? (
           <Animated.View
             style={{position: 'absolute', top: 0, bottom: 0, left: 0, right: 0, backgroundColor: 'white', opacity}}/>
@@ -560,12 +593,45 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     alignSelf: 'flex-start'
-  }
+  },
+  leftHealthInfo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginTop: 5
+  },
+  leftHealthFont: {
+    color: 'rgba(144, 154, 174, 0.5)',
+    fontSize: 12,
+    fontWeight: 'bold'
+  },
+  leftHealthTitle: {
+    color: 'rgba(144, 154, 174, 0.5)',
+    fontSize: 10
+  },
+  healthSummaryTitle: {
+    color: 'rgba(144, 154, 174, 0.5)',
+    fontSize: 15,
+    marginTop: 10,
+    fontWeight: 'bold'
+  },
+  healthSummaryContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 20,
+    justifyContent: 'space-between'
+  },
+  healthSummaryInstance: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+
 });
 
 
 UserBox.propTypes = {
   uid: PropTypes.string.isRequired,
-  User: PropTypes.object.isRequired,
+  User: PropTypes.object,
   updateIndex: PropTypes.func.isRequired
 };

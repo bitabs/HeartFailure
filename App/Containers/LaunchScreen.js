@@ -4,6 +4,7 @@ import Feather from 'react-native-vector-icons/Feather';
 import {TabViewAnimated, TabBar} from 'react-native-tab-view';
 import type {NavigationState} from 'react-native-tab-view/types';
 import SimplePage from './SimplePage';
+
 /*
 * ======= Firebase Initialisation ======
 * */
@@ -42,28 +43,40 @@ export default class LaunchScreen extends PureComponent<*, State> {
       defaultView     : null,
     };
     this.userRef = firebase.app().database().ref(`/Users/`);
+    this.dashRef = firebase.app().database().ref(`/Dashboard/`);
+
+    this.updateIndex = this.updateIndex.bind(this);
+    this.updateUserView = this.updateUserView.bind(this);
   }
 
   componentWillUnmount() {
+    this._isMounted = false;
     console.log("unmounting launchscreen")
   }
 
   componentDidMount() {
+    this._isMounted = true;
     User().then(user => {
       this.userRef.child(user.uid).once('value').then(snap => {
-        console.log(snap.val());
-        if (snap.val()) {
-          this.setState({
+        if (snap.val() && this._isMounted) {
+          const {routes} = this.state, authUser = snap.val();
+          this.setState(prevState => ({
             authUserUID: user.uid,
             authUserType: snap.val().type,
-            routes: snap.val().type === "Patient" ? [...this.state.routes,
-              {key: '1', icon: 'users'},
-              {key: '4', icon: 'message-square'}
-            ] : [...this.state.routes]
-          })
+            routes: authUser.type === "Patient" ? [...routes, {key: '4', icon: 'message-square'}]: prevState.routes
+          }));
         }
-      })
-    })
+      });
+    });
+  };
+
+
+  signOutUser = async () => {
+    try {
+      await firebase.auth().signOut();
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   _handleIndexChange = index => this.setState({index});
@@ -92,29 +105,28 @@ export default class LaunchScreen extends PureComponent<*, State> {
     </View>
   </View>);
 
-  _renderFooter = props => (<View style={{elevation: 20, backgroundColor: 'white', paddingBottom: 5}}>
-    <TabBar {...props} indicatorStyle={styles.indicator} renderIcon={this._renderIcon} style={styles.tabbar}/>
+  _renderFooter = props => (<View style={{elevation: 20, backgroundColor: 'white'}}>
+    <TabBar {...props} indicatorStyle={styles.indicator} renderIcon={this._renderIcon} style={[styles.tabbar, {paddingTop: 1, paddingBottom: 1}] }/>
   </View>);
 
   _renderScene = ({route}) => (<SimplePage
     authUserUID={this.state.authUserUID}
     authUserType={this.state.authUserType}
     index={this.state.index}
-    updateIndex={this.updateIndex.bind(this)}
-    userView={this.updateUserView.bind(this)}
+    updateIndex={this.updateIndex}
+    userView={this.updateUserView}
     activeUser={this.state.viewCurrentUser}
     navigation={this.props.navigation}
   />);
 
   render() {
+    const {index, authUserType} = this.state;
     return (
       <TabViewAnimated
         style={styles.container}
         navigationState={this.state}
         renderScene={this._renderScene}
-        renderHeader={!(
-          this.state.index === 0 && this.state.authUserType === "Patient"
-        ) && !(this.state.index === 2 && this.state.authUserType === "Doctor") ? this._renderHeader : null}
+        renderHeader={!(index === 3 && authUserType === "Patient") && !(index === 2 && authUserType === "Doctor") ? this._renderHeader : null}
         renderFooter={this._renderFooter}
         onIndexChange={this._handleIndexChange}
       />

@@ -3,7 +3,7 @@ import {
   View, Text, StyleSheet, TouchableOpacity,
   TouchableHighlight, Dimensions, Image, ScrollView, TextInput
 } from 'react-native';
-import Ionicons from "react-native-vector-icons/Feather";
+import Feather from "react-native-vector-icons/Feather";
 
 import User from '../Components/User';
 import firebase from 'react-native-firebase';
@@ -203,13 +203,22 @@ export default class UserInfo extends Component {
         return Object.keys(obj).sort((a, b) => obj[a].timeStamp < obj[b].timeStamp).map((e, j) => {
           const message = obj[e];
           return (
-            <View style={styles.comment} key={i + j}>
-              <Image style={styles.profPic} source={Images[person.uid]} resizeMode="contain"/>
+            <View style={styles.comment} key={e}>
+
+              {Images[this.props.uid] ? (
+                <Image style={styles.profPic} source={Images[person.uid]} resizeMode="contain"/>
+              ) : (
+                <View style={[styles.profPic, {alignItems: 'center', justifyContent: 'center', backgroundColor: '#E67D8F'}]}>
+                  <Feather name={"user"} size={20} color={"white"}/>
+                </View>
+              )}
+
+
               <View style={styles.msgText}>
                 <View style={styles.$top}>
                   <Text style={styles.name}>{person.name}</Text>
                   <View style={styles.time}>
-                    <Ionicons name={"clock"} size={15} color="#6d777d"/>
+                    <Feather name={"clock"} size={15} color="#6d777d"/>
                     <TimeAgo style={{fontSize: 13, marginLeft: 5, fontWeight: 'bold'}} time={message.timeStamp}/>
                   </View>
                 </View>
@@ -228,7 +237,14 @@ export default class UserInfo extends Component {
 
                 <View style={{alignSelf: 'center'}}>
                   <View style={styles.profileTopContainer}>
-                    <Image style={styles.userImg} source={Images[User.uid]} resizeMode="contain"/>
+                    {Images[User.uid] ? (
+                      <Image style={styles.userImg} source={Images[User.uid]} resizeMode="contain"/>
+                    ):(
+                      <View style={[styles.userImg, {backgroundColor: '#E67D8F', alignItems: 'center', justifyContent: 'center'} ]}>
+                        <Feather name={"user"} size={50} color={"white"}/>
+                      </View>
+                    )}
+
                     <View style={{alignItems: 'flex-end', flexDirection:'column', justifyContent: 'space-between'}}>
                       <Text style={{fontWeight: 'bold', fontSize: 16, color: '#bccad0'}}>Get to know me:</Text>
                       <Text style={{color: '#bccad0', flexWrap: 'wrap', maxWidth: 100, textAlign: 'right'}} numberOfLines={2}>{User.address}</Text>
@@ -286,7 +302,7 @@ export default class UserInfo extends Component {
 
                 {this.props.authUserType === "Doctor" ? (
                   <View>
-                    <View style={{alignItems: 'flex-start', marginBottom: 20}}>
+                    <View style={{alignItems: 'flex-start', marginBottom: 10}}>
                       <Text style={{fontSize: 17, color: '#bccad0'}}>Electrocardiography</Text>
                     </View>
                     <View style={{alignItems: 'center', padding: 0, marginBottom: 30}}>
@@ -316,7 +332,7 @@ export default class UserInfo extends Component {
                         this.sendMessage(User.uid)
                         this.textInput.clear()
                       }}>
-                        <Ionicons name={"chevron-right"} size={20} color="white" />
+                        <Feather name={"chevron-right"} size={20} color="white" />
                       </TouchableOpacity>
                     </View>
                   </View>

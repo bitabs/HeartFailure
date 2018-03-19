@@ -25,8 +25,7 @@ export const SignedOut = StackNavigator({
   }
 });
 
-
-const DrawerExample = DrawerNavigator({
+export const $LaunchScreen = DrawerNavigator({
   Home: {
     screen: LaunchScreen
   },
@@ -34,41 +33,13 @@ const DrawerExample = DrawerNavigator({
   drawerOpenRoute: 'FooDrawerOpen',
   drawerCloseRoute: 'FooDrawerClose',
   drawerPosition: "right",
-  contentComponent: ({ navigation }) => (
-    <MessagingComponent navigation={navigation} />
-  ),
+  contentComponent: ({ navigation }) => (<MessagingComponent navigation={navigation} />),
 });
-
-export const $LaunchScreen = DrawerNavigator({
-  Home: {screen: DrawerExample}
-},{
-  //contentComponent: CustomSideMenu
-});
-
-// export const $Doctors = DrawerNavigator({
-//   Profile: {screen:  Cardiologists}
-// },{
-//   contentComponent: CustomSideMenu
-// });
-
-// export const $MyDoctors = DrawerNavigator({
-//   Profile: {screen:  ViewMyDoctors}
-// },{
-//   contentComponent: CustomSideMenu
-// });
-
-
 
 export const SignedIn = StackNavigator({
   LaunchScreen: {
     screen: $LaunchScreen
   },
-  // DoctorsScreen: {
-  //   screen: $Doctors
-  // },
-  // MyDoctors: {
-  //   screen: $MyDoctors
-  // }
 }, {
   headerMode: "none",
   mode: "modal",
