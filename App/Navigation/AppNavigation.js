@@ -3,11 +3,8 @@ import LaunchScreen from '../Containers/LaunchScreen'
 import React from 'react';
 import Login from "../Containers/Login";
 import Loading from "../Containers/Loading";
-import CustomSideMenu from "../Components/customSideMenu";
 import MessagingComponent from "../Components/MessagingComponent";
 import SignUp from "../Containers/SignUp";
-import Cardiologists from "../Containers/Cardiologists";
-import ViewMyDoctors from "../Containers/ViewMyDoctors";
 
 
 export const SignedOut = StackNavigator({
@@ -25,8 +22,7 @@ export const SignedOut = StackNavigator({
   }
 });
 
-
-const DrawerExample = DrawerNavigator({
+export const $LaunchScreen = DrawerNavigator({
   Home: {
     screen: LaunchScreen
   },
@@ -34,41 +30,13 @@ const DrawerExample = DrawerNavigator({
   drawerOpenRoute: 'FooDrawerOpen',
   drawerCloseRoute: 'FooDrawerClose',
   drawerPosition: "right",
-  contentComponent: ({ navigation }) => (
-    <MessagingComponent navigation={navigation} />
-  ),
+  contentComponent: ({ navigation }) => (<MessagingComponent navigation={navigation} />),
 });
-
-export const $LaunchScreen = DrawerNavigator({
-  Home: {screen: DrawerExample}
-},{
-  //contentComponent: CustomSideMenu
-});
-
-// export const $Doctors = DrawerNavigator({
-//   Profile: {screen:  Cardiologists}
-// },{
-//   contentComponent: CustomSideMenu
-// });
-
-// export const $MyDoctors = DrawerNavigator({
-//   Profile: {screen:  ViewMyDoctors}
-// },{
-//   contentComponent: CustomSideMenu
-// });
-
-
 
 export const SignedIn = StackNavigator({
   LaunchScreen: {
     screen: $LaunchScreen
   },
-  // DoctorsScreen: {
-  //   screen: $Doctors
-  // },
-  // MyDoctors: {
-  //   screen: $MyDoctors
-  // }
 }, {
   headerMode: "none",
   mode: "modal",

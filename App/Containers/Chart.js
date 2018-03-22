@@ -43,6 +43,7 @@ export default class Chart extends Component {
         style={{height: this.props.height, width: this.props.width || Dimensions.get('window').width}}
         config={this.props.config}
         options={this.props.options}
+        stock={this.props.stock || false}
         scalesPageToFit={false}
         automaticallyAdjustContentInsets={false}
         showsHorizontalScrollIndicator={false}
