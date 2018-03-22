@@ -43,6 +43,7 @@
 		DB2986EB6D5540C899637DF7 /* libBleManager.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 353927049BA54D2A90787B20 /* libBleManager.a */; };
 		EA57AADC896847759A1C0FC1 /* libRNBLE.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 01107D3353F74D4F963171FD /* libRNBLE.a */; };
 		8361960F8417489BBD7BA11E /* libRNRandomBytes.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 75F2342F4E634132A2A9AE5F /* libRNRandomBytes.a */; };
+		71491FF10E604468BA3C6124 /* libOGReactNativeWaveform.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AB9AD59AB00F4BF9B03244A2 /* libOGReactNativeWaveform.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -283,6 +284,8 @@
 		01107D3353F74D4F963171FD /* libRNBLE.a */ = {isa = PBXFileReference; name = "libRNBLE.a"; path = "libRNBLE.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 		C647F386B9B249EB83E7EEF5 /* RNRandomBytes.xcodeproj */ = {isa = PBXFileReference; name = "RNRandomBytes.xcodeproj"; path = "../node_modules/react-native-randombytes/RNRandomBytes.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		75F2342F4E634132A2A9AE5F /* libRNRandomBytes.a */ = {isa = PBXFileReference; name = "libRNRandomBytes.a"; path = "libRNRandomBytes.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		3B07C71E00DD4ABA81D9253F /* OGReactNativeWaveform.xcodeproj */ = {isa = PBXFileReference; name = "OGReactNativeWaveform.xcodeproj"; path = "../node_modules/react-native-audiowaveform/ios/OGReactNativeWaveform.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		AB9AD59AB00F4BF9B03244A2 /* libOGReactNativeWaveform.a */ = {isa = PBXFileReference; name = "libOGReactNativeWaveform.a"; path = "libOGReactNativeWaveform.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -318,6 +321,7 @@
 				DB2986EB6D5540C899637DF7 /* libBleManager.a in Frameworks */,
 				EA57AADC896847759A1C0FC1 /* libRNBLE.a in Frameworks */,
 				8361960F8417489BBD7BA11E /* libRNRandomBytes.a in Frameworks */,
+				71491FF10E604468BA3C6124 /* libOGReactNativeWaveform.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -492,6 +496,7 @@
 				D713333A567C4A918873770B /* BleManager.xcodeproj */,
 				DCC13FF7798B41E4A10F8757 /* RNBLE.xcodeproj */,
 				C647F386B9B249EB83E7EEF5 /* RNRandomBytes.xcodeproj */,
+				3B07C71E00DD4ABA81D9253F /* OGReactNativeWaveform.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1046,6 +1051,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1055,6 +1061,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-ble-manager\ios",
 					"$(SRCROOT)\..\node_modules\react-native-ble",
 					"$(SRCROOT)\..\node_modules\react-native-randombytes",
+					"$(SRCROOT)\..\node_modules\react-native-audiowaveform\ios/**",
 				);
 			};
 			name = Debug;
@@ -1082,6 +1089,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1091,6 +1099,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-ble-manager\ios",
 					"$(SRCROOT)\..\node_modules\react-native-ble",
 					"$(SRCROOT)\..\node_modules\react-native-randombytes",
+					"$(SRCROOT)\..\node_modules\react-native-audiowaveform\ios/**",
 				);
 			};
 			name = Release;
@@ -1118,6 +1127,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-ble-manager\ios",
 					"$(SRCROOT)\..\node_modules\react-native-ble",
 					"$(SRCROOT)\..\node_modules\react-native-randombytes",
+					"$(SRCROOT)\..\node_modules\react-native-audiowaveform\ios/**",
 				);
 			};
 			name = Debug;
@@ -1144,6 +1154,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-ble-manager\ios",
 					"$(SRCROOT)\..\node_modules\react-native-ble",
 					"$(SRCROOT)\..\node_modules\react-native-randombytes",
+					"$(SRCROOT)\..\node_modules\react-native-audiowaveform\ios/**",
 				);
 			};
 			name = Release;
@@ -1180,6 +1191,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1189,6 +1201,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-ble-manager\ios",
 					"$(SRCROOT)\..\node_modules\react-native-ble",
 					"$(SRCROOT)\..\node_modules\react-native-randombytes",
+					"$(SRCROOT)\..\node_modules\react-native-audiowaveform\ios/**",
 				);
 			};
 			name = Debug;
@@ -1225,6 +1238,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1234,6 +1248,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-ble-manager\ios",
 					"$(SRCROOT)\..\node_modules\react-native-ble",
 					"$(SRCROOT)\..\node_modules\react-native-randombytes",
+					"$(SRCROOT)\..\node_modules\react-native-audiowaveform\ios/**",
 				);
 			};
 			name = Release;
@@ -1265,6 +1280,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 			};
 			name = Debug;
@@ -1289,6 +1305,7 @@
 				TVOS_DEPLOYMENT_TARGET = 10.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",

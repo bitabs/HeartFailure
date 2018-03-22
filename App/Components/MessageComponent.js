@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {View, Text, StyleSheet, Image} from "react-native";
-import Ionicons from 'react-native-vector-icons/Feather';
+import Feather from 'react-native-vector-icons/Feather';
 import PropTypes from 'prop-types';
 import {Images} from '../Containers/PreLoadImages';
 import TimeAgo from 'react-native-timeago';
@@ -24,9 +24,9 @@ export default class MessageComponent extends Component {
 
   randomIcon = () => {
     switch (this.getRandomInt(0, 2))  {
-      case 0  : return (<Ionicons name="monitor"    size={15} color="#bccad0" />);
-      case 1  : return (<Ionicons name="smartphone" size={15} color="#bccad0" />);
-      case 2  : return (<Ionicons name="tablet"     size={15} color="#bccad0" />);
+      case 0  : return (<Feather name="monitor"    size={15} color="#bccad0" />);
+      case 1  : return (<Feather name="smartphone" size={15} color="#bccad0" />);
+      case 2  : return (<Feather name="tablet"     size={15} color="#bccad0" />);
       default : return null
     }
   };
@@ -67,7 +67,14 @@ export default class MessageComponent extends Component {
     return(
       <View style={styles.container}>
         <View style={styles.topContainer}>
-          <Image style={styles.userImg} source={Images[this.props.uid]} resizeMode="contain"/>
+          {Images[this.props.uid] ? (
+            <Image style={styles.userImg} source={Images[this.props.uid]} resizeMode="contain"/>
+          ) : (
+            <View style={[styles.userImg, {alignItems: 'center', justifyContent: 'center', backgroundColor: '#E67D8F'}]}>
+              <Feather name={"user"} size={20} color={"white"}/>
+            </View>
+          )}
+
 
           <View style={{flex: 1}}>
             <Text numberOfLines={1} style={styles.msgPersonName}>{this.props.name}</Text>
@@ -123,10 +130,10 @@ const styles = StyleSheet.create({
     color: 'rgba(188,202,208, 0.7)'
   },
   tag: {
-    paddingTop: 1,
-    paddingBottom: 1,
-    paddingLeft: 4,
-    paddingRight: 4,
+    paddingTop: 3,
+    paddingBottom: 4,
+    paddingLeft: 5,
+    paddingRight: 5,
     borderRadius: 3,
     backgroundColor: '#E67D8F'
   },

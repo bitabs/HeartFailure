@@ -30,6 +30,7 @@ export default class OpeningLogoLoader extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    flexDirection: 'column',
     justifyContent: 'center', // Used to set Text Component Vertically Center
     alignItems: 'center' // Used to set Text Component Horizontally Center
   }
