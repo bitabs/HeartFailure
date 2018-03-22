@@ -3,11 +3,8 @@ import LaunchScreen from '../Containers/LaunchScreen'
 import React from 'react';
 import Login from "../Containers/Login";
 import Loading from "../Containers/Loading";
-import CustomSideMenu from "../Components/customSideMenu";
 import MessagingComponent from "../Components/MessagingComponent";
 import SignUp from "../Containers/SignUp";
-import Cardiologists from "../Containers/Cardiologists";
-import ViewMyDoctors from "../Containers/ViewMyDoctors";
 
 
 export const SignedOut = StackNavigator({
