@@ -41,12 +41,14 @@ export default class LaunchScreen extends PureComponent<*, State> {
       modalVisible    : false,
       viewCurrentUser : null,
       defaultView     : null,
+      disableSwipe    : true,
     };
     this.userRef = firebase.app().database().ref(`/Users/`);
     this.dashRef = firebase.app().database().ref(`/Dashboard/`);
 
     this.updateIndex = this.updateIndex.bind(this);
     this.updateUserView = this.updateUserView.bind(this);
+    this.toggleSwipe = this.toggleSwipe.bind(this);
   }
 
   componentWillUnmount() {
@@ -70,15 +72,6 @@ export default class LaunchScreen extends PureComponent<*, State> {
     });
   };
 
-
-  signOutUser = async () => {
-    try {
-      await firebase.auth().signOut();
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
   _handleIndexChange = index => this.setState({index});
 
   updateIndex = route => {
@@ -88,6 +81,8 @@ export default class LaunchScreen extends PureComponent<*, State> {
       index: this.state.index === 0 ? 1 : 0
     })
   };
+
+  toggleSwipe = val => this.setState({disableSwipe: val});
 
   updateUserView = user => this.setState({viewCurrentUser: user});
 
@@ -114,6 +109,7 @@ export default class LaunchScreen extends PureComponent<*, State> {
     authUserType={this.state.authUserType}
     index={this.state.index}
     updateIndex={this.updateIndex}
+    disableSwipe={this.toggleSwipe}
     userView={this.updateUserView}
     activeUser={this.state.viewCurrentUser}
     navigation={this.props.navigation}
@@ -124,6 +120,7 @@ export default class LaunchScreen extends PureComponent<*, State> {
     return (
       <TabViewAnimated
         style={styles.container}
+        swipeEnabled={this.state.disableSwipe}
         navigationState={this.state}
         renderScene={this._renderScene}
         renderHeader={!(index === 3 && authUserType === "Patient") && !(index === 2 && authUserType === "Doctor") ? this._renderHeader : null}

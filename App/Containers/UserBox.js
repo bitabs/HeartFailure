@@ -136,7 +136,6 @@ export default class UserBox extends Component {
 
   update = (user) => {
     if (!this._isMounted) return;
-    console.log(this.props.type);
     this.props.updateIndex(this.props.type);
     this.props.userView(user);
 
@@ -283,7 +282,6 @@ export default class UserBox extends Component {
 
   UserLeftSection = (User, uid) => {
     if (!this._isMounted) return;
-    console.log(User);
     let health = null;
 
     if (User && User.type === "Patient")

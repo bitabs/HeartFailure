@@ -3,7 +3,6 @@ package com.heartfailure;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
-import com.otomogroove.OGReactNativeWaveform.OGWavePackage;
 import com.horcrux.svg.SvgPackage;
 import com.bitgo.randombytes.RandomBytesPackage;
 import it.innove.BleManagerPackage;
@@ -34,7 +33,6 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
         new MainReactPackage(),
-            new OGWavePackage(),
             new SvgPackage(),
             new RandomBytesPackage(),
             new BleManagerPackage(),

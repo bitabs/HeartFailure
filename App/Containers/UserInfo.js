@@ -26,6 +26,8 @@ export default class UserInfo extends Component {
       randomFav   : null,
       type: "",
       testing: false,
+      ECG: null,
+      heartSound: null
     };
 
     this.userRef   = firebase.app().database().ref(`/Users/`);
@@ -41,6 +43,15 @@ export default class UserInfo extends Component {
   componentDidMount() {
     this._isMounted = true;
     if (this._isMounted) this.initialiseDB(this.userRef, this.ecgRef, this.healthRef, this.PCRef, this.DCRef);
+    fetch('https://raw.githubusercontent.com/NaseebullahSafi/HeartFailure/master/ECG.txt?token=APbiPfg9DRYV1oisDd6yXU30FdIFSmmtks5avQatwA%3D%3D')
+      .then(response => response.text().then(text => {
+        this.setState({ECG: text.split('\n').map(Number)})
+      }));
+
+    fetch('https://raw.githubusercontent.com/NaseebullahSafi/HeartFailure/master/Stethoscope.txt?token=APbiPc8PDxQZp3_Ris9gpqyeJjGxkegBks5avSIWwA%3D%3D')
+      .then(response => response.text().then(text => {
+        this.setState({heartSound: text.split('\n').map(Number)})
+      }))
   }
 
   componentWillUnmount() {
@@ -78,9 +89,9 @@ export default class UserInfo extends Component {
     const $this = this;
     return {
       chart: {
-        backgroundColor: 'rgba(188,202,208, 0.1)',
+        backgroundColor: 'rgba(188,202,208, 0.045)',
+        renderTo: 'container'
       },
-
       title: {
         text: '',
         style: {
@@ -89,10 +100,14 @@ export default class UserInfo extends Component {
       },
       xAxis: {
         visible: false,
+        min: 5000
+      },
+      yAxis: {
+        visible: false
       },
       plotOptions: {
         series: {
-          color: '#aab8be',
+          color: 'rgba(230, 125, 143, 0.4)',
           lineWidth: 1.5,
           marker: {
             enabled: false
@@ -108,20 +123,13 @@ export default class UserInfo extends Component {
             }
           },
           events: {
-            click: function() {
+            click: function () {
               this.setState(this.state === 'select' ? '' : 'select');
             }
           }
         }
       },
-      yAxis: {
-        visible: false
-      },
-      tooltip: { enabled: false },
-      scrollbar: {
-        enabled: false
-      },
-      legend: {
+      tooltip: {
         enabled: false
       },
       exporting: {
@@ -130,15 +138,103 @@ export default class UserInfo extends Component {
       credits: {
         enabled: false
       },
+      legend: {
+        enabled: false
+      },
+      scrollbar: {
+        enabled: true,
+        barBackgroundColor: 'rgba(188,202,208, 0.22)',
+        barBorderRadius: 2,
+        barBorderWidth: 0,
+        buttonBackgroundColor: 'white',
+        buttonBorderWidth: 0,
+        buttonArrowColor: 'white',
+        buttonBorderRadius: 0,
+        rifleColor: 'rgba(188,202,208, 0.42)',
+        trackBackgroundColor: 'rgba(188,202,208, 0.045)',
+        trackBorderWidth: 1,
+        trackBorderColor: 'white',
+        trackBorderRadius: 7
+      },
       series: [{
-        name: 'Random data',
-        data: (function() {
+        data: $this.state.ECG
+      }]
+    }
+  };
 
-          if ($this.props.User && $this.props.User.ecg)
-            return $this.props.User.ecg;
-        }()),
-        pointStart: Date.now() - 10 * 100,
-        pointInterval: 10,
+  soundConfig = () => {
+    const $this = this;
+    return {
+      chart: {
+        backgroundColor: 'rgba(188,202,208, 0.045)',
+        renderTo: 'container'
+      },
+      title: {
+        text: '',
+        style: {
+          display: 'none'
+        }
+      },
+      xAxis: {
+        visible: false,
+        min: 5000
+      },
+      yAxis: {
+        visible: false
+      },
+      plotOptions: {
+        series: {
+          color: 'rgba(230, 125, 143, 0.4)',
+          lineWidth: 1.5,
+          marker: {
+            enabled: false
+          },
+        },
+        line: {
+          marker: {
+            enabled: false
+          },
+          states: {
+            select: {
+              lineWidth: 1.5
+            }
+          },
+          events: {
+            click: function () {
+              this.setState(this.state === 'select' ? '' : 'select');
+            }
+          }
+        }
+      },
+      tooltip: {
+        enabled: false
+      },
+      exporting: {
+        enabled: false
+      },
+      credits: {
+        enabled: false
+      },
+      legend: {
+        enabled: false
+      },
+      scrollbar: {
+        enabled: true,
+        barBackgroundColor: 'rgba(188,202,208, 0.22)',
+        barBorderRadius: 2,
+        barBorderWidth: 0,
+        buttonBackgroundColor: 'white',
+        buttonBorderWidth: 0,
+        buttonArrowColor: 'white',
+        buttonBorderRadius: 0,
+        rifleColor: 'rgba(188,202,208, 0.42)',
+        trackBackgroundColor: 'rgba(188,202,208, 0.045)',
+        trackBorderWidth: 1,
+        trackBorderColor: 'white',
+        trackBorderRadius: 7
+      },
+      series: [{
+        data: $this.state.heartSound
       }]
     }
   };
@@ -205,7 +301,7 @@ export default class UserInfo extends Component {
           return (
             <View style={styles.comment} key={e}>
 
-              {Images[this.props.uid] ? (
+              {Images[person.uid] ? (
                 <Image style={styles.profPic} source={Images[person.uid]} resizeMode="contain"/>
               ) : (
                 <View style={[styles.profPic, {alignItems: 'center', justifyContent: 'center', backgroundColor: '#E67D8F'}]}>
@@ -300,14 +396,25 @@ export default class UserInfo extends Component {
                   </View>
                 ): null}
 
-                {this.props.authUserType === "Doctor" ? (
+                {this.props.authUserType === "Doctor" && this.props.User && this.props.User.ecg ? (
                   <View>
-                    <View style={{alignItems: 'flex-start', marginBottom: 10}}>
-                      <Text style={{fontSize: 17, color: '#bccad0'}}>Electrocardiography</Text>
+                    <View>
+                      <View style={{alignItems: 'flex-start', marginBottom: 10}}>
+                        <Text style={{fontSize: 17, color: '#bccad0'}}>Electrocardiography</Text>
+                      </View>
+                      <View style={{alignItems: 'center', padding: 0, marginBottom: 30}}>
+                        <Chart type={"day"} stock={true} height={300} config={this.config()} component={"Statistics"}/>
+                      </View>
                     </View>
-                    <View style={{alignItems: 'center', padding: 0, marginBottom: 30}}>
-                      <Chart type={"day"} height={160} width={(Dimensions.get('window').width)} config={this.config()} component={"Statistics"}/>
+                    <View>
+                      <View style={{alignItems: 'flex-start', marginBottom: 10}}>
+                        <Text style={{fontSize: 17, color: '#bccad0'}}>Stethoscope</Text>
+                      </View>
+                      <View style={{alignItems: 'center', padding: 0, marginBottom: 30}}>
+                        <Chart type={"day"} stock={true} height={300} config={this.soundConfig()} component={"Statistics"}/>
+                      </View>
                     </View>
+
                   </View>
                 ): null}
 
