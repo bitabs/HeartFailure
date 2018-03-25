@@ -10,43 +10,21 @@ export default class Database {
 
   static updateHealthTable = (uid, inputValues) => firebase.app().database().ref(`/Health/${uid}`).update(inputValues).catch(e => console.log(e));
 
-  static getHealth = async (uid, healthRef) => await new Promise((resolve, reject) => {
+  static updateECG = (uid, data) => firebase.app().database().ref(`/ECG/`).update({[uid]: data}).catch(e => console.log(e));
+
+  static getHealth = async (uid, healthRef) => await new Promise((resolve, reject) =>
     healthRef.child(uid).on('value', (snap) => snap.val() ? resolve(snap.val()) : reject())
-  });
+  );
 
   static updateDashBoard = (rootUID = null, childUI = null, userObj) =>
     firebase.app().database().ref(`/Dashboard/${rootUID}/${childUI}`).update(userObj).catch(e => console.log(e));
 
-  static updateECG = (uid, data) => firebase.app().database().ref(`/ECG/`).update({[uid]: data}).catch(e => console.log(e));
+  static setMessage = (uid, toUid, ref, $message) =>
+    ref.child(`${uid}<=>${toUid}/messages`).push({timeStamp: moment().format(), msgText: $message}).catch(e => console.error(e));
 
-  //
-  // static setECG() {
-  //   const ECG = [];
-  //   User().then(user => {
-  //     firebase.app().database().ref(`/ECG/${user.uid}`).set(ECG).then(() => {
-  //       console.log("successfully added ECG!");
-  //     }).catch(e => console.log(e));
-  //   });
-  // }
-  //
-  // static setAppointments() {
-  //   const appointments = [];
-  //   User().then(user => {
-  //     firebase.app().database().ref(`/Appointments/${user.uid}`).set(appointments).then(() => {
-  //       console.log("successfully added Appointments!");
-  //     }).catch(e => console.log(e));
-  //   });
-  // }
-  //
-  // static setDashboard() {
-  //   const patients = {};
-  //   User().then(user => {
-  //     firebase.app().database().ref(`/Dashboard/${user.uid}`).set(patients).then(() => {
-  //       console.log("successfully added to Dashboard!");
-  //     }).catch(e => console.log(e));
-  //   });
-  // }
-  //
+  static followUser = (authUserUID, toFollowUserUID, userTypeObject, creds) =>
+    firebase.app().database().ref(`/Users/${authUserUID}/${userTypeObject}/${toFollowUserUID}`).set(creds).catch(e => console.error(e));
+
   static async initialiseMessagesDB(msgTo = "", loggedInUserUid, activeUserUid, type, ref, healthRef) {
     let health = null;
     if (type === "Patient") this.getHealth(loggedInUserUid, healthRef).then(h => health = h).catch(e => console.log(e));
@@ -61,20 +39,5 @@ export default class Database {
         }).catch(e => console.log(e));
       }
     });
-  }
-
-  static setMessage(uid, toUid, ref, $message) {
-    const message = {timeStamp: moment().format(), msgText: $message};
-    ref.child(`${uid}<=>${toUid}/messages`).push(message).then(() => {
-      console.log("Successfully added to message");
-    }).catch(e => console.log(e));
-  }
-
-  static followUser(authUserUID, toFollowUserUID, userTypeObject, creds) {
-    // console.log(authUserUID, toFollowUserUID, userTypeObject, creds)
-    firebase.app().database().ref(`/Users/${authUserUID}/${userTypeObject}s/${toFollowUserUID}`)
-      .set(creds).then(() => {
-      console.log("successfully added to DoctorsList!");
-    }).catch(e => console.log(e));
   }
 }
