@@ -8,13 +8,7 @@ import CheckBox from 'react-native-check-box';
 
 const onLogin = creds => {
   const {email, password} = creds;
-  firebase.auth().signInWithEmailAndPassword(email, password).then((user) => {
-    /*
-    * User is logged in
-    *
-    * */
-    // if (user) navigation.navigate('drawerStack');
-  }).catch(err => {
+  firebase.auth().signInAndRetrieveDataWithEmailAndPassword(email, password).catch(err => {
     const { code, message } = err;
   });
 };

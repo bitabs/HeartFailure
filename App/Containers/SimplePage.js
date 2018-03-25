@@ -4,7 +4,6 @@ import Statistics from "./Statistics";
 import ListOfUsers from "./ListOfUsers";
 import UserInfo from "./UserInfo";
 import PatientMainScreen from "./PatientMainScreen";
-import slayer from 'slayer';
 
 export default class SimplePage extends Component {
   constructor(props) {
@@ -22,7 +21,7 @@ export default class SimplePage extends Component {
   }
 
   View = (navigation, authUserUID, authUserType, index, updateIndex, userView, activeUser, disableSwipe) => {
-    if (!this._isMounted) return;
+    // if (!this._isMounted) return;
     let toReturn = null;
 
     if ((authUserType === "Patient" && index === 3) || (authUserType === "Doctor" && index === 2))
@@ -30,7 +29,8 @@ export default class SimplePage extends Component {
 
     if (authUserType === "Patient" && index === 2) toReturn = <Statistics />;
 
-    if (index === 0) toReturn = (<ListOfUsers authUserType={authUserType} authUserUID={authUserUID} updateIndex={updateIndex} userView={userView}/>);
+    console.log(this.props.authUserType);
+    if (index === 0) toReturn = (<ListOfUsers authUserType={this.props.authUserType} authUserUID={authUserUID} updateIndex={updateIndex} userView={userView}/>);
 
     if ((authUserType === "Patient" && index === 1) || (authUserType === "Doctor" && index === 1)  )
       toReturn = (<UserInfo index={index} User={activeUser} authUserUID={authUserUID} authUserType={authUserType} disableSwipe={disableSwipe} />);
@@ -46,14 +46,14 @@ export default class SimplePage extends Component {
     return (
       <View style={styles.page}>{
         this.View (
-          navigation,
-          authUserUID,
-          authUserType,
-          index,
-          updateIndex,
-          userView,
-          activeUser,
-          disableSwipe
+          this.props.navigation,
+          this.props.authUserUID,
+          this.props.authUserType,
+          this.props.index,
+          this.props.updateIndex,
+          this.props.userView,
+          this.props.activeUser,
+          this.props.disableSwipe
         )
       }</View>
     );

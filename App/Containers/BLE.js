@@ -8,8 +8,6 @@ import {
   AppState, TouchableOpacity, Text,
 } from 'react-native';
 import { stringToBytes } from 'convert-string';
-
-import { Buffer } from 'buffer';
 import BleManager from "react-native-ble-manager";
 const BleManagerModule = NativeModules.BleManager;
 const bleManagerEmitter = new NativeEventEmitter(BleManagerModule);

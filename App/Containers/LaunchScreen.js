@@ -1,4 +1,4 @@
-import React, {PureComponent} from 'react'
+import React, {Component} from 'react'
 import {View, TouchableHighlight, StyleSheet, Text, Animated, AsyncStorage, StatusBar} from 'react-native'
 import Feather from 'react-native-vector-icons/Feather';
 import {TabViewAnimated, TabBar} from 'react-native-tab-view';
@@ -27,7 +27,7 @@ type Route = {
 
 type State = NavigationState<Route>;
 
-export default class LaunchScreen extends PureComponent<*, State> {
+export default class LaunchScreen extends Component<*, State> {
   static title = 'Icon only top bar';
   static appbarElevation = 0;
 
@@ -49,6 +49,7 @@ export default class LaunchScreen extends PureComponent<*, State> {
     this.updateIndex = this.updateIndex.bind(this);
     this.updateUserView = this.updateUserView.bind(this);
     this.toggleSwipe = this.toggleSwipe.bind(this);
+    this.retrieveInfo = this.retrieveInfo.bind(this);
   }
 
   componentWillUnmount() {
@@ -58,19 +59,26 @@ export default class LaunchScreen extends PureComponent<*, State> {
 
   componentDidMount() {
     this._isMounted = true;
+    this.retrieveInfo(this.userRef)
+  };
+
+  retrieveInfo = (userRef) => {
+    const extraKey = {key: '4', icon: 'message-square'};
     User().then(user => {
-      this.userRef.child(user.uid).once('value').then(snap => {
-        if (snap.val() && this._isMounted) {
+      userRef.child(user.uid).on('value', snap => {
+        if (snap.val()) {
           const {routes} = this.state, authUser = snap.val();
-          this.setState(prevState => ({
+          console.log(snap.val());
+          this.setState({
             authUserUID: user.uid,
             authUserType: snap.val().type,
-            routes: authUser.type === "Patient" ? [...routes, {key: '4', icon: 'message-square'}]: prevState.routes
-          }));
+            routes: (authUser.type === "Patient" && !routes.includes(extraKey)) ? [...routes, extraKey]: routes
+          });
         }
       });
     });
   };
+
 
   _handleIndexChange = index => this.setState({index});
 
@@ -104,16 +112,21 @@ export default class LaunchScreen extends PureComponent<*, State> {
     <TabBar {...props} indicatorStyle={styles.indicator} renderIcon={this._renderIcon} style={[styles.tabbar, {paddingTop: 1, paddingBottom: 1}] }/>
   </View>);
 
-  _renderScene = ({route}) => (<SimplePage
-    authUserUID={this.state.authUserUID}
-    authUserType={this.state.authUserType}
-    index={this.state.index}
-    updateIndex={this.updateIndex}
-    disableSwipe={this.toggleSwipe}
-    userView={this.updateUserView}
-    activeUser={this.state.viewCurrentUser}
-    navigation={this.props.navigation}
-  />);
+  _renderScene = ({route}) => {
+    console.log(this.state.authUserType);
+    return (
+      <SimplePage
+        authUserUID={this.state.authUserUID}
+        authUserType={this.state.authUserType}
+        index={this.state.index}
+        updateIndex={this.updateIndex}
+        disableSwipe={this.toggleSwipe}
+        userView={this.updateUserView}
+        activeUser={this.state.viewCurrentUser}
+        navigation={this.props.navigation}
+      />
+    )
+  };
 
   render() {
     const {index, authUserType} = this.state;

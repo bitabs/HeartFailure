@@ -711,7 +711,7 @@ class PatientMainScreen extends PureComponent {
               <Text style={styles.boxTitle}>
                 {user ? user.length : 0} {this.applyLetterSpacing("Connections").toUpperCase()}</Text>
             </View>
-            <View style={[styles.socialIcons, {flexWrap: 'wrap'}]}>
+            <View style={[styles.socialIcons, {flexWrap: 'wrap', justifyContent: 'flex-start'}]}>
               {
                 user ? user.map((uid, i) => {
                   if (i <= 3) {
@@ -1112,9 +1112,6 @@ class PatientMainScreen extends PureComponent {
                           elevation: 4
                         }}
                         onPress={handleSubmit(saveEdit => {
-                          // const allergiesAsArray = saveEdit.allergies.split(',') || null;
-                          // console.log("checking: ", {...saveEdit, allergies: saveEdit.allergies.split(',') || null })
-                          //if (saveEdit['allergies']) saveEdit['allergies'] = eval(`[${saveEdit['allergies']}]`);
                           Database.updateHealthTable(uid, {
                             ...saveEdit,
                             allergies: saveEdit.allergies ? saveEdit.allergies.split(',') : null

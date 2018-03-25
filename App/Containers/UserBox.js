@@ -7,6 +7,7 @@ import Chart from "./Chart";
 import PropTypes from 'prop-types';
 import {Images} from './PreLoadImages';
 import Database from '../Components/Database';
+import firebase from 'react-native-firebase';
 import Feather from 'react-native-vector-icons/Feather';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
@@ -16,7 +17,15 @@ export default class UserBox extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      User: this.props.User,
+      User        : this.props.User,
+      health      : {
+        height    : 0, weight      : 0,
+        age       : 0, fat         : 0,
+        allergies : 0, bpm         : 0,
+        calories  : 0, thermometer : 0,
+        healthAlert : null
+      },
+      ECG   : null,
       randomFav: null,
       randomWatch: null,
       totalMessages: null,
@@ -25,6 +34,10 @@ export default class UserBox extends Component {
       star: "9,4.958 10.313,7.618 13.25,8.048 11.125,10.119 11.627,13.042 9,11.66 6.374,13.042 6.875,10.119 4.75,8.048 7.688,7.618"
     };
     this.animatedValue = new Animated.Value(1);
+
+    this.healthRef  = firebase.app().database().ref(`/Health/`);
+    this.ecgRef     = firebase.app().database().ref(`/ECG/`);
+    this.fetchAsyncData = this.fetchAsyncData.bind(this);
   }
 
   componentWillUnmount() {
@@ -35,14 +48,30 @@ export default class UserBox extends Component {
   componentDidMount() {
     this._isMounted = true;
     if (!this._isMounted) return;
-
+    this.fetchAsyncData(this.healthRef, this.ecgRef);
     this.setState({
       randomFav: this.getRandomInt(0, 4),
       randomWatch: this.getRandomInt(0, 500)
     });
-
     this.spin();
   }
+
+
+  fetchAsyncData = (healthRef, ecgRef) => {
+    if (this.props.type === "Doctor") {
+      healthRef.on('value', snap => {
+        if (snap.val()) this.setState({
+          health: snap.val()[this.props.uid]
+        })
+      });
+
+      ecgRef.on('value', snap => {
+        if (snap.val()) this.setState({
+          ECG: snap.val()[this.props.uid]
+        });
+      })
+    }
+  };
 
   spin() {
     this.animatedValue.setValue(1);
@@ -50,7 +79,7 @@ export default class UserBox extends Component {
       this.animatedValue,
       {
         toValue: 0,
-        duration: 1000,
+        duration: 100,
         delay: 100,
         easing: Easing.linear
       }
@@ -115,12 +144,8 @@ export default class UserBox extends Component {
       series: [{
         name: 'Random data',
         data: (function () {
-          let data = [];
-
-          if ($this.props.User && $this.props.User.ecg)
-            return $this.props.User.ecg;
-          //data = $this.props.Patient.ecg;
-          //return data;
+          if ($this.state.ECG)
+            return $this.state.ECG;
         }()),
         pointStart: Date.now() - 10 * 100,
         pointInterval: 10,
@@ -170,23 +195,35 @@ export default class UserBox extends Component {
     if (!this._isMounted) return;
     let user = User && (User.Patients || User.Doctors);
 
-    const {health = null} = User;
+    const {health} = this.state;
 
 
     const Users = User && user ? Object.keys(user).map((uid, i) => {
       if (i < 3) return (
         <View style={[styles.imgCircleContainer, {position: 'absolute', left: i * 17}]} key={i}>
-          <Image style={{
-            borderRadius: 300,
-            height: 25,
-            width: 25,
-          }} source={Images[uid]} resizeMode="contain"/>
+          {Images[uid] ? (
+            <Image style={{
+              borderRadius: 300,
+              height: 25,
+              width: 25,
+            }} source={Images[uid]} resizeMode="contain"/>
+          ): (
+            <View style={{
+              borderRadius: 300,
+              height: 25,
+              width: 25,
+              backgroundColor: '#6482e6',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}>
+              <Feather name={"user"} size={15} color={"white"}/>
+            </View>
+          )}
         </View>
       )
     }) : null;
 
     const more = Users && Object.keys(Users).length > 3;
-
 
     return (
       <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 10}}>
@@ -196,7 +233,7 @@ export default class UserBox extends Component {
               {Users}
             </View>
             {more ? (
-              <View style={[styles.imgCircleContainer, {position: 'absolute', left: 56, backgroundColor: 'white',}]}>
+              <View style={[styles.imgCircleContainer, {position: 'absolute', left: 56, backgroundColor: 'white'}]}>
                 <View style={{
                   width: 25,
                   height: 25,
@@ -212,7 +249,7 @@ export default class UserBox extends Component {
           </View>
         </View>) : null}
 
-        {health ? (
+        {User.type === "Patient" && health.healthAlert ? (
           <View>
             <Text style={{
               padding: 8,
@@ -222,7 +259,6 @@ export default class UserBox extends Component {
               borderRadius: 5,
               fontSize: 12,
               color: 'white',
-              // elevation: 2,
               fontWeight: 'bold'
             }}>{health.healthAlert}</Text>
           </View>
@@ -256,12 +292,17 @@ export default class UserBox extends Component {
 
   ECG = User => {
     if (!this._isMounted) return;
+    const {ECG} = this.state;
     return (
-      User && User.ecg ? (
+      User.type === "Patient" && ECG ? (
         <View style={{alignItems: 'center', padding: 0}}>
           <Chart type={"day"} height={100} width={"100%"} config={this.config()} component={"Statistics"}/>
         </View>
-      ) : null
+      ) : (
+        <View style={{width: '100%', height: 100, alignItems: 'center', justifyContent: 'center'}}>
+          <Text style={{color: 'rgba(144, 154, 174, 0.5)', fontSize: 15, opacity: 0.7}}>No ECG data found</Text>
+        </View>
+      )
     )
   };
 
@@ -282,12 +323,8 @@ export default class UserBox extends Component {
 
   UserLeftSection = (User, uid) => {
     if (!this._isMounted) return;
-    let health = null;
-
-    if (User && User.type === "Patient")
-      health = User.health;
-
-    const tagColor = this.tagColor(health ? health.healthAlert : null);
+    const {health} = this.state;
+    const tagColor = this.tagColor(User.type === "Patient" ? health.healthAlert: null);
 
     return (
       <View style={styles.leftContainer}>
@@ -295,9 +332,7 @@ export default class UserBox extends Component {
         <View style={{marginBottom: 20}}>
 
           <View style={[styles.imgRound, {
-            backgroundColor: tagColor
-          }, {
-            backgroundColor: !Images[uid] ? "#E67D8F" : null
+            backgroundColor: !Images[uid] ? "#E67D8F" : tagColor
           }]}>
             {Images[uid] ? (
               <View>
@@ -312,7 +347,7 @@ export default class UserBox extends Component {
         </View>
 
         {
-          User && User.type === "Patient" && health ? (
+          User && User.type === "Patient" ? (
             <View style={{width: '100%'}}>
               <View style={{alignSelf: 'center'}}>
                 <Svg width="31.463" height="31.463" viewBox="0 0 31.463 31.463">
@@ -354,11 +389,11 @@ export default class UserBox extends Component {
                   <Text style={{color: 'rgba(144, 154, 174, 0.5)', fontSize: 12}}>Allergies</Text>
 
                   <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                    {Object.values(health.allergies).map((allergy, i) => {
+                    {health.allergies ? Object.values(health.allergies).map((allergy, i) => {
                       if (i <= 1)
                         return <Text key={i}
                                      style={styles.leftHealthTitle}>{allergy}{i !== 1 ? ', ' : ''}</Text>
-                    })}
+                    }): <Text style={styles.leftHealthTitle}>Not Specified</Text>}
                   </View>
                 </View>
               </View>
@@ -372,10 +407,7 @@ export default class UserBox extends Component {
   UserRightSection = User => {
     if (!this._isMounted) return;
 
-    let health = null;
-
-    if (User && User.type === "Patient")
-      health = User.health;
+    const {health} = this.state;
 
     return (
       <View style={styles.rightContainer}>
@@ -386,7 +418,7 @@ export default class UserBox extends Component {
 
         {this.stackedUsers(User)}
 
-        {health ? (
+        {User.type === "Patient" ? (
           <View>
             <Text style={styles.healthSummaryTitle}>Health
               Summary</Text>
@@ -494,7 +526,6 @@ export default class UserBox extends Component {
 
 const styles = StyleSheet.create({
   box: {
-    // marginTop: 10,
     marginBottom: 20,
     alignItems: 'flex-start',
     backgroundColor: 'white',
@@ -572,8 +603,6 @@ const styles = StyleSheet.create({
     borderRadius: 300,
     height: 83,
     width: 83,
-    // borderColor: 'white',
-    // backgroundColor: 'black',
     alignItems: 'center',
     overflow: 'hidden',
     elevation: 2,

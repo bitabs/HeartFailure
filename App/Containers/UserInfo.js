@@ -19,15 +19,17 @@ export default class UserInfo extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      user: null,
-      message: null,
-      allMessages: null,
+      user            : null,
+      authUserUID     : null,
+      authUserType    : null,
+      message         : null,
+      allMessages     : null,
       filteredMessages: null,
-      randomFav   : null,
-      type: "",
-      testing: false,
-      ECG: null,
-      heartSound: null
+      randomFav       : null,
+      type            : "",
+      testing         : false,
+      ECG             : null,
+      heartSound      : null
     };
 
     this.userRef   = firebase.app().database().ref(`/Users/`);
@@ -40,9 +42,28 @@ export default class UserInfo extends Component {
     this.initialiseDB = this.initialiseDB.bind(this);
   }
 
+  componentWillUnmount() {
+    this._isMounted = false;
+  }
+
   componentDidMount() {
     this._isMounted = true;
-    if (this._isMounted) this.initialiseDB(this.userRef, this.ecgRef, this.healthRef, this.PCRef, this.DCRef);
+    if (this._isMounted) {
+      this.fetchDummyData();
+      User().then(authUser => {
+        this.userRef.on('value', snap => {
+          if (snap.val()) this.setState({
+            authUserUID: authUser.uid,
+            authUserType: snap.val()[authUser.uid].type
+          }, () => {
+            this.initialiseDB(snap.val(), this.ecgRef, this.healthRef, this.PCRef, this.DCRef);
+          })
+        });
+      });
+    }
+  }
+
+  fetchDummyData = () => {
     fetch('https://raw.githubusercontent.com/NaseebullahSafi/HeartFailure/master/ECG.txt?token=APbiPfg9DRYV1oisDd6yXU30FdIFSmmtks5avQatwA%3D%3D')
       .then(response => response.text().then(text => {
         this.setState({ECG: text.split('\n').map(Number)})
@@ -52,37 +73,30 @@ export default class UserInfo extends Component {
       .then(response => response.text().then(text => {
         this.setState({heartSound: text.split('\n').map(Number)})
       }))
-  }
+  };
 
-  componentWillUnmount() {
-    this._isMounted = false;
-    console.log("unmoutning in UserInfo");
-  }
-
-  initialiseDB = (userRef, ecgRef, healthRef, PCRef, DCRef) => {
+  initialiseDB = (userSnapData = null, ecgRef, healthRef, PCRef, DCRef) => {
     if (!this._isMounted) return;
-    const {index, authUserUID, authUserType, User} = this.props;
+    const {User} = this.props, {authUserUID, authUserType} = this.state;
 
-    userRef.on('value', snap => {
-      if (snap.val() && this._isMounted && User) {
-        const user = snap.val()[authUserUID];
-        Database.initialiseMessagesDB(user.name, authUserUID, User.uid, authUserType, authUserType === "Patient" ? PCRef : DCRef, healthRef).catch(e => console.log(e));
+    if (userSnapData && this._isMounted && User) {
+      const user = userSnapData[authUserUID];
+      Database.initialiseMessagesDB(user.name, authUserUID, User.uid, authUserType, authUserType === "Patient" ? PCRef : DCRef, healthRef).catch(e => console.log(e));
 
-        PCRef.on('value', snap => {
-          this.fetchComments([PCRef, DCRef]).then(refValues => {
-            const [PatientsComments, DoctorsComments] = refValues;
-            this.filterMsg({...PatientsComments, ...DoctorsComments});
-          })
-        });
+      PCRef.on('value', snap => {
+        this.fetchComments([PCRef, DCRef]).then(refValues => {
+          const [PatientsComments, DoctorsComments] = refValues;
+          this.filterMsg({...PatientsComments, ...DoctorsComments});
+        })
+      });
 
-        DCRef.on('value', snap => {
-          this.fetchComments([PCRef, DCRef]).then(refValues => {
-            const [PatientsComments, DoctorsComments] = refValues;
-            this.filterMsg({...PatientsComments, ...DoctorsComments});
-          })
-        });
-      }
-    });
+      DCRef.on('value', snap => {
+        this.fetchComments([PCRef, DCRef]).then(refValues => {
+          const [PatientsComments, DoctorsComments] = refValues;
+          this.filterMsg({...PatientsComments, ...DoctorsComments});
+        })
+      });
+    }
   };
 
   config = () => {
@@ -241,7 +255,7 @@ export default class UserInfo extends Component {
 
   sendMessage = (toUid) => {
     if (!this._isMounted) return;
-    const { message } = this.state, {authUserUID, authUserType} = this.props;
+    const { message, authUserUID, authUserType } = this.state;
     if (this._isMounted) Database.setMessage(authUserUID, toUid, authUserType === "Patient" ? this.PCRef : this.DCRef, message);
   };
 
@@ -257,7 +271,7 @@ export default class UserInfo extends Component {
 
 
   filterMsg = AsyncMessages => {
-    const {authUserUID, User} = this.props;
+    const {User} = this.props, {authUserUID} = this.state;
     let filtered = Object.keys(AsyncMessages).reduce((acc, val) => {
       const patientToDoctor = `${authUserUID}<=>${User.uid}`;
       const doctorToPatient = `${User.uid}<=>${authUserUID}`;
@@ -274,9 +288,7 @@ export default class UserInfo extends Component {
    * Returns a random integer between min (inclusive) and max (inclusive)
    * Using Math.round() will give you a non-uniform distribution!
    */
-  getRandomInt = (min, max) => {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  };
+  getRandomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
   favorite = () => [1,2,3,4,5].map((e,i) => {
     return (
@@ -396,7 +408,7 @@ export default class UserInfo extends Component {
                   </View>
                 ): null}
 
-                {this.props.authUserType === "Doctor" && this.props.User && this.props.User.ecg ? (
+                {this.state.authUserType === "Doctor" && this.props.User && this.props.User.ecg ? (
                   <View>
                     <View>
                       <View style={{alignItems: 'flex-start', marginBottom: 10}}>
@@ -459,7 +471,6 @@ export default class UserInfo extends Component {
     )
   }
 }
-
 
 const styles = StyleSheet.create({
   container: {
