@@ -52,7 +52,7 @@ export default class UserInfo extends Component {
       this.fetchDummyData();
       User().then(authUser => {
         this.userRef.on('value', snap => {
-          if (snap.val()) this.setState({
+          if (snap.val() && this._isMounted) this.setState({
             authUserUID: authUser.uid,
             authUserType: snap.val()[authUser.uid].type
           }, () => {
@@ -66,12 +66,12 @@ export default class UserInfo extends Component {
   fetchDummyData = () => {
     fetch('https://raw.githubusercontent.com/NaseebullahSafi/HeartFailure/master/ECG.txt?token=APbiPfg9DRYV1oisDd6yXU30FdIFSmmtks5avQatwA%3D%3D')
       .then(response => response.text().then(text => {
-        this.setState({ECG: text.split('\n').map(Number)})
+        if (this._isMounted) this.setState({ECG: text.split('\n').map(Number)})
       }));
 
     fetch('https://raw.githubusercontent.com/NaseebullahSafi/HeartFailure/master/Stethoscope.txt?token=APbiPc8PDxQZp3_Ris9gpqyeJjGxkegBks5avSIWwA%3D%3D')
       .then(response => response.text().then(text => {
-        this.setState({heartSound: text.split('\n').map(Number)})
+        if (this._isMounted) this.setState({heartSound: text.split('\n').map(Number)})
       }))
   };
 
@@ -138,7 +138,7 @@ export default class UserInfo extends Component {
           },
           events: {
             click: function () {
-              this.setState(this.state === 'select' ? '' : 'select');
+              if (this._isMounted) this.setState(this.state === 'select' ? '' : 'select');
             }
           }
         }
@@ -440,7 +440,7 @@ export default class UserInfo extends Component {
                       placeholder="Comment"
                       underlineColorAndroid="transparent"
                       placeholderTextColor={"#bccad0"}
-                      onChangeText={(text) => this.setState({message: text})}
+                      onChangeText={(text) => (this._isMounted) ? this.setState({message: text}): null}
                     />
 
                     <View style={{

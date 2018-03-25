@@ -294,15 +294,17 @@ export default class UserBox extends Component {
     if (!this._isMounted) return;
     const {ECG} = this.state;
     return (
-      User.type === "Patient" && ECG ? (
+      User.type === "Patient" ? (
         <View style={{alignItems: 'center', padding: 0}}>
-          <Chart type={"day"} height={100} width={"100%"} config={this.config()} component={"Statistics"}/>
+          {ECG ? (
+            <Chart type={"day"} height={100} width={"100%"} config={this.config()} component={"Statistics"}/>
+          ): (
+            <View style={{width: '100%', height: 100, alignItems: 'center', justifyContent: 'center'}}>
+              <Text style={{color: 'rgba(144, 154, 174, 0.5)', fontSize: 15, opacity: 0.7}}>No ECG data found</Text>
+            </View>
+          )}
         </View>
-      ) : (
-        <View style={{width: '100%', height: 100, alignItems: 'center', justifyContent: 'center'}}>
-          <Text style={{color: 'rgba(144, 154, 174, 0.5)', fontSize: 15, opacity: 0.7}}>No ECG data found</Text>
-        </View>
-      )
+      ) : null
     )
   };
 

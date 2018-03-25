@@ -68,7 +68,7 @@ class PatientMainScreen extends PureComponent {
       0.117046142578125, 0.1312630615234375, 0.1529300537109375, 0.167607177734375,
       0.1899068603515625, 0.2124422607421875, 0.235044677734375, 0.2575535888671875,
       0.2724073486328125, 0.286978271484375, 0.3007579345703125, 0.3067425537109375,
-      0.3106370849609375, 0.303756103515625, 0.2897236328125,0.25916931152343753,
+      0.3106370849609375, 0.303756103515625, 0.2897236328125, 0.25916931152343753,
       0.2200599365234375, 0.1728209228515625, 0.133416259765625, 0.086224853515625,
       0.05493408203125, 0.02409423828125, 0.00922607421875, -0.0043409423828125,
       -0.0097349853515625, -0.013127685546875, -0.01423095703125, -0.013834716796875,
@@ -92,7 +92,7 @@ class PatientMainScreen extends PureComponent {
       0.117046142578125, 0.1312630615234375, 0.1529300537109375, 0.167607177734375,
       0.1899068603515625, 0.2124422607421875, 0.235044677734375, 0.2575535888671875,
       0.2724073486328125, 0.286978271484375, 0.3007579345703125, 0.3067425537109375,
-      0.3106370849609375, 0.303756103515625, 0.2897236328125,0.25916931152343753,
+      0.3106370849609375, 0.303756103515625, 0.2897236328125, 0.25916931152343753,
       0.2200599365234375, 0.1728209228515625, 0.133416259765625, 0.086224853515625,
       0.05493408203125, 0.02409423828125, 0.00922607421875, -0.0043409423828125,
       -0.0097349853515625, -0.013127685546875, -0.01423095703125, -0.013834716796875,
@@ -116,7 +116,7 @@ class PatientMainScreen extends PureComponent {
       0.117046142578125, 0.1312630615234375, 0.1529300537109375, 0.167607177734375,
       0.1899068603515625, 0.2124422607421875, 0.235044677734375, 0.2575535888671875,
       0.2724073486328125, 0.286978271484375, 0.3007579345703125, 0.3067425537109375,
-      0.3106370849609375, 0.303756103515625, 0.2897236328125,0.25916931152343753,
+      0.3106370849609375, 0.303756103515625, 0.2897236328125, 0.25916931152343753,
       0.2200599365234375, 0.1728209228515625, 0.133416259765625, 0.086224853515625,
       0.05493408203125, 0.02409423828125, 0.00922607421875, -0.0043409423828125,
       -0.0097349853515625, -0.013127685546875, -0.01423095703125, -0.013834716796875,
@@ -512,14 +512,7 @@ class PatientMainScreen extends PureComponent {
   topContainer = User => {
     const {navigation} = this.props;
     return (
-      <View style={{
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        padding: 20,
-        paddingBottom: 0,
-        paddingTop: 0
-      }}>
+      <View style={styles.topSection}>
         <View>
           <View style={styles.imageContainer}>
             <View style={[styles.imgCircleContainer, !Images[User.uid] ? {elevation: 1} : null]}>
@@ -530,10 +523,11 @@ class PatientMainScreen extends PureComponent {
             </View>
           </View>
         </View>
+
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
+
           <View>
-            <TouchableOpacity onPress={() => navigation.navigate('FooDrawerOpen')}
-              style={{position: 'relative', backgroundColor: 'white', borderRadius: 300, padding: 15, elevation: 1}}>
+            <TouchableOpacity onPress={() => navigation.navigate('FooDrawerOpen')} style={styles.messageBtn}>
               <View style={{position: 'relative'}}>
                 <Feather name={"message-square"} size={17} color="#bccad0"/>
                 <View style={styles.notificationDot}/>
@@ -544,6 +538,7 @@ class PatientMainScreen extends PureComponent {
           <TouchableOpacity style={{marginLeft: 25}} onPress={() => this.signOutUser()}>
             <Text style={{color: '#a1a2a7', fontWeight: 'bold', fontSize: 10}}>L O G O U T</Text>
           </TouchableOpacity>
+
         </View>
       </View>
     )
@@ -566,20 +561,11 @@ class PatientMainScreen extends PureComponent {
       <View style={[styles.box, {minHeight: 250}]}>
         {!editView ? (
           <View>
-            <View style={{
-              borderBottomWidth: 1,
-              borderBottomColor: 'rgba(188,202,208, 0.15)',
-              paddingBottom: 20,
-              marginRight: 5
-            }}>
+            <View style={styles.innerBox}>
               <TouchableOpacity
-                style={{
-                  alignSelf: 'flex-end', marginBottom: 1, padding: 10, backgroundColor: '#6482e6', borderRadius: 300,
-                  elevation: 4, marginRight: 5
-                }}
+                style={styles.toggleViewBtn}
                 onPress={() => this.toggleBtns("editView", true)}
-              >
-                <Feather name={'edit-2'} size={17} color='white'/>
+              ><Feather name={'edit-2'} size={17} color='white'/>
               </TouchableOpacity>
               <Text
                 style={styles.boxTitle}>{this.applyLetterSpacing(`About ${name.split(" ")[0]}`).toUpperCase()}</Text>
@@ -638,14 +624,7 @@ class PatientMainScreen extends PureComponent {
                 <View style={{flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'stretch',}}
                       keyboardShouldPersistTaps={'handled'}>
                   <TouchableOpacity
-                    style={{
-                      alignSelf: 'flex-end',
-                      marginBottom: 1,
-                      padding: 10,
-                      backgroundColor: '#6482e6',
-                      borderRadius: 300,
-                      elevation: 4
-                    }}
+                    style={[styles.toggleViewBtn, {marginRight: 0}]}
                     onPress={handleSubmit(saveEdit => {
                       Database.updateUserTable(uid, saveEdit);
                       this.toggleBtns("editView", false);
@@ -729,7 +708,7 @@ class PatientMainScreen extends PureComponent {
                               source={Images[uid]}
                               resizeMode="contain"
                             />
-                          ): (
+                          ) : (
                             <View style={[styles.userImg, {
                               borderRadius: 300,
                               height: 50,
@@ -888,12 +867,12 @@ class PatientMainScreen extends PureComponent {
               <View style={{padding: 30, paddingBottom: 0}}>
                 <Text style={styles.boxTitle}>{this.applyLetterSpacing("Electrocardiograph").toUpperCase()}</Text>
               </View>
-              <Counter />
+              <Counter/>
               <View>
                 <Text style={{fontSize: 50, color: '#7D8292', textAlign: 'center'}}><Text
                   style={{color: '#d0d4db'}}>0</Text>{97}</Text>
 
-                <Text style={{fontSize: 15, color: '#e0e1e8', textAlign: 'center'}}>b e a t s   p e r   m i n u t e</Text>
+                <Text style={{fontSize: 15, color: '#e0e1e8', textAlign: 'center'}}>b e a t s p e r m i n u t e</Text>
 
               </View>
               <ECG height={130} width={Dimensions.get('window').width - 10}/>
@@ -976,7 +955,7 @@ class PatientMainScreen extends PureComponent {
               backgroundColor: '#6482e6',
               marginTop: 20
             }}
-             onPress={() => Database.updateECG(uid, this.ECG)}
+                              onPress={() => Database.updateECG(uid, this.ECG)}
             ><Feather name={'activity'} size={17} color='white'/>
             </TouchableOpacity>
           </View>
@@ -1212,11 +1191,26 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 30
   },
+  topSection: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: 20,
+    paddingBottom: 0,
+    paddingTop: 0
+  },
   middleContainer: {
     paddingTop: 20,
     flexDirection: 'column',
     alignItems: 'center',
     alignSelf: 'center'
+  },
+  messageBtn: {
+    position: 'relative',
+    backgroundColor: 'white',
+    borderRadius: 300,
+    padding: 15,
+    elevation: 1
   },
   notificationDot: {
     position: 'absolute',
@@ -1239,6 +1233,12 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     elevation: 0.1,
   },
+  innerBox: {
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(188,202,208, 0.15)',
+    paddingBottom: 20,
+    marginRight: 5
+  },
   boxTitle: {
     color: '#aab8be',
     fontSize: 13,
@@ -1250,6 +1250,15 @@ const styles = StyleSheet.create({
     fontSize: 13,
     lineHeight: 22,
     textAlign: 'left'
+  },
+  toggleViewBtn: {
+    alignSelf: 'flex-end',
+    marginBottom: 1,
+    padding: 10,
+    backgroundColor: '#6482e6',
+    borderRadius: 300,
+    elevation: 4,
+    marginRight: 5
   },
   type: {
     fontSize: 25,
@@ -1264,7 +1273,6 @@ const styles = StyleSheet.create({
     borderRadius: 80,
     height: 60,
     width: 60,
-    // borderColor: 'white',
     backgroundColor: 'white',
     alignItems: 'center',
     overflow: 'hidden',
@@ -1300,7 +1308,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: 10,
-    // marginBottom: 20,
   },
   connection: {
     margin: 10,
@@ -1329,8 +1336,6 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: "#aab8be",
     height: 40,
-    // alignSelf: 'stretch',
-    // width: '100%',
     paddingLeft: 15,
     paddingRight: 15,
     backgroundColor: 'rgba(188,202,208, 0.15)',
