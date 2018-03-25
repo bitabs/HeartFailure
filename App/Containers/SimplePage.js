@@ -21,7 +21,7 @@ export default class SimplePage extends Component {
   }
 
   View = (navigation, authUserUID, authUserType, index, updateIndex, userView, activeUser, disableSwipe) => {
-    // if (!this._isMounted) return;
+    if (!this._isMounted) return;
     let toReturn = null;
 
     if ((authUserType === "Patient" && index === 3) || (authUserType === "Doctor" && index === 2))
@@ -29,8 +29,7 @@ export default class SimplePage extends Component {
 
     if (authUserType === "Patient" && index === 2) toReturn = <Statistics />;
 
-    console.log(this.props.authUserType);
-    if (index === 0) toReturn = (<ListOfUsers authUserType={this.props.authUserType} authUserUID={authUserUID} updateIndex={updateIndex} userView={userView}/>);
+    if (index === 0) toReturn = (<ListOfUsers updateIndex={updateIndex} userView={userView}/>);
 
     if ((authUserType === "Patient" && index === 1) || (authUserType === "Doctor" && index === 1)  )
       toReturn = (<UserInfo index={index} User={activeUser} authUserUID={authUserUID} authUserType={authUserType} disableSwipe={disableSwipe} />);
@@ -39,10 +38,6 @@ export default class SimplePage extends Component {
   };
 
   render() {
-    const {
-      navigation, authUserUID, authUserType,
-      index, updateIndex, userView, activeUser, disableSwipe
-    } = this.props;
     return (
       <View style={styles.page}>{
         this.View (

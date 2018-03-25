@@ -20,7 +20,6 @@ export default class ListOfUsers extends Component {
       iWantThisUsers: this.props.authUserType  === "Doctor" ? "Patient" : "Doctor"
     };
     this.userRef = firebase.app().database().ref(`/Users/`);
-    this.dashRef = firebase.app().database().ref(`/Dashboard/`);
     this.initialiseDashboard = this.initialiseDashboard.bind(this);
     this.fetchUsersFromNetwork = this.fetchUsersFromNetwork.bind(this);
   }
@@ -40,7 +39,7 @@ export default class ListOfUsers extends Component {
             authUserType: snap.val()[authUser.uid].type,
           }, () => {
             const {authUserUID, authUserType} = this.state;
-            this.initialiseDashboard(authUserUID, authUserType, snap.val(), this.dashRef, this.props.userView);
+            this.initialiseDashboard(authUserUID, authUserType, snap.val(), this.props.userView);
           });
 
           this.userRef.endAt().limitToLast().child(`${this.state.authUserUID}/Patients`).on('child_added', childSnap =>
@@ -73,7 +72,7 @@ export default class ListOfUsers extends Component {
     }
   };
 
-  initialiseDashboard = (authUserUID, authUserType, userSnapData, dashRef, userView) => {
+  initialiseDashboard = (authUserUID, authUserType, userSnapData, userView) => {
     const isPatient = authUserType === "Patient";
 
     if (isPatient && this._isMounted) {

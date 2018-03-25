@@ -28,9 +28,6 @@ type Route = {
 type State = NavigationState<Route>;
 
 export default class LaunchScreen extends Component<*, State> {
-  static title = 'Icon only top bar';
-  static appbarElevation = 0;
-
   constructor(props) {
     super(props);
     this.state = {
@@ -43,9 +40,8 @@ export default class LaunchScreen extends Component<*, State> {
       defaultView     : null,
       disableSwipe    : true,
     };
-    this.userRef = firebase.app().database().ref(`/Users/`);
-    this.dashRef = firebase.app().database().ref(`/Dashboard/`);
 
+    this.userRef = firebase.app().database().ref(`/Users/`);
     this.updateIndex = this.updateIndex.bind(this);
     this.updateUserView = this.updateUserView.bind(this);
     this.toggleSwipe = this.toggleSwipe.bind(this);
@@ -54,7 +50,6 @@ export default class LaunchScreen extends Component<*, State> {
 
   componentWillUnmount() {
     this._isMounted = false;
-    console.log("unmounting launchscreen")
   }
 
   componentDidMount() {
@@ -131,15 +126,21 @@ export default class LaunchScreen extends Component<*, State> {
   render() {
     const {index, authUserType} = this.state;
     return (
-      <TabViewAnimated
-        style={styles.container}
-        swipeEnabled={this.state.disableSwipe}
-        navigationState={this.state}
-        renderScene={this._renderScene}
-        renderHeader={!(index === 3 && authUserType === "Patient") && !(index === 2 && authUserType === "Doctor") ? this._renderHeader : null}
-        renderFooter={this._renderFooter}
-        onIndexChange={this._handleIndexChange}
-      />
+      <React.Fragment>
+        <StatusBar
+          backgroundColor="white"
+          barStyle="dark-content"
+        />
+        <TabViewAnimated
+          style={styles.container}
+          swipeEnabled={this.state.disableSwipe}
+          navigationState={this.state}
+          renderScene={this._renderScene}
+          renderHeader={!(index === 3 && authUserType === "Patient") && !(index === 2 && authUserType === "Doctor") ? this._renderHeader : null}
+          renderFooter={this._renderFooter}
+          onIndexChange={this._handleIndexChange}
+        />
+      </React.Fragment>
     );
   }
 }
