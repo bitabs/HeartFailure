@@ -39,6 +39,7 @@ export default class LaunchScreen extends Component<*, State> {
       viewCurrentUser : null,
       defaultView     : null,
       disableSwipe    : true,
+      activeTitle     : null
     };
 
     this.userRef = firebase.app().database().ref(`/Users/`);
@@ -46,6 +47,7 @@ export default class LaunchScreen extends Component<*, State> {
     this.updateUserView = this.updateUserView.bind(this);
     this.toggleSwipe = this.toggleSwipe.bind(this);
     this.retrieveInfo = this.retrieveInfo.bind(this);
+    this.toggleTitle = this.toggleTitle.bind(this);
   }
 
   componentWillUnmount() {
@@ -67,6 +69,7 @@ export default class LaunchScreen extends Component<*, State> {
           this.setState({
             authUserUID: user.uid,
             authUserType: snap.val().type,
+            activeTitle: snap.val().type === "Doctor" ? "My Patients" : "My Doctors",
             routes: (authUser.type === "Patient" && !routes.includes(extraKey)) ? [...routes, extraKey]: routes
           });
         }
@@ -79,7 +82,7 @@ export default class LaunchScreen extends Component<*, State> {
 
   updateIndex = route => {
     if (route === "Patient") this.setState({
-      index: this.state.index === 2 ? 3 : 2
+      index: this.state.index === 0 ? 1 : 0
     }); else if (route === "Doctor") this.setState({
       index: this.state.index === 0 ? 1 : 0
     })
@@ -87,12 +90,21 @@ export default class LaunchScreen extends Component<*, State> {
 
   toggleSwipe = val => this.setState({disableSwipe: val});
 
+  toggleTitle = val => this.setState({activeTitle: val});
+
   updateUserView = user => this.setState({viewCurrentUser: user});
 
   _renderIcon = ({route}) => <Feather name={route.icon} size={24} color="#bccad0"/>;
 
   _renderHeader = props => (<View style={[styles.headerContainer, {justifyContent: 'space-between', backgroundColor: 'white', elevation: 0.3}]}>
-    <Feather name="activity" size={20} color="#8F9CAE" />
+    <Feather name="activity" size={20} color="#bccad0" />
+    {
+      this.state.index === 0 ? (
+        <Text style={{fontSize: 22, color:"#bccad0"}}>{
+          this.state.activeTitle
+        }</Text>
+      ): null
+    }
     <View style={{position: 'relative'}}>
       <TouchableHighlight activeOpacity={1} underlayColor="rgba(253,138,94,0)" onPress={() => {
         this.props.navigation.navigate('FooDrawerOpen')
@@ -108,7 +120,6 @@ export default class LaunchScreen extends Component<*, State> {
   </View>);
 
   _renderScene = ({route}) => {
-    console.log(this.state.authUserType);
     return (
       <SimplePage
         authUserUID={this.state.authUserUID}
@@ -116,6 +127,7 @@ export default class LaunchScreen extends Component<*, State> {
         index={this.state.index}
         updateIndex={this.updateIndex}
         disableSwipe={this.toggleSwipe}
+        activeTitle={this.toggleTitle}
         userView={this.updateUserView}
         activeUser={this.state.viewCurrentUser}
         navigation={this.props.navigation}

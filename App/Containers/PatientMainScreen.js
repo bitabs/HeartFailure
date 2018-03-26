@@ -872,7 +872,7 @@ class PatientMainScreen extends PureComponent {
                 <Text style={{fontSize: 50, color: '#7D8292', textAlign: 'center'}}><Text
                   style={{color: '#d0d4db'}}>0</Text>{97}</Text>
 
-                <Text style={{fontSize: 15, color: '#e0e1e8', textAlign: 'center'}}>b e a t s p e r m i n u t e</Text>
+                <Text style={{fontSize: 15, color: '#e0e1e8', textAlign: 'center'}}>b e a t s   p e r   m i n u t e</Text>
 
               </View>
               <ECG height={130} width={Dimensions.get('window').width - 10}/>
