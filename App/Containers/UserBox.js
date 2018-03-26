@@ -237,12 +237,12 @@ export default class UserBox extends Component {
                 <View style={{
                   width: 25,
                   height: 25,
-                  backgroundColor: '#f8f8f8',
+                  backgroundColor: '#1bb3f3',
                   borderRadius: 300,
                   alignItems: 'center',
                   justifyContent: 'center'
                 }}>
-                  <Text style={{fontSize: 10, fontWeight: 'bold'}}>+{Object.keys(Users).length - 3}</Text>
+                  <Text style={{fontSize: 12, fontWeight: 'bold', color: "white"}}>+{Object.keys(Users).length - 3}</Text>
                 </View>
               </View>
             ) : null}

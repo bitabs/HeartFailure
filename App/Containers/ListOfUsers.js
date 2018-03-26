@@ -39,7 +39,7 @@ export default class ListOfUsers extends Component {
             authUserType: snap.val()[authUser.uid].type,
           }, () => {
             const {authUserUID, authUserType} = this.state;
-            this.initialiseDashboard(authUserUID, authUserType, snap.val(), this.props.userView);
+            this.initialiseDashboard(authUserUID, authUserType, snap.val(), snap.val()[authUserUID], this.props.userView);
           });
 
           this.userRef.endAt().limitToLast().child(`${this.state.authUserUID}/Patients`).on('child_added', childSnap =>
@@ -72,26 +72,27 @@ export default class ListOfUsers extends Component {
     }
   };
 
-  initialiseDashboard = (authUserUID, authUserType, userSnapData, userView) => {
+  initialiseDashboard = (authUserUID, authUserType, snapVal, currentUser, userView) => {
     const isPatient = authUserType === "Patient";
 
     if (isPatient && this._isMounted) {
-      const {Doctors = null} = userSnapData && userSnapData[authUserUID];
-      Doctors ? Object.keys(Doctors).map((uid, i) => {
-        this.setState(prevState => ({
-          Users: {...prevState.Users, [uid]: userSnapData[uid]}
-        }), () => {
-          if (i === 0) userView({uid: uid, ...userSnapData[uid]});
-        });
-      }) : null;
+      const doctors = _.has(currentUser, `Doctors`);
+      if (doctors) {
+        this.setState({
+          Users: Object.assign({}, ...Object.entries(currentUser['Doctors']).map( uid => ({ [uid[0]]: snapVal[uid[0]] }) ))
+        }, () => userView({uid: Object.keys(this.state.Users)[0], ...Object.values(this.state.Users)[0]}))
+      }
     }
 
     if (!isPatient && this._isMounted) {
-      this.setState({
-        Users: JSON.parse(JSON.stringify(userSnapData), (k, v) => !v.type || (
-          v.type === "Patient" && (_.has(userSnapData[this.state.authUserUID], `Patients`) ? _.has(userSnapData[this.state.authUserUID][`Patients`], k) : true )
-        ) ? v : void 0)
-      }, () => userView({uid: Object.keys(this.state.Users)[0], ...Object.values(this.state.Users)[0]}))
+      const patients = _.has(currentUser, `Patients`);
+      if (patients) {
+        this.setState({
+          Users: Object.assign({}, ...Object.entries(currentUser['Patients']).map( uid => ({ [uid[0]]: snapVal[uid[0]] }) ))
+        },() => {
+          userView({uid: Object.keys(this.state.Users)[0], ...Object.values(this.state.Users)[0]})
+        });
+      }
     }
   };
 
@@ -104,10 +105,9 @@ export default class ListOfUsers extends Component {
       <View style={styles.page}>
 
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{flexGrow: 1}}>
-          {(Users && !switchViews) ? (
-            <View>
-              <Text style={styles.pageTitle}>{isDoctor ? "My Patients" : "My Doctors"}</Text>
-              {Object.keys(Users).map((uid, i) => {
+          {Users ? (
+            <View style={{height: switchViews ? 0 : null }}>
+              {Object.keys(Users).map(uid => {
                 const user = Users[uid];
                 return (
                   <UserBox
@@ -124,9 +124,20 @@ export default class ListOfUsers extends Component {
                 )
               })}
             </View>
-          ) : filteredUsers && switchViews ? (
-            <View>
-              <Text style={styles.pageTitle}>{isDoctor ? "Patients" : "Doctors"}</Text>
+          ): !Users ? (
+            <View style={[styles.page, {
+              flex: 1,
+              flexDirection: 'row',
+              justifyContent: 'center',
+              alignItems: 'center',
+              padding: 30
+            }]}>
+              <Feather name="activity" size={33} color="#8F9CAE"/>
+            </View>
+          ) : null}
+
+          {switchViews ? (
+            <View style={{position: 'absolute', backgroundColor: 'white', top:0,left: 0, right:0, overflow: 'hidden'}}>
               {Object.keys(filteredUsers).map((uid, i) => {
                 const filteredUser = filteredUsers[uid];
                 return (
@@ -144,20 +155,13 @@ export default class ListOfUsers extends Component {
                 )
               })}
             </View>
-          ) : !Users ? (
-            <View style={[styles.page, {
-              flex: 1,
-              flexDirection: 'row',
-              justifyContent: 'center',
-              alignItems: 'center',
-              padding: 30
-            }]}>
-              <Feather name="activity" size={33} color="#8F9CAE"/>
-            </View>
           ) : null}
         </ScrollView>
 
-        <TouchableOpacity style={styles.stickyBtn} activeOpacity={1} onPress={() => this.switchToggle(!switchViews)}>
+        <TouchableOpacity style={styles.stickyBtn} activeOpacity={1} onPress={() => {
+          this.switchToggle(!switchViews);
+          this.props.activeTitle(isDoctor ? (!switchViews ? "Patients" : "My Patients") : switchViews ? "My Doctors" : "Doctors")
+        }}>
           <Feather name={"search"} size={20} color={"white"}/>
         </TouchableOpacity>
       </View>
