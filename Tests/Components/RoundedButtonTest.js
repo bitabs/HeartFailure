@@ -1,8 +1,10 @@
 import 'react-native'
 import React from 'react'
 import RoundedButton from '../../App/Components/RoundedButton'
-import { shallow } from 'enzyme'
+import Enzyme, { shallow } from 'enzyme'
 import renderer from 'react-test-renderer'
+import Adapter from 'enzyme-adapter-react-16';
+Enzyme.configure({ adapter: new Adapter() });
 
 test('RoundedButton component renders correctly', () => {
   const tree = renderer.create(<RoundedButton onPress={() => {}} text='howdy' />).toJSON()

@@ -65,7 +65,6 @@ export default class LaunchScreen extends Component<*, State> {
       userRef.child(user.uid).on('value', snap => {
         if (snap.val()) {
           const {routes} = this.state, authUser = snap.val();
-          console.log(snap.val());
           this.setState({
             authUserUID: user.uid,
             authUserType: snap.val().type,

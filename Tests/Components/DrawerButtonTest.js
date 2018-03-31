@@ -1,9 +1,10 @@
 import 'react-native'
 import React from 'react'
 import DrawerButton from '../../App/Components/DrawerButton'
-import { shallow } from 'enzyme'
+import Enzyme,{ shallow } from 'enzyme'
 import renderer from 'react-test-renderer'
-
+import Adapter from 'enzyme-adapter-react-16';
+Enzyme.configure({ adapter: new Adapter() });
 test('AlertMessage component renders correctly', () => {
   const tree = renderer.create(<DrawerButton onPress={() => {}} text='hi' />).toJSON()
   expect(tree).toMatchSnapshot()
