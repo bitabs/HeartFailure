@@ -17,19 +17,44 @@ export default class ListOfUsers extends Component {
       authUserType: null,
       switchViews: false,
       filteredUsers: null,
+      health: null,
+      ECG: null,
       iWantThisUsers: this.props.authUserType  === "Doctor" ? "Patient" : "Doctor"
     };
     this.userRef = firebase.app().database().ref(`/Users/`);
-    this.initialiseDashboard = this.initialiseDashboard.bind(this);
+    this.healthRef  = firebase.app().database().ref(`/Health/`);
+    this.ecgRef     = firebase.app().database().ref(`/ECG/`);
+    this.fetchAsyncData = this.fetchAsyncData.bind(this);
+    this.setDefaultUser = this.setDefaultUser.bind(this);
     this.fetchUsersFromNetwork = this.fetchUsersFromNetwork.bind(this);
   }
 
   componentWillUnmount() {
     this._isMounted = false;
+    console.log("compent unmounted")
   }
+
+  fetchAsyncData = (healthRef, ecgRef) => {
+    // console.log(this.state);
+    healthRef.on('value', snap => {
+      if (snap.val() && this._isMounted) this.setState({
+        health: snap.val()
+      })
+    });
+
+    ecgRef.on('value', snap => {
+      if (snap.val() && this._isMounted) this.setState({
+        ECG: snap.val()
+      });
+    })
+  };
 
   componentDidMount() {
     this._isMounted = true;
+    console.log("mounted");
+
+    this.fetchAsyncData(this.healthRef, this.ecgRef);
+    // this.setDefaultUser();
 
     User().then(authUser => {
       this.userRef.on('value', snap => {
@@ -37,18 +62,29 @@ export default class ListOfUsers extends Component {
           this.setState({
             authUserUID: authUser.uid,
             authUserType: snap.val()[authUser.uid].type,
-          }, () => {
-            const {authUserUID, authUserType} = this.state;
-            this.initialiseDashboard(authUserUID, authUserType, snap.val(), snap.val()[authUserUID], this.props.userView);
           });
 
-          this.userRef.endAt().limitToLast().child(`${this.state.authUserUID}/Patients`).on('child_added', childSnap =>
+          this.userRef.endAt().limitToLast().child(`${this.state.authUserUID}/Patients`).on('child_added', childSnap => {
+            if (this._isMounted) {
+              this.setState(prevState => ({
+                Users: {...prevState.Users, [childSnap.key]: {...snap.val()[childSnap.key]} }
+              }), () => {
+                this.setDefaultUser()
+              });
+            }
             this.state.authUserType === "Doctor" ? Database.updateDashBoard(this.state.authUserUID, childSnap.key, snap.val()[childSnap.key]) : null
-          );
+          });
 
-          this.userRef.endAt().limitToLast().child(`${this.state.authUserUID}/Doctors` ).on('child_added', childSnap =>
-            this.state.authUserType === "Patient" ?Database.updateDashBoard(childSnap.key, this.state.authUserUID, snap.val()[this.state.authUserUID]) : null
-          );
+          this.userRef.endAt().limitToLast().child(`${this.state.authUserUID}/Doctors` ).on('child_added', childSnap => {
+            if (this._isMounted) {
+              this.setState(prevState => ({
+                Users: {...prevState.Users, [childSnap.key]: {...snap.val()[childSnap.key]} }
+              }), () => {
+                this.setDefaultUser()
+              });
+            }
+            this.state.authUserType === "Patient" ? Database.updateDashBoard(childSnap.key, this.state.authUserUID, snap.val()[this.state.authUserUID]) : null
+          });
 
           const isDoctor = this.state.authUserType === "Doctor";
 
@@ -61,7 +97,16 @@ export default class ListOfUsers extends Component {
     });
   }
 
+  setDefaultUser = () => {
+    const { Users } = this.state, { userView } = this.props;
+    if (Users && this._isMounted) userView({
+      uid: Object.keys(Users)[0],
+      ...Object.values(Users)[0]
+    })
+  };
+
   fetchUsersFromNetwork = (data, attribute) => {
+    // console.log(this.state);
     const attributes = `${attribute}s`;
     if (this._isMounted) {
       this.setState({
@@ -71,43 +116,19 @@ export default class ListOfUsers extends Component {
       });
     }
   };
-
-  initialiseDashboard = (authUserUID, authUserType, snapVal, currentUser, userView) => {
-    const isPatient = authUserType === "Patient";
-
-    if (isPatient && this._isMounted) {
-      const doctors = _.has(currentUser, `Doctors`);
-      if (doctors) {
-        this.setState({
-          Users: Object.assign({}, ...Object.entries(currentUser['Doctors']).map( uid => ({ [uid[0]]: snapVal[uid[0]] }) ))
-        }, () => userView({uid: Object.keys(this.state.Users)[0], ...Object.values(this.state.Users)[0]}))
-      }
-    }
-
-    if (!isPatient && this._isMounted) {
-      const patients = _.has(currentUser, `Patients`);
-      if (patients) {
-        this.setState({
-          Users: Object.assign({}, ...Object.entries(currentUser['Patients']).map( uid => ({ [uid[0]]: snapVal[uid[0]] }) ))
-        },() => {
-          userView({uid: Object.keys(this.state.Users)[0], ...Object.values(this.state.Users)[0]})
-        });
-      }
-    }
-  };
-
   switchToggle = value => this._isMounted ? this.setState({switchViews: value}) : null;
 
   render() {
     const {Users = null, switchViews, filteredUsers, authUserType, authUserUID} = this.state, {updateIndex, userView} = this.props;
+    const {health, ECG} = this.state;
     const isDoctor = authUserType === "Doctor";
     return (
       <View style={styles.page}>
 
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{flexGrow: 1}}>
-          {Users ? (
-            <View style={{height: switchViews ? 0 : null }}>
-              {Object.keys(Users).map(uid => {
+          {Users && health && ECG && !switchViews ? (
+            <View>
+              {Object.keys(Users).map((uid, i) => {
                 const user = Users[uid];
                 return (
                   <UserBox
@@ -119,12 +140,47 @@ export default class ListOfUsers extends Component {
                     toFollow={false}
                     updateIndex={updateIndex}
                     userView={userView}
+                    health={health[uid] || {
+                      height    : 0, weight      : 0,
+                      age       : 0, fat         : 0,
+                      allergies : 0, bpm         : 0,
+                      calories  : 0, thermometer : 0,
+                      healthAlert : null
+                    }}
+                    ECG={ECG[uid] || {}}
                     key={uid}
                   />
                 )
               })}
             </View>
-          ): !Users ? (
+          ): switchViews ? (
+              <View>
+                {Object.keys(filteredUsers).map((uid, i) => {
+                  const filteredUser = filteredUsers[uid];
+                  return (
+                    <UserBox
+                      uid={uid}
+                      authUserUID={authUserUID}
+                      opositeTable={isDoctor ? "Patients" : "Doctors"}
+                      type={authUserType}
+                      User={filteredUser}
+                      toFollow={true}
+                      updateIndex={updateIndex}
+                      userView={userView}
+                      health={{
+                        height    : 0, weight      : 0,
+                        age       : 0, fat         : 0,
+                        allergies : 0, bpm         : 0,
+                        calories  : 0, thermometer : 0,
+                        healthAlert : null
+                      }}
+                      ECG={null}
+                      key={uid}
+                    />
+                  )
+                })}
+              </View>
+            ): !Users ? (
             <View style={[styles.page, {
               flex: 1,
               flexDirection: 'row',
@@ -133,27 +189,6 @@ export default class ListOfUsers extends Component {
               padding: 30
             }]}>
               <Feather name="activity" size={33} color="#8F9CAE"/>
-            </View>
-          ) : null}
-
-          {switchViews ? (
-            <View style={{position: 'absolute', backgroundColor: 'white', top:0,left: 0, right:0, overflow: 'hidden'}}>
-              {Object.keys(filteredUsers).map((uid, i) => {
-                const filteredUser = filteredUsers[uid];
-                return (
-                  <UserBox
-                    uid={uid}
-                    authUserUID={authUserUID}
-                    opositeTable={isDoctor ? "Patients" : "Doctors"}
-                    type={authUserType}
-                    User={filteredUser}
-                    toFollow={true}
-                    updateIndex={updateIndex}
-                    userView={userView}
-                    key={uid}
-                  />
-                )
-              })}
             </View>
           ) : null}
         </ScrollView>

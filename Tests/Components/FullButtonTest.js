@@ -1,8 +1,10 @@
 import 'react-native'
 import React from 'react'
 import FullButton from '../../App/Components/FullButton'
-import { shallow } from 'enzyme'
+import Enzyme,{ shallow } from 'enzyme'
 import renderer from 'react-test-renderer'
+import Adapter from 'enzyme-adapter-react-16';
+Enzyme.configure({ adapter: new Adapter() });
 
 test('FullButton component renders correctly', () => {
   const tree = renderer.create(<FullButton onPress={() => {}} text='hi' />).toJSON()

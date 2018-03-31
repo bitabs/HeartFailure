@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {PureComponent} from 'react';
 import {
   View, ScrollView, Text, StyleSheet, Image, Animated, Easing, TouchableHighlight, TouchableOpacity,
   Dimensions
@@ -7,13 +7,12 @@ import Chart from "./Chart";
 import PropTypes from 'prop-types';
 import {Images} from './PreLoadImages';
 import Database from '../Components/Database';
-import firebase from 'react-native-firebase';
 import Feather from 'react-native-vector-icons/Feather';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import Svg, {Polygon, Circle, Path} from 'react-native-svg';
 
-export default class UserBox extends Component {
+export default class UserBox extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -34,10 +33,6 @@ export default class UserBox extends Component {
       star: "9,4.958 10.313,7.618 13.25,8.048 11.125,10.119 11.627,13.042 9,11.66 6.374,13.042 6.875,10.119 4.75,8.048 7.688,7.618"
     };
     this.animatedValue = new Animated.Value(1);
-
-    this.healthRef  = firebase.app().database().ref(`/Health/`);
-    this.ecgRef     = firebase.app().database().ref(`/ECG/`);
-    this.fetchAsyncData = this.fetchAsyncData.bind(this);
   }
 
   componentWillUnmount() {
@@ -48,42 +43,11 @@ export default class UserBox extends Component {
   componentDidMount() {
     this._isMounted = true;
     if (!this._isMounted) return;
-    this.fetchAsyncData(this.healthRef, this.ecgRef);
+    // this.fetchAsyncData(this.healthRef, this.ecgRef);
     this.setState({
       randomFav: this.getRandomInt(0, 4),
       randomWatch: this.getRandomInt(0, 500)
     });
-    this.spin();
-  }
-
-
-  fetchAsyncData = (healthRef, ecgRef) => {
-    if (this.props.type === "Doctor") {
-      healthRef.on('value', snap => {
-        if (snap.val()) this.setState({
-          health: snap.val()[this.props.uid]
-        })
-      });
-
-      ecgRef.on('value', snap => {
-        if (snap.val()) this.setState({
-          ECG: snap.val()[this.props.uid]
-        });
-      })
-    }
-  };
-
-  spin() {
-    this.animatedValue.setValue(1);
-    Animated.timing(
-      this.animatedValue,
-      {
-        toValue: 0,
-        duration: 100,
-        delay: 100,
-        easing: Easing.linear
-      }
-    ).start(() => this.setState({wait: false}));
   }
 
   config = () => {
@@ -144,8 +108,8 @@ export default class UserBox extends Component {
       series: [{
         name: 'Random data',
         data: (function () {
-          if ($this.state.ECG)
-            return $this.state.ECG;
+          if ($this.props.ECG)
+            return $this.props.ECG;
         }()),
         pointStart: Date.now() - 10 * 100,
         pointInterval: 10,
@@ -195,7 +159,7 @@ export default class UserBox extends Component {
     if (!this._isMounted) return;
     let user = User && (User.Patients || User.Doctors);
 
-    const {health} = this.state;
+    const {health} = this.props;
 
 
     const Users = User && user ? Object.keys(user).map((uid, i) => {
@@ -249,7 +213,7 @@ export default class UserBox extends Component {
           </View>
         </View>) : null}
 
-        {User.type === "Patient" && health.healthAlert ? (
+        {User.type === "Patient" && health ? (
           <View>
             <Text style={{
               padding: 8,
@@ -292,7 +256,7 @@ export default class UserBox extends Component {
 
   ECG = User => {
     if (!this._isMounted) return;
-    const {ECG} = this.state;
+    const {ECG} = this.props;
     return (
       User.type === "Patient" ? (
         <View style={{alignItems: 'center', padding: 0}}>
@@ -325,9 +289,8 @@ export default class UserBox extends Component {
 
   UserLeftSection = (User, uid) => {
     if (!this._isMounted) return;
-    const {health} = this.state;
-    const tagColor = this.tagColor(User.type === "Patient" ? health.healthAlert: null);
-
+    const {health} = this.props;
+    const tagColor = this.tagColor(User.type === "Patient" && health ? health.healthAlert: null);
     return (
       <View style={styles.leftContainer}>
 
@@ -409,7 +372,7 @@ export default class UserBox extends Component {
   UserRightSection = User => {
     if (!this._isMounted) return;
 
-    const {health} = this.state;
+    const {health} = this.props;
 
     return (
       <View style={styles.rightContainer}>
@@ -420,7 +383,7 @@ export default class UserBox extends Component {
 
         {this.stackedUsers(User)}
 
-        {User.type === "Patient" ? (
+        {User.type === "Patient" && health ? (
           <View>
             <Text style={styles.healthSummaryTitle}>Health
               Summary</Text>
@@ -510,17 +473,11 @@ export default class UserBox extends Component {
                   marginLeft: 5,
                   fontSize: 10,
                   color: 'rgba(144, 154, 174, 0.5)'
-                }}>{this.getRandomInt(0, 500)}</Text>
-
+                }}>230</Text>
               </View>
             </View>
           ): null}
         </View>
-
-        {this.state.wait ? (
-          <Animated.View
-            style={{position: 'absolute', top: 0, bottom: 0, left: 0, right: 0, backgroundColor: 'white', opacity}}/>
-        ) : null}
       </View>
     );
   }
