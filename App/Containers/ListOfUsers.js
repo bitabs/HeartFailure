@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {PureComponent} from 'react';
 import {View, ScrollView, Text, StyleSheet, TouchableOpacity} from "react-native";
 import PropTypes from 'prop-types';
 import _ from 'lodash';
@@ -8,7 +8,7 @@ import UserBox from "./UserBox";
 import Database from '../Components/Database';
 import User from '../Components/User';
 
-export default class ListOfUsers extends Component {
+export default class ListOfUsers extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -35,7 +35,6 @@ export default class ListOfUsers extends Component {
   }
 
   fetchAsyncData = (healthRef, ecgRef) => {
-    // console.log(this.state);
     healthRef.on('value', snap => {
       if (snap.val() && this._isMounted) this.setState({
         health: snap.val()
@@ -54,14 +53,13 @@ export default class ListOfUsers extends Component {
     console.log("mounted");
 
     this.fetchAsyncData(this.healthRef, this.ecgRef);
-    // this.setDefaultUser();
-
     User().then(authUser => {
       this.userRef.on('value', snap => {
         if (snap.val() && this._isMounted) {
+          console.log(snap.val()[authUser.uid]);
           this.setState({
             authUserUID: authUser.uid,
-            authUserType: snap.val()[authUser.uid].type,
+            authUserType: snap.val()[authUser.uid] ? snap.val()[authUser.uid].type : null,
           });
 
           this.userRef.endAt().limitToLast().child(`${this.state.authUserUID}/Patients`).on('child_added', childSnap => {
@@ -106,7 +104,6 @@ export default class ListOfUsers extends Component {
   };
 
   fetchUsersFromNetwork = (data, attribute) => {
-    // console.log(this.state);
     const attributes = `${attribute}s`;
     if (this._isMounted) {
       this.setState({
@@ -116,6 +113,7 @@ export default class ListOfUsers extends Component {
       });
     }
   };
+
   switchToggle = value => this._isMounted ? this.setState({switchViews: value}) : null;
 
   render() {
@@ -193,11 +191,11 @@ export default class ListOfUsers extends Component {
           ) : null}
         </ScrollView>
 
-        <TouchableOpacity style={styles.stickyBtn} activeOpacity={1} onPress={() => {
+        <TouchableOpacity style={[styles.stickyBtn, {backgroundColor: !switchViews ? "#6482e6" : "#E67D8F" }]} activeOpacity={1} onPress={() => {
           this.switchToggle(!switchViews);
           this.props.activeTitle(isDoctor ? (!switchViews ? "Patients" : "My Patients") : switchViews ? "My Doctors" : "Doctors")
         }}>
-          <Feather name={"search"} size={20} color={"white"}/>
+          <Feather name={!switchViews ? "users" : "arrow-left"} size={20} color={"white"}/>
         </TouchableOpacity>
       </View>
     );
@@ -224,9 +222,8 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 0,
     right: 0,
-    margin: 30,
+    margin: 25,
     padding: 20,
-    backgroundColor: '#1bb3f3',
     borderRadius: 300,
     elevation: 3,
   },

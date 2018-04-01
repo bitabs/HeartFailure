@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {View, TouchableHighlight, StyleSheet, Text, Animated, AsyncStorage, StatusBar} from 'react-native'
+import {View, TouchableHighlight, StyleSheet, Text, StatusBar} from 'react-native'
 import Feather from 'react-native-vector-icons/Feather';
 import {TabViewAnimated, TabBar} from 'react-native-tab-view';
 import type {NavigationState} from 'react-native-tab-view/types';
@@ -56,6 +56,7 @@ export default class LaunchScreen extends Component<*, State> {
 
   componentDidMount() {
     this._isMounted = true;
+    // firebase.auth().signOut();
     this.retrieveInfo(this.userRef)
   };
 
@@ -93,7 +94,7 @@ export default class LaunchScreen extends Component<*, State> {
 
   updateUserView = user => this.setState({viewCurrentUser: user});
 
-  _renderIcon = ({route}) => <Feather name={route.icon} size={24} color="#bccad0"/>;
+  _renderIcon = ({route}) => <Feather name={route.icon} size={20} color="#bccad0"/>;
 
   _renderHeader = props => (<View style={[styles.headerContainer, {justifyContent: 'space-between', backgroundColor: 'white', elevation: 0.3}]}>
     <Feather name="activity" size={20} color="#bccad0" />
@@ -115,7 +116,7 @@ export default class LaunchScreen extends Component<*, State> {
   </View>);
 
   _renderFooter = props => (<View style={{elevation: 20, backgroundColor: 'white'}}>
-    <TabBar {...props} indicatorStyle={styles.indicator} renderIcon={this._renderIcon} style={[styles.tabbar, {paddingTop: 1, paddingBottom: 1}] }/>
+    <TabBar {...props} indicatorStyle={styles.indicator} renderIcon={this._renderIcon} style={[styles.tabbar, {paddingTop: 2, paddingBottom: 2}] }/>
   </View>);
 
   _renderScene = ({route}) => {

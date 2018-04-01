@@ -14,9 +14,9 @@ const onSignUp = (creds) => {
     writePermission   : type === "Doctor"
   };
 
-  //console.log("props123 ", values, nav);
-  firebase.auth().createUserWithEmailAndPassword(email, password).then((user) => {
-    Database.createNewUser(user.uid, userToBeRegistered);
+  firebase.auth().createUserAndRetrieveDataWithEmailAndPassword(email, password).then((user) => {
+    console.log(user.user);
+    Database.createNewUser(user.user.uid, userToBeRegistered);
   }).catch(err => {
     const { code, message } = err;
   });
