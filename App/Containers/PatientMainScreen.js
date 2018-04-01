@@ -782,7 +782,7 @@ class PatientMainScreen extends PureComponent {
                 }) : <Text>No Connections</Text>
               }
             </View>
-            {user && user.length >= 3 ? (
+            {user && user.length > 3 ? (
               <View>
                 <TouchableOpacity
                   style={{
