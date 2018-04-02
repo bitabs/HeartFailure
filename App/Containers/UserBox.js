@@ -1,22 +1,54 @@
-import React, {PureComponent} from 'react';
-import {
-  View, ScrollView, Text, StyleSheet, Image, Animated, Easing, TouchableHighlight, TouchableOpacity,
-  Dimensions
-} from "react-native";
-import Chart from "./Chart";
-import PropTypes from 'prop-types';
-import {Images} from './PreLoadImages';
-import Database from '../Components/Database';
-import Feather from 'react-native-vector-icons/Feather';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import React, {PureComponent} from 'react'
 
-import Svg, {Polygon, Circle, Path} from 'react-native-svg';
+// predefined react components
+import {View, Text, Image, TouchableOpacity} from "react-native"
 
+// chart component to visualise ECG & heart sound
+import Chart from "./Chart"
+
+// used to defined strict types for props
+import PropTypes from 'prop-types'
+
+// Static images object of the users images
+import {Images} from './PreLoadImages'
+
+// Static database class consisting of common DB queries
+import Database from '../Components/Database'
+
+// import Feather icons package
+import Feather from 'react-native-vector-icons/Feather'
+
+// import Ionicons icons package
+import Ionicons from 'react-native-vector-icons/Ionicons'
+
+// svg package supported in React. Mostly used for svg inline
+import Svg, {Polygon, Circle, Path} from 'react-native-svg'
+
+// styles of this component
+import styles from './Styles/UserBoxStyles'
+
+/**
+ * This component is used to display the user's details in
+ * summary format in ListOfUsers Component.
+ * ==============================================================
+ */
 export default class UserBox extends PureComponent {
+
+  /**
+   * It extends PureComponent instead of component for performance
+   * reasons. It ensures that it doesn't always renders. And only
+   * renders when the state has been changed.
+   * ==============================================================
+   * @param props
+   */
   constructor(props) {
     super(props);
+
+    // state object of this component that holds information
     this.state = {
+      // the user that is passed to the props from ListOfUsers.js
       User        : this.props.User,
+      // health object with default values.
       health      : {
         height    : 0, weight      : 0,
         age       : 0, fat         : 0,
@@ -24,32 +56,47 @@ export default class UserBox extends PureComponent {
         calories  : 0, thermometer : 0,
         healthAlert : null
       },
-      ECG   : null,
-      randomFav: null,
-      randomWatch: null,
-      totalMessages: null,
-      Users: null,
-      wait: true,
-      star: "9,4.958 10.313,7.618 13.25,8.048 11.125,10.119 11.627,13.042 9,11.66 6.374,13.042 6.875,10.119 4.75,8.048 7.688,7.618"
+      ECG           : null,
+      randomFav     : null,
+      randomWatch   : null,
+      totalMessages : null,
+      Users         : null,
+      wait          : true,
+      star          : "9,4.958 10.313,7.618 " +
+      "13.25,8.048 11.125,10.119 11.627,13.042 " +
+      "9,11.66 6.374,13.042 6.875,10.119 " +
+      "4.75,8.048 7.688,7.618"
     };
-    this.animatedValue = new Animated.Value(1);
   }
 
+  /**
+   * This method is called when the component is about to unmount
+   * ==============================================================
+   */
   componentWillUnmount() {
+    // make sure to falsify this so that this.setState cannot be used
     this._isMounted = false;
-    console.log("unmoutning in UserBox");
   }
 
   componentDidMount() {
     this._isMounted = true;
+
+    // if _isMounted is false, then terminate immediately
     if (!this._isMounted) return;
-    // this.fetchAsyncData(this.healthRef, this.ecgRef);
+
+    // otherwise update the state obj =
     this.setState({
       randomFav: this.getRandomInt(0, 4),
       randomWatch: this.getRandomInt(0, 500)
     });
   }
 
+  /**
+   * This method returns an object with the correct format that is
+   * then passed to highcharts.js to <chart /> component
+   * ==============================================================
+   * @return config Obj
+   */
   config = () => {
     const $this = this;
     return {
@@ -123,19 +170,33 @@ export default class UserBox extends PureComponent {
    */
   getRandomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
-  update = (user) => {
+  /**
+   * This method is called to change the index (i.e. to navigate to
+   * navigate to another tab without sliding; and pass this user,
+   * which will be used in <UserInfo /> component
+   * ==============================================================
+   * @param user
+   */
+  update = user => {
     if (!this._isMounted) return;
+
+    // This method calls setState in <LaunchScreen />, so check if _isMounted
     this.props.updateIndex(this.props.type);
     this.props.userView(user);
-
   };
 
+  /**
+   * This method creates stars object in horizontal format. It
+   * depicts the rating mechanism of the user
+   * ==============================================================
+   * @return {XML}
+   */
   stars = () => {
     if (!this._isMounted) return;
     return (
       <View style={{marginTop: 10}}>
         <View style={{flexDirection: 'row'}}>
-          <Text style={{fontWeight: 'bold', color: '#97a4aa', marginRight: 5}}>{this.state.randomFav}.00</Text>
+          <Text style={styles.starsRatingValue}>{this.state.randomFav}.00</Text>
           {[1, 2, 3, 4, 5].map((e, i) => {
             return (
               <Svg height="15" width="15" key={i}>
@@ -155,116 +216,127 @@ export default class UserBox extends PureComponent {
     )
   };
 
+  /**
+   * This method will create a stack container containing user's
+   * pictures.
+   * ==============================================================
+   * @param User
+   * @return {XML}
+   */
   stackedUsers = User => {
+    // terminate if the component is unmounted
     if (!this._isMounted) return;
+
+    // pre check to make sure that user is occupied with values
     let user = User && (User.Patients || User.Doctors);
 
-    const {health} = this.props;
+    // fetch the health object from this components props
+    const { health } = this.props;
 
-
+    // loop through the users object and call the image
     const Users = User && user ? Object.keys(user).map((uid, i) => {
       if (i < 3) return (
-        <View style={[styles.imgCircleContainer, {position: 'absolute', left: i * 17}]} key={i}>
+        <View style={[
+          styles.imgCircleContainer, {
+          position: 'absolute', left: i * 17
+        }]} key={i}>
           {Images[uid] ? (
-            <Image style={{
-              borderRadius: 300,
-              height: 25,
-              width: 25,
-            }} source={Images[uid]} resizeMode="contain"/>
+            <Image
+              style={styles.stackedUsersImage}
+              source={Images[uid]}
+              resizeMode="contain"
+            />
           ): (
-            <View style={{
-              borderRadius: 300,
-              height: 25,
-              width: 25,
-              backgroundColor: '#6482e6',
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}>
+            <View style={styles.stackedUsersUserIcon}>
               <Feather name={"user"} size={15} color={"white"}/>
             </View>
           )}
         </View>
       )
-    }) : null;
+    }): null;
 
     const more = Users && Object.keys(Users).length > 3;
-
     return (
-      <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 10}}>
-        {Users ? (<View style={{position: 'relative', marginBottom: 10, height: 20}}>
-          <View style={{flexDirection: 'row', position: 'relative'}}>
-            <View style={{position: 'relative'}}>
-              {Users}
-            </View>
+      <View style={styles.stackedUsersMainContainer}>
+        {Users ? (<View style={styles.stackedUsersMainInnerContainer}>
+          <View style={styles.stackedUsersMainInnerInnerContainer}>
+            <View style={{position: 'relative'}}>{Users}</View>
             {more ? (
-              <View style={[styles.imgCircleContainer, {position: 'absolute', left: 56, backgroundColor: 'white'}]}>
-                <View style={{
-                  width: 25,
-                  height: 25,
-                  backgroundColor: '#1bb3f3',
-                  borderRadius: 300,
-                  alignItems: 'center',
-                  justifyContent: 'center'
-                }}>
-                  <Text style={{fontSize: 12, fontWeight: 'bold', color: "white"}}>+{Object.keys(Users).length - 3}</Text>
+              <View style={[styles.imgCircleContainer, styles.imgCircleContainerOverride]}>
+                <View style={styles.usersMoreContainer}>
+                  <Text style={styles.plusTxt}>+{Object.keys(Users).length - 3}</Text>
                 </View>
               </View>
             ) : null}
           </View>
         </View>) : null}
-
         {User.type === "Patient" && health ? (
           <View>
-            <Text style={{
-              padding: 8,
-              paddingLeft: 20,
-              paddingRight: 20,
-              backgroundColor: this.tagColor(health.healthAlert),
-              borderRadius: 5,
-              fontSize: 12,
-              color: 'white',
-              fontWeight: 'bold'
-            }}>{health.healthAlert}</Text>
+            <Text style={[styles.healthTag, {
+              backgroundColor: this.tagColor(health.healthAlert)
+            }]}>{health.healthAlert}</Text>
           </View>
         ) : null}
-
-
       </View>
     );
   };
 
+  /**
+   * This method creates a container within the box showing the
+   * general information about the user like: their image, name,
+   * profession and address.
+   * ==============================================================
+   * @param name
+   * @param profession
+   * @param address
+   * @return {XML}
+   * @constructor
+   */
   UsersGeneralDetails = (name, profession, address) => {
+    // terminate if the component is not mounted
     if (!this._isMounted) return;
+
     return (
-      <View style={{flexDirection: 'row', justifyContent: 'space-between', position: 'relative'}}>
-        <View style={{flexWrap: 'wrap', maxWidth: 130, alignItems: 'flex-start'}}>
+      <View style={styles.generalDetailsView}>
+        <View style={styles.nameAndProfession}>
           <Text style={styles.name}>{name}</Text>
           <Text style={styles.profession}>{profession || "Not Specified"}</Text>
         </View>
-        <View style={{alignSelf: 'flex-start', marginTop: 5, flexDirection: 'row', alignItems: 'center'}}>
-          <Feather style={{fontWeight: '900', marginRight: 5}} name="map-pin" size={10} color="#909aae"/>
-          <Text numberOfLines={1} style={{
-            fontSize: 10,
-            color: '#909aae',
-            flexWrap: 'wrap',
-            maxWidth: 100
-          }}>{address || "Not Specified"}</Text>
+        <View style={styles.address}>
+          <Feather style={styles.addressIcon} name="map-pin" size={10} color="#909aae"/>
+          <Text numberOfLines={1} style={styles.addressTxt}>{address || "Not Specified"}</Text>
         </View>
       </View>
     )
   };
 
+  /**
+   * This method will visualise the ECG in line graph. It calls the
+   * config object obtained from this.config()
+   * ==============================================================
+   * @param User
+   * @return {*}
+   * @constructor
+   */
   ECG = User => {
+    // terminate if the component is not mounted
     if (!this._isMounted) return;
+
+    // fetch the ECG data points from props
     const {ECG} = this.props;
+
+    // show the ECG data visualisation
     return (
       User.type === "Patient" ? (
-        <View style={{alignItems: 'center', padding: 0}}>
+        <View style={styles.ECGView}>
           {ECG ? (
-            <Chart type={"day"} height={100} width={"100%"} config={this.config()} component={"Statistics"}/>
+            <Chart
+              type  ={"day"}  height={100}
+              width ={"100%"} config={this.config()}
+            />
           ): (
-            <View style={{width: '100%', height: 100, alignItems: 'center', justifyContent: 'center'}}>
-              <Text style={{color: 'rgba(144, 154, 174, 0.5)', fontSize: 15, opacity: 0.7}}>No ECG data found</Text>
+            <View style={styles.ECG404}>
+              <Text style={styles.ECG404Txt}>No ECG data found</Text>
             </View>
           )}
         </View>
@@ -272,11 +344,14 @@ export default class UserBox extends PureComponent {
     )
   };
 
-  random = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
-
-
+  /**
+   * This method will return the color pallet based on the health
+   * alert obtained from database
+   * ==============================================================
+   * @param healthAlert
+   * @return {*}
+   */
   tagColor = healthAlert => {
-    if (!this._isMounted) return;
     if (healthAlert === "Stable")
       return "#44C8A6";
     else if (healthAlert === "Average")
@@ -287,10 +362,28 @@ export default class UserBox extends PureComponent {
       return 'white'
   };
 
+  /**
+   * This method will show the image of the user and provide
+   * general health information of the user on the left side of the
+   * box
+   * ==============================================================
+   * @param User
+   * @param uid
+   * @return {XML}
+   * @constructor
+   */
   UserLeftSection = (User, uid) => {
-    if (!this._isMounted) return;
-    const {health} = this.props;
-    const tagColor = this.tagColor(User.type === "Patient" && health ? health.healthAlert: null);
+
+    // fetch the health details from the props and pre-compute the tag color
+    const
+      { health } = this.props,
+      tagColor = this.tagColor(
+        User.type === "Patient" && health
+          ? health.healthAlert
+          : null
+      );
+
+    // Create the left side and return it
     return (
       <View style={styles.leftContainer}>
 
@@ -298,82 +391,94 @@ export default class UserBox extends PureComponent {
 
           <View style={[styles.imgRound, {
             backgroundColor: !Images[uid] ? "#E67D8F" : tagColor
-          }]}>
-            {Images[uid] ? (
-              <View>
-                <Image style={styles.userImg} source={Images[uid]} resizeMode="contain"/>
-                <View style={styles.imgOverlay}/>
-              </View>
-            ) : <Feather name={"user"} size={40} color={"white"}/>}
-          </View>
+          }]}>{Images[uid] ? (
+            <View>
+              <Image style={styles.userImg} source={Images[uid]} resizeMode="contain"/>
+              <View style={styles.imgOverlay}/>
+            </View>
+          ):<Feather name={"user"} size={40} color={"white"}/>
+          }</View>
           <View style={styles.verified}>
-            <Feather style={{fontWeight: '900'}} name="check" size={15} color="white"/>
+            <Feather style={styles.Nine} name="check" size={15} color="white"/>
           </View>
         </View>
 
-        {
-          User && User.type === "Patient" ? (
-            <View style={{width: '100%'}}>
-              <View style={{alignSelf: 'center'}}>
-                <Svg width="31.463" height="31.463" viewBox="0 0 31.463 31.463">
-                  <Circle fill={"rgba(144, 154, 174, 0.5)"} cx="15.698" cy="2.644" r="2.644"/>
-                  <Path fill={'rgba(144, 154, 174, 0.5)'} d="M21.396,8.791c0,0,0.148-2.953-2.968-2.953h-5.403c-3.005,0-2.983,2.727-2.985,2.953l0.001,8.38
-		c0.049,0.452,0.495,0.967,1.049,0.967c0.551,0,0.956-0.499,1.006-0.952l0.938,13.346c0.069,0.679,0.549,0.932,1.139,0.932
-		c0.589,0,1.068-0.253,1.137-0.932h0.833c0.072,0.679,0.55,0.932,1.137,0.932c0.591,0,1.07-0.253,1.141-0.932l0.966-13.354
-		c0,0.453,0.438,0.963,0.992,0.963c0.552,0,0.993-0.517,1.042-0.969L21.396,8.791z"/>
-                </Svg>
+        {User && User.type === "Patient" ? (
+          <View style={{width: '100%'}}>
+            <View style={{alignSelf: 'center'}}>
+              <Svg
+                width="31.463"
+                height="31.463"
+                viewBox="0 0 31.463 31.463"
+              ><Circle
+                fill={"rgba(144, 154, 174, 0.5)"}
+                cx="15.698" cy="2.644" r="2.644"
+              /><Path
+                fill={'rgba(144, 154, 174, 0.5)'}
+                d="M21.396,8.791c0,0,0.148-2.953-2.968-2.953h-5.403c-3.005,
+                  0-2.983,2.727-2.985,2.953l0.001,8.38c0.049,0.452,0.495,
+                  0.967,1.049,0.967c0.551,0,0.956-0.499,1.006-0.952l0.938,
+                  13.346c0.069,0.679,0.549,0.932,1.139,0.932c0.589,0,1.068-0.253,
+                  1.137-0.932h0.833c0.072,0.679,0.55,0.932,1.137,0.932c0.591,0,
+                  1.07-0.253,1.141-0.932l0.966-13.354c0,0.453,0.438,0.963,0.992,
+                  0.963c0.552,0,0.993-0.517,1.042-0.969L21.396,8.791z"
+              /></Svg>
+            </View>
+            <View style={{marginTop: 10}}>
+              <View
+                style={styles.leftHealthInfo}>
+                <Text style={styles.leftHealthFont}>{health.height}cm</Text>
+                <Text style={styles.leftHealthTitle}>Height</Text>
               </View>
-
-              <View style={{marginTop: 10}}>
-                <View
-                  style={styles.leftHealthInfo}>
-                  <Text style={styles.leftHealthFont}>{health.height}cm</Text>
-                  <Text style={styles.leftHealthTitle}>Height</Text>
-                </View>
-                <View
-                  style={styles.leftHealthInfo}>
-                  <Text style={styles.leftHealthFont}>{health.weight}cm</Text>
-                  <Text style={styles.leftHealthTitle}>Weight</Text>
-                </View>
-                <View
-                  style={styles.leftHealthInfo}>
-                  <Text style={styles.leftHealthFont}>{health.age}</Text>
-                  <Text style={styles.leftHealthTitle}>Age</Text>
-                </View>
-                <View
-                  style={styles.leftHealthInfo}>
-                  <Text style={styles.leftHealthFont}>{health.fat}%</Text>
-                  <Text style={styles.leftHealthTitle}>Fat</Text>
-                </View>
-                <View style={{
-                  flexDirection: 'column',
-                  alignItems: 'flex-start',
-                  justifyContent: 'flex-start',
-                  marginTop: 10
-                }}>
-                  <Text style={{color: 'rgba(144, 154, 174, 0.5)', fontSize: 12}}>Allergies</Text>
-
-                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                    {health.allergies ? Object.values(health.allergies).map((allergy, i) => {
-                      if (i <= 1)
-                        return <Text key={i}
-                                     style={styles.leftHealthTitle}>{allergy}{i !== 1 ? ', ' : ''}</Text>
-                    }): <Text style={styles.leftHealthTitle}>Not Specified</Text>}
-                  </View>
+              <View
+                style={styles.leftHealthInfo}>
+                <Text style={styles.leftHealthFont}>{health.weight}cm</Text>
+                <Text style={styles.leftHealthTitle}>Weight</Text>
+              </View>
+              <View
+                style={styles.leftHealthInfo}>
+                <Text style={styles.leftHealthFont}>{health.age}</Text>
+                <Text style={styles.leftHealthTitle}>Age</Text>
+              </View>
+              <View
+                style={styles.leftHealthInfo}>
+                <Text style={styles.leftHealthFont}>{health.fat}%</Text>
+                <Text style={styles.leftHealthTitle}>Fat</Text>
+              </View>
+              <View style={styles.allergiesView}>
+                <Text style={styles.allergiesTxt}>Allergies</Text>
+                <View style={styles.allergiesContainer}>
+                  {health.allergies ? Object.values(health.allergies).map((allergy, i) => {
+                    if (i <= 1) return (
+                      <Text
+                        key={i}
+                        style={styles.leftHealthTitle}>
+                        {allergy}{i !== 1 ? ', ' : ''}
+                      </Text>
+                    )
+                  }): <Text style={styles.leftHealthTitle}>Not Specified</Text>}
                 </View>
               </View>
             </View>
-          ) : null
-        }
+          </View>
+        ) : null}
       </View>
     )
   };
 
+  /**
+   * This method will create the right side of the box, its a main
+   * container consisting of nested containers.
+   * ==============================================================
+   * @param User
+   * @return {XML}
+   * @constructor
+   */
   UserRightSection = User => {
-    if (!this._isMounted) return;
-
+    // fetch the health obj from the props
     const {health} = this.props;
 
+    // merge all sub containers into one and return it
     return (
       <View style={styles.rightContainer}>
 
@@ -385,28 +490,40 @@ export default class UserBox extends PureComponent {
 
         {User.type === "Patient" && health ? (
           <View>
-            <Text style={styles.healthSummaryTitle}>Health
-              Summary</Text>
-
+            <Text style={styles.healthSummaryTitle}>Health Summary</Text>
             <View style={styles.healthSummaryContainer}>
               <View style={styles.healthSummaryInstance}>
-                <Ionicons style={{fontWeight: '900'}} name="md-heart" size={17} color="rgba(144, 154, 174, 0.5)"/>
-                <Text style={{color: 'rgba(144, 154, 174, 0.5)', fontSize: 20}}>{health.bpm}
+                <Ionicons
+                  style={styles.Nine}
+                  name="md-heart"
+                  size={17}
+                  color="rgba(144, 154, 174, 0.5)"
+                />
+                <Text style={styles.healthSingular}>{health.bpm}
                   <Text style={{fontSize: 13}}> bpm</Text>
                 </Text>
               </View>
 
               <View style={styles.healthSummaryInstance}>
-                <Ionicons style={{fontWeight: '900'}} name="md-flame" size={17} color="rgba(144, 154, 174, 0.5)"/>
-                <Text style={{color: 'rgba(144, 154, 174, 0.5)', fontSize: 20}}>{health.calories}
-                  <Text style={{fontSize: 13}}> cal</Text>
+                <Ionicons
+                  style={styles.Nine}
+                  name="md-flame"
+                  size={17}
+                  color="rgba(144, 154, 174, 0.5)"
+                />
+                <Text
+                  style={styles.healthSingular}>{health.calories}
+                  <Text style={{fontSize: 13}}>cal</Text>
                 </Text>
               </View>
 
               <View style={styles.healthSummaryInstance}>
-                <Ionicons style={{fontWeight: '900'}} name="md-thermometer" size={17} color="rgba(144, 154, 174, 0.5)"/>
-                <Text style={{color: 'rgba(144, 154, 174, 0.5)', fontSize: 20}}>{health.thermometer}°
-                </Text>
+                <Ionicons
+                  style={styles.Nine}
+                  name="md-thermometer"
+                  size={17}
+                  color="rgba(144, 154, 174, 0.5)"
+                /><Text style={styles.healthSingular}>{health.thermometer}°</Text>
               </View>
             </View>
           </View>
@@ -417,10 +534,21 @@ export default class UserBox extends PureComponent {
     );
   };
 
+  /**
+   * This method will the database and follow the user
+   * ==============================================================
+   * @param authUID, uid, o, User
+   */
+  follow = (authUID, uid, o, User) => Database.followUser (
+    authUID, uid, o, {
+      name       : User.name       || "Not Specified",
+      profession : User.profession || "Not Specified"
+    }
+  );
+
   render() {
-    const
-      opacity = this.animatedValue.interpolate({inputRange: [0, 0.5, 1], outputRange: [0, 0.5, 1]}),
-      {uid, authUserUID, type, User, toFollow, opositeTable} = this.props;
+    // es6 destructor to return the following attributes from props
+    const {uid, authUserUID, User, toFollow, opositeTable} = this.props;
 
     return (
       <View>
@@ -429,51 +557,45 @@ export default class UserBox extends PureComponent {
           {toFollow ? (
             <TouchableOpacity
               activeOpacity={0.7}
-              onPress={() => Database.followUser(authUserUID, uid, opositeTable, {name: User.name || "Not Specified", profession: User.profession || "Not Specified"})}
-              style={{alignSelf: 'flex-end', padding: 10, paddingRight: 0, paddingLeft: 30}}>
-              <Feather style={{fontWeight: '900'}} name="plus-circle" size={15} color="#909aae"/>
+              onPress={() => this.follow(authUserUID, uid, opositeTable, User)}
+              style={styles.toFollowBtn}>
+              <Feather style={styles.Nine} name="plus-circle" size={15} color="#909aae"/>
             </TouchableOpacity>
           ):(
             <TouchableOpacity
               activeOpacity={0.7}
               onPress={() => this.update({uid: this.props.uid, ...User})}
-              style={{alignSelf: 'flex-end', padding: 10, paddingRight: 0, paddingLeft: 30}}>
-              <Feather style={{fontWeight: '900'}} name="more-horizontal" size={15} color="#909aae"/>
+              style={styles.toFollowBtn}>
+              <Feather style={styles.Nine} name="more-horizontal" size={15} color="#909aae"/>
             </TouchableOpacity>
           )}
 
-          <View style={{flexWrap: 'wrap', flexDirection: 'row', alignItems: 'flex-start'}}>
+          <View style={styles.leftAndRightSection}>
             {User ? this.UserLeftSection(User, this.props.uid): null}
             {User ? this.UserRightSection(User): null}
           </View>
 
-
           {!toFollow ? (
-            <View style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              width: '100%',
-              alignItems: 'center',
-              paddingBottom: 20,
-            }}>
-              <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                <Feather style={{fontWeight: '900'}} name="eye" size={15} color="rgba(144, 154, 174, 0.5)"/>
+            <View style={styles.toFollowView}>
+              <View style={styles.toFollowNestedView}>
+                <Feather
+                  style={styles.Nine}
+                  name="eye"
+                  size={15}
+                  color="rgba(144, 154, 174, 0.5)"
+                />
                 <Text
-                  style={{
-                    marginLeft: 5,
-                    fontSize: 10,
-                    color: 'rgba(144, 154, 174, 0.5)'
-                  }}>{this.state.randomWatch}</Text>
+                  style={styles.totalViewed}>{this.state.randomWatch}</Text>
               </View>
 
-              <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                <Feather style={{fontWeight: '900'}} name="message-square" size={15}
-                         color="rgba(144, 154, 174, 0.5)"/>
-                <Text style={{
-                  marginLeft: 5,
-                  fontSize: 10,
-                  color: 'rgba(144, 154, 174, 0.5)'
-                }}>230</Text>
+              <View style={styles.rightMessageIcon}>
+                <Feather
+                  style={styles.Nine}
+                  name="message-square"
+                  size={15}
+                  color="rgba(144, 154, 174, 0.5)"
+                />
+                <Text style={styles.totalViewedTxt}>230</Text>
               </View>
             </View>
           ): null}
@@ -482,139 +604,6 @@ export default class UserBox extends PureComponent {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  box: {
-    marginBottom: 20,
-    alignItems: 'flex-start',
-    backgroundColor: 'white',
-    paddingTop: 10,
-    paddingBottom: 0,
-    padding: 30,
-    flexDirection: 'column',
-    justifyContent: 'flex-start',
-    width: Dimensions.get('window').width
-  },
-  leftContainer: {
-    position: 'relative',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: 20
-  },
-  rightContainer: {
-    flex: 1,
-    position: 'relative',
-    flexDirection: 'column'
-  },
-  userImg: {
-    borderRadius: 300,
-    height: 80,
-    width: 80
-  },
-  verified: {
-    position: 'absolute',
-    bottom: 5,
-    backgroundColor: '#59D0D0',
-    padding: 2,
-    width: 20, height: 20,
-    borderRadius: 100 / 2,
-    left: 5,
-    elevation: 2,
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  name: {
-    fontSize: 16,
-    color: '#909aae'
-  },
-  profession: {
-    fontSize: 13,
-    opacity: 0.5,
-    color: 'rgba(144, 154, 174, 0.8)'
-  },
-  infoContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingLeft: 20,
-    paddingRight: 20
-  },
-  infoBox: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    position: 'relative'
-  },
-  imgCircleContainer: {
-    borderRadius: 300,
-    height: 30,
-    width: 30,
-    borderColor: 'white',
-    backgroundColor: 'white',
-    alignItems: 'center',
-    overflow: 'hidden',
-    elevation: 0,
-    justifyContent: 'center',
-  },
-  imgRound: {
-    position: 'relative',
-    borderRadius: 300,
-    height: 83,
-    width: 83,
-    alignItems: 'center',
-    overflow: 'hidden',
-    elevation: 2,
-    justifyContent: 'center',
-  },
-  imgOverlay: {
-    position: 'absolute',
-    backgroundColor: 'rgba(144, 154, 174, 0.8)',
-    opacity: 0.5,
-    borderRadius: 300,
-    height: 83,
-    width: 83,
-  },
-  messageBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    alignSelf: 'flex-start'
-  },
-  leftHealthInfo: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginTop: 5
-  },
-  leftHealthFont: {
-    color: 'rgba(144, 154, 174, 0.5)',
-    fontSize: 12,
-    fontWeight: 'bold'
-  },
-  leftHealthTitle: {
-    color: 'rgba(144, 154, 174, 0.5)',
-    fontSize: 10
-  },
-  healthSummaryTitle: {
-    color: 'rgba(144, 154, 174, 0.5)',
-    fontSize: 15,
-    marginTop: 10,
-    fontWeight: 'bold'
-  },
-  healthSummaryContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 20,
-    justifyContent: 'space-between'
-  },
-  healthSummaryInstance: {
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-
-});
-
 
 UserBox.propTypes = {
   uid: PropTypes.string.isRequired,

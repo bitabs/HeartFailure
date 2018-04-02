@@ -29,7 +29,9 @@ export default class UserInfo extends Component {
       type            : "",
       testing         : false,
       ECG             : null,
-      heartSound      : null
+      heartSound      : null,
+      HealthFromDB    : null,
+      ECGFromDB       : null
     };
 
     this.userRef   = firebase.app().database().ref(`/Users/`);
@@ -66,7 +68,7 @@ export default class UserInfo extends Component {
   fetchDummyData = () => {
     fetch('https://raw.githubusercontent.com/NaseebullahSafi/HeartFailure/master/ECG.txt?token=APbiPfg9DRYV1oisDd6yXU30FdIFSmmtks5avQatwA%3D%3D')
       .then(response => response.text().then(text => {
-        if (this._isMounted) this.setState({ECG: text.split('\n').map(Number)})
+        if (this._isMounted) this.setState({ECG: text.split('\n').map(Number)}, () => console.log(this.state.ECG))
       }));
 
     fetch('https://raw.githubusercontent.com/NaseebullahSafi/HeartFailure/master/Stethoscope.txt?token=APbiPc8PDxQZp3_Ris9gpqyeJjGxkegBks5avSIWwA%3D%3D')
@@ -82,6 +84,23 @@ export default class UserInfo extends Component {
     if (userSnapData && this._isMounted && User) {
       const user = userSnapData[authUserUID];
       Database.initialiseMessagesDB(user.name, authUserUID, User.uid, authUserType, authUserType === "Patient" ? PCRef : DCRef, healthRef).catch(e => console.log(e));
+
+
+      healthRef.on('value', snap => {
+        if (snap.val()) {
+          this.setState({
+            HealthFromDB: snap.val()[User.uid]
+          })
+        }
+      });
+
+      ecgRef.on('value', snap => {
+        if (snap.val()) {
+          this.setState({
+            ECGFromDB: snap.val()[User.uid]
+          })
+        }
+      });
 
       PCRef.on('value', snap => {
         this.fetchComments([PCRef, DCRef]).then(refValues => {
@@ -378,13 +397,13 @@ export default class UserInfo extends Component {
 
                 <View style={{flexDirection: 'row', maxWidth: 310, height: 2, backgroundColor: '#bccad0', opacity: 0.1, marginTop: 20, marginBottom: 20}} />
 
-                {this.props.User && this.props.User.health ? (
+                {this.props.User && this.state.authUserType === "Doctor" && this.state.HealthFromDB ? (
                   <View>
                     <View style={{flexDirection: 'row', justifyContent: 'space-between', marginBottom: 20}}>
                       <Text style={{fontSize: 18, color: '#bccad0'}}>Statistics:</Text>
                       <View style={{flexDirection: 'row'}}>
                         <View style={{alignItems: 'center', marginLeft: 20}}>
-                          <Text style={{fontSize: 30, color: '#bccad0'}}>{User.health.bpm}</Text>
+                          <Text style={{fontSize: 30, color: '#bccad0'}}>{this.state.HealthFromDB.bpm}</Text>
                           <Svg width={"20"} height={"20"} x="0px" y="0px" viewBox="0 0 426.668 426.668">
                             <Path fill="#E67D8F" d="
                     M401.788,74.476c-63.492-82.432-188.446-33.792-188.446,49.92
@@ -393,7 +412,7 @@ export default class UserInfo extends Component {
                           </Svg>
                         </View>
                         <View style={{alignItems: 'center', marginLeft: 20}}>
-                          <Text style={{fontSize: 30, color: '#bccad0'}}>{User.health.calories}</Text>
+                          <Text style={{fontSize: 30, color: '#bccad0'}}>{this.state.HealthFromDB.calories}</Text>
                           <Svg width="20" height="20" viewBox="0 0 388.055 388.055">
                             <G>
                               <Path fill="#E67D8F" d="M288.428,136.455c-26-32.4-53.2-66.4-52.4-128.4c0-3.2-1.6-5.6-4.4-7.2
@@ -408,7 +427,7 @@ export default class UserInfo extends Component {
                   </View>
                 ): null}
 
-                {this.state.authUserType === "Doctor" && this.props.User && this.props.User.ecg ? (
+                {this.state.authUserType === "Doctor" && this.props.User && this.state.ECGFromDB ? (
                   <View>
                     <View>
                       <View style={{alignItems: 'flex-start', marginBottom: 10}}>
