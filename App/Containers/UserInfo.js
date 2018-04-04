@@ -377,6 +377,7 @@ export default class UserInfo extends Component {
    * ==============================================================
    */
   sendMessage = (toUid) => {
+    console.log(toUid);
     // first insure the component is mounted
     if (!this._isMounted) return;
     // get the message content, uid and the type of the user
@@ -678,7 +679,7 @@ export default class UserInfo extends Component {
    * @param Messages
    * @return {XML}
    */
-  commentsContainer = (total, Messages) => {
+  commentsContainer = (User, total, Messages) => {
     return (
       <View style={[styles.container, styles.commentsContainer]}>
         <Text style={styles.commentsTitle}>Comments({total})</Text>
@@ -762,7 +763,7 @@ export default class UserInfo extends Component {
                     : null
                 }
 
-                {this.commentsContainer(total, Messages)}
+                {this.commentsContainer(User, total, Messages)}
 
               </View>
             </View>
