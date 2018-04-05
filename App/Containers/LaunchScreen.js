@@ -147,11 +147,27 @@ export default class LaunchScreen extends Component<*, State> {
     User().then(user => {
 
       // when the data of the current user is available
-      userRef.child(user.uid).on('value', snap => {
+      userRef.child(user.uid).once('value').then(snap => {
         // check of val() consists data
         if (snap.val()) {
           const {routes} = this.state, authUser = snap.val();
 
+          // We update the state object so that the component is re-rendered
+          this.setState({
+            routes: (authUser.type === "Patient" && !routes.includes(extraKey)) ? [
+              ...routes, {
+                key : '3',
+                icon: 'activity'
+              }, extraKey
+            ]: [...routes, {key: '3', icon: 'menu'}]
+          });
+        }
+      });
+
+      // when the data of the current user is available
+      userRef.child(user.uid).on('value', snap => {
+        // check of val() consists data
+        if (snap.val()) {
           // We update the state object so that the component is re-rendered
           this.setState({
             // the ID of the current user
@@ -160,13 +176,6 @@ export default class LaunchScreen extends Component<*, State> {
             authUserType: snap.val().type,
             // title of the dashboard based on the current user type
             activeTitle: snap.val().type === "Doctor" ? "My Patients" : "My Doctors",
-            // Add an extra tab if the user is patient
-            routes: (authUser.type === "Patient" && !routes.includes(extraKey)) ? [
-              ...routes, {
-                key : '3',
-                icon: 'activity'
-              }, extraKey
-            ]: [...routes, {key: '3', icon: 'menu'}]
           });
         }
       });
