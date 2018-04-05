@@ -12,16 +12,7 @@ export default class SimplePage extends Component {
     this.View = this.View.bind(this);
   }
 
-  componentDidMount() {
-    // this._isMounted = true;
-  }
-
-  componentWillUnmount() {
-    // this._isMounted = false;
-  }
-
   View = (navigation, authUserUID, authUserType, index, updateIndex, userView, activeUser, disableSwipe, activeTitle) => {
-    // if (!this._isMounted) return;
     let toReturn = null;
 
     if ((authUserType === "Patient" && index === 3) || (authUserType === "Doctor" && index === 2))
