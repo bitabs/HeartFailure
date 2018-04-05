@@ -71,13 +71,14 @@ export default class ListOfUsers extends PureComponent {
     // Get list of users that have no link with the current user
     this.fetchUsersFromNetwork = this.fetchUsersFromNetwork.bind(this);
 
+    // set the uid and type of the user in state obj
     this.setCurrentUserUidAndType = this.setCurrentUserUidAndType.bind(this);
 
+    // add the user to the database
     this.addUser = this.addUser.bind(this);
 
+    // once added, update the dashboard
     this.updateDashBoard = this.updateDashBoard.bind(this);
-
-
   }
 
   /**
@@ -278,7 +279,6 @@ export default class ListOfUsers extends PureComponent {
   switchToggle = value => this._isMounted
     ? this.setState({switchViews: value})
     : null;
-
 
   users = (Users = null, toFollow, opositeTable) => Object.keys(Users).map(uid => {
     const
