@@ -3,6 +3,11 @@ package com.heartfailure;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.oblador.vectoricons.VectorIconsPackage;
+import com.horcrux.svg.SvgPackage;
+import com.AlexanderZaytsev.RNI18n.RNI18nPackage;
+import io.invertase.firebase.RNFirebasePackage;
+import it.innove.BleManagerPackage;
 import com.horcrux.svg.SvgPackage;
 import it.innove.BleManagerPackage;
 import io.invertase.firebase.RNFirebasePackage;
@@ -28,8 +33,10 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
         new MainReactPackage(),
-            new SvgPackage(),
-            new BleManagerPackage(),
+        new VectorIconsPackage(),
+        new SvgPackage(),
+        new RNI18nPackage(),
+        new BleManagerPackage(),
         new RNFirebasePackage(),
         new RNFirebaseDatabasePackage(),
         new RNFirebaseAuthPackage()

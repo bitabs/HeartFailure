@@ -58,5 +58,4 @@ export default class Chart extends Component {
 Chart.propTypes = {
   height        : PropTypes.number.isRequired,
   config        : PropTypes.object.isRequired,
-  component     : PropTypes.string.isRequired
 };
