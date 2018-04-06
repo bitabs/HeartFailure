@@ -1,28 +1,28 @@
-import React, {Component} from 'react';
+import React, {Component} from 'react'
 
 // predefined components from react native
-import {View, Text, TouchableOpacity, Image, ScrollView, TextInput} from 'react-native';
+import {View, Text, TouchableOpacity, Image, ScrollView, TextInput} from 'react-native'
 
 // importing feather icon package
-import Feather from "react-native-vector-icons/Feather";
+import Feather from "react-native-vector-icons/Feather"
 
 // importing User which will return the authenticated user
-import User from '../Components/User';
+import User from '../Components/User'
 
 // importing firebase to access firebase database
-import firebase from 'react-native-firebase';
+import firebase from 'react-native-firebase'
 
 // static class containing common DB operations
-import Database from '../Components/Database';
+import Database from '../Components/Database'
 
 // Images object containing static url to Users image
-import {Images} from '../Containers/PreLoadImages';
+import {Images} from '../Containers/PreLoadImages'
 
 // chart to visualise ECG & heart sound
-import Chart from "./Chart";
+import Chart from "./Chart"
 
 // SVG package for React Native to work
-import Svg, { Path, Polygon, Polyline, G } from 'react-native-svg';
+import Svg, { Path, Polygon, Polyline, G } from 'react-native-svg'
 
 // TimeAgo to provide time passed from certain point mechanism
 import TimeAgo from "react-native-timeago"

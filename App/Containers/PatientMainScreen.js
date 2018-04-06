@@ -1,37 +1,37 @@
-import React, {PureComponent} from 'react';
+import React, {PureComponent} from 'react'
 
 // predefined components from React
 import {
   Text, View, TouchableOpacity, Dimensions, ScrollView,
   Image, Keyboard, TouchableWithoutFeedback, TextInput
-} from 'react-native';
+} from 'react-native'
 
 // ECG component that mimics real-time ECG render
-import ECG from "./ECG";
+import ECG from "./ECG"
 
 // Chart to visualise ECG and heart sound in line graph7
-import Chart from "./Chart";
+import Chart from "./Chart"
 
 // Database Query relation operations
-import Database from '../Components/Database';
+import Database from '../Components/Database'
 
 // Images object with static URL to users images
-import {Images} from '../Containers/PreLoadImages';
+import {Images} from '../Containers/PreLoadImages'
 
 // Feather icon package
-import Feather from "react-native-vector-icons/Feather";
+import Feather from "react-native-vector-icons/Feather"
 
 // fireabse module to use firebase database
-import firebase from 'react-native-firebase';
+import firebase from 'react-native-firebase'
 
 // used for editing profile
-import {Field, reduxForm} from "redux-form";
+import {Field, reduxForm} from "redux-form"
 
 // to acquire the current authenticated user's details
-import User from '../Components/User';
+import User from '../Components/User'
 
 // Component to intiate recording
-import Counter from "./Counter";
+import Counter from "./Counter"
 
 // importing styles for this component
 import styles from './Styles/PatientMainScreenStyles'

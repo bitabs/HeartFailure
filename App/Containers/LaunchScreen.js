@@ -70,15 +70,12 @@ export default class LaunchScreen extends Component<*, State> {
      * refresh if anything changes within this object.
      */
     this.state = {
-      index           : 0,
-      routes          : [{key: '1', icon: 'users'}, {key: '2', icon: 'cpu'}],
-      authUserUID     : null,
-      authUserType    : null,
-      modalVisible    : false,
-      viewCurrentUser : null,
-      defaultView     : null,
-      disableSwipe    : true,
-      activeTitle     : null
+      index           : 0, routes : [
+        {key: '1', icon: 'users'}, {key: '2', icon: 'cpu'}
+      ],
+      authUserUID     : null,  authUserType    : null,
+      modalVisible    : false, viewCurrentUser : null,
+      defaultView     : null,  activeTitle     : null
     };
 
     // Keep a local reference to the database from firebase
