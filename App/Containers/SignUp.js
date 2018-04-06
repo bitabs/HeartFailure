@@ -1,28 +1,65 @@
-import Ionicons from 'react-native-vector-icons/Feather';
-import firebase from 'react-native-firebase';
 import React from 'react'
-import { StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View, Keyboard } from 'react-native'
-import {Field, reduxForm} from 'redux-form';
-import Database from '../Components/Database';
 
+// predefined components of react
+import {
+  StyleSheet, Text, TextInput, TouchableOpacity,
+  TouchableWithoutFeedback, View, Keyboard
+} from 'react-native'
 
-const onSignUp = (creds) => {
-  const {name, email, password, type} = creds;
+// icon package to use vector icons
+import Ionicons from 'react-native-vector-icons/Feather'
+
+// bridge to firebase database
+import firebase from 'react-native-firebase'
+
+// form components from redux
+import {Field, reduxForm} from 'redux-form'
+
+// DB component for common DB operations
+import Database from '../Components/Database'
+
+// importing styles for the signup form
+import styles from './Styles/SignUpStyles'
+/**
+ * It will create an account for the user. Therefore it will
+ * require common user credentials
+ * ==============================================================
+ * @param credentials
+ */
+const onSignUp = credentials => {
+
+  // to signup, we shall acquire the following
+  const {name, email, password, type} = credentials;
+
+  // these fields are predefined from firebase
   const userToBeRegistered = {
     name              : name,
     type              : type,
     writePermission   : type === "Doctor"
   };
 
-  firebase.auth().createUserAndRetrieveDataWithEmailAndPassword(email, password).then((user) => {
-    console.log(user.user);
-    Database.createNewUser(user.user.uid, userToBeRegistered);
-  }).catch(err => {
-    const { code, message } = err;
-  });
+  // to create the user, we shall do so by passing the email and password
+  firebase.auth()
+    .createUserAndRetrieveDataWithEmailAndPassword(email, password)
+    .then((user) => Database.createNewUser (
+      user.user.uid, userToBeRegistered
+    )).catch(err => ({ code, message } = err));
 };
 
-const renderInput = ({secureTextEntry, password, placeholder, input: { onChange, ...restInput }}) => {
+/**
+ * Converts the <Field /> component to actual form field
+ * component
+ * ==============================================================
+ * @param secureTextEntry
+ * @param password
+ * @param placeholder
+ * @param onChange
+ * @param restInput
+ * @return {XML}
+ */
+const renderInput = (
+  { secureTextEntry, password, placeholder, input: { onChange, ...restInput }
+  }) => {
   return (
     <TextInput
       placeholder           = {placeholder}
@@ -37,41 +74,76 @@ const renderInput = ({secureTextEntry, password, placeholder, input: { onChange,
   )
 };
 
+/**
+ * Creates the sign up form for users to add their credentials
+ * ==============================================================
+ * @param props
+ * @return {XML}
+ * @constructor
+ */
 const SignUp = props => {
-  //console.log(props);
   const { handleSubmit } = props;
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <View style={styles.container}>
         <View style={styles.centerContainer}>
-
           <View style={styles.topContainer}>
             <Ionicons name="activity" size={63} color="#bccad0" />
             <Text style={styles.topContainerTxt}>Sign up for an account.</Text>
           </View>
-
           <View style={styles.middleContainer}>
-            <View style={{position: 'relative'}}>
-              <Field style={[styles.input, {marginBottom: 40}]} name="name" placeholder="Name" component={renderInput} />
+            <View style={styles.inputContainer}>
+              <Field
+                style={[styles.input, styles.overrideInput]}
+                name="name"
+                placeholder="Name"
+                component={renderInput}
+              />
             </View>
-            <View style={{position: 'relative'}}>
-              <Field style={[styles.input, {marginBottom: 40}]} name="email" placeholder="Email" component={renderInput} />
+            <View style={styles.inputContainer}>
+              <Field
+                style={[styles.input, styles.overrideInput]}
+                name="email"
+                placeholder="Email"
+                component={renderInput}
+              />
             </View>
-            <View style={{position: 'relative'}}>
-              <Field style={[styles.input, {marginBottom: 40}]} name="type" placeholder="Patient or Doctor?" component={renderInput} />
+            <View style={styles.inputContainer}>
+              <Field
+                style={[styles.input, styles.overrideInput]}
+                name="type"
+                placeholder="Patient or Doctor?"
+                component={renderInput}
+              />
             </View>
-            <View style={{position: 'relative'}}>
-              <Field style={[styles.input, {marginBottom: 40}]} secureTextEntry={true} password={true} name="password" placeholder="Password" component={renderInput} />
+            <View style={styles.inputContainer}>
+              <Field
+                style={[styles.input, styles.overrideInput]}
+                secureTextEntry={true}
+                password={true}
+                name="password"
+                placeholder="Password"
+                component={renderInput}
+              />
             </View>
-            <View style={{position: 'relative'}}>
-              <Field style={[styles.input, {marginBottom: 40}]} secureTextEntry={true} password={true} name="confirmPassword" placeholder="Confirm password" component={renderInput} />
+            <View style={styles.inputContainer}>
+              <Field
+                style={[styles.input, styles.overrideInput]}
+                secureTextEntry={true}
+                password={true}
+                name="confirmPassword"
+                placeholder="Confirm password"
+                component={renderInput}
+              />
             </View>
           </View>
 
           <View style={styles.bottomContainer}>
-            <TouchableOpacity style={styles.loginBtn} onPress={handleSubmit(onSignUp)}>
-              <Text style={{textAlign: 'center', fontSize: 18, fontWeight: 'bold', color: 'white', letterSpacing: 2}}>S I G N  U P</Text>
+            <TouchableOpacity
+              style={styles.loginBtn}
+              onPress={handleSubmit(onSignUp)}
+            ><Text style={styles.signUpTxt}>S I G N  U P</Text>
             </TouchableOpacity>
           </View>
 
@@ -84,62 +156,3 @@ const SignUp = props => {
 export default reduxForm({
   form: 'test'
 })(SignUp)
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#f3f3f3',
-    flex: 1,
-    justifyContent: 'center', // Used to set Text Component Vertically Center
-    alignItems: 'center', // Used to set Text Component Horizontally Center
-  },
-  centerContainer: {
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  topContainer: {
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  topContainerTxt: {
-    marginTop: 10,
-    textAlign: 'center',
-    fontSize: 17,
-    color: '#bccad0'
-  },
-  middleContainer: {
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 10,
-    marginBottom:10
-  },
-  input: {
-    fontSize: 15,
-    color: "#aab8be",
-    height: 40,
-    width: 280,
-    paddingLeft: 15,
-    backgroundColor: 'rgba(188,202,208, 0.15)',
-    marginTop: 10,
-    borderRadius: 5
-  },
-  bottomContainer: {
-    flexDirection: 'column',
-    marginTop: 10,
-    alignItems: 'center'
-  },
-  loginBtn: {
-    backgroundColor: '#E67D8F',
-    alignSelf: 'stretch',
-    borderRadius: 5,
-    padding: 12,
-    width: 280,
-    height: 50,
-    elevation: 2,
-    marginBottom: 20
-  },
-  signUp: {
-
-  }
-});

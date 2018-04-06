@@ -168,11 +168,11 @@ export default class UserInfo extends Component {
       Database.initialiseMessagesDB(
         user.name, authUserUID, User.uid, authUserType,
         authUserType === "Patient" ? PCRef : DCRef, healthRef
-      ).catch(e => console.log(e));
+      ).catch(e => e);
 
       // fetch the health record of the user passed from the props to state obj
       healthRef.on('value', snap => {
-        if (snap.val()) {
+        if (snap.val() && this._isMounted) {
           this.setState({
             HealthFromDB: snap.val()[User.uid]
           })
@@ -181,7 +181,7 @@ export default class UserInfo extends Component {
 
       // fetch the ecg record of the user to state obj
       ecgRef.on('value', snap => {
-        if (snap.val()) {
+        if (snap.val() && this._isMounted) {
           this.setState({
             ECGFromDB: snap.val()[User.uid]
           })
@@ -377,7 +377,6 @@ export default class UserInfo extends Component {
    * ==============================================================
    */
   sendMessage = (toUid) => {
-    console.log(toUid);
     // first insure the component is mounted
     if (!this._isMounted) return;
     // get the message content, uid and the type of the user
@@ -542,7 +541,7 @@ export default class UserInfo extends Component {
     return (
       <View style={styles.topContainerView}>
         <View style={styles.profileTopContainer}>
-          {Images[User.uid]
+          {User && Images[User.uid]
             ? (<Image
                 style={styles.userImg}
                 source={Images[User.uid]}

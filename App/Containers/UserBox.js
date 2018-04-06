@@ -262,9 +262,14 @@ export default class UserBox extends PureComponent {
           <View style={styles.stackedUsersMainInnerInnerContainer}>
             <View style={{position: 'relative'}}>{Users}</View>
             {more ? (
-              <View style={[styles.imgCircleContainer, styles.imgCircleContainerOverride]}>
+              <View style={[
+                styles.imgCircleContainer,
+                styles.imgCircleContainerOverride
+              ]}>
                 <View style={styles.usersMoreContainer}>
-                  <Text style={styles.plusTxt}>+{Object.keys(Users).length - 3}</Text>
+                  <Text style={styles.plusTxt}>
+                    +{Object.keys(Users).length - 3}
+                  </Text>
                 </View>
               </View>
             ) : null}
@@ -537,7 +542,10 @@ export default class UserBox extends PureComponent {
   /**
    * This method will the database and follow the user
    * ==============================================================
-   * @param authUID, uid, o, User
+   * @param authUID,
+   * @param uid
+   * @param o
+   * @param User
    */
   follow = (authUID, uid, o, User) => Database.followUser (
     authUID, uid, o, {

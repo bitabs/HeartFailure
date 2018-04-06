@@ -133,7 +133,9 @@ export default class LaunchScreen extends Component<*, State> {
   retrieveInfo = (userRef) => {
 
     // we add an extra tab for patients
-    const extraKey = {key: '4', icon: 'menu'};
+    const
+      key3 = {key : '3', icon: 'activity'},
+      key4 = {key: '4', icon: 'menu'};
 
     /**
      * User() will return info of the current authenticated user.
@@ -147,27 +149,15 @@ export default class LaunchScreen extends Component<*, State> {
     User().then(user => {
 
       // when the data of the current user is available
-      userRef.child(user.uid).once('value').then(snap => {
-        // check of val() consists data
-        if (snap.val()) {
-          const {routes} = this.state, authUser = snap.val();
-
-          // We update the state object so that the component is re-rendered
-          this.setState({
-            routes: (authUser.type === "Patient" && !routes.includes(extraKey)) ? [
-              ...routes, {
-                key : '3',
-                icon: 'activity'
-              }, extraKey
-            ]: [...routes, {key: '3', icon: 'menu'}]
-          });
-        }
-      });
-
-      // when the data of the current user is available
       userRef.child(user.uid).on('value', snap => {
         // check of val() consists data
         if (snap.val()) {
+
+          let
+            authUser  = snap.val(),
+            isPatient = authUser.type === "Patient",
+            contains  = key => this.state.routes.some(route => route.key === key);
+
           // We update the state object so that the component is re-rendered
           this.setState({
             // the ID of the current user
@@ -176,6 +166,15 @@ export default class LaunchScreen extends Component<*, State> {
             authUserType: snap.val().type,
             // title of the dashboard based on the current user type
             activeTitle: snap.val().type === "Doctor" ? "My Patients" : "My Doctors",
+
+            // conditions for the routing to ensure not duplicate
+            routes: isPatient
+              ? !contains('3') && !contains('4')
+                ? [...this.state.routes, key3, key4]
+                : [...this.state.routes]
+              : !contains('3')
+                ? [...this.state.routes, {key : '3', icon: 'menu'}]
+                : this.state.routes
           });
         }
       });
@@ -314,15 +313,14 @@ export default class LaunchScreen extends Component<*, State> {
   _renderScene = ({route}) => {
     return (
       <SimplePage
-        authUserUID={this.state.authUserUID}
-        authUserType={this.state.authUserType}
-        index={this.state.index}
-        updateIndex={this.updateIndex}
-        disableSwipe={this.toggleSwipe}
-        activeTitle={this.toggleTitle}
-        userView={this.updateUserView}
-        activeUser={this.state.viewCurrentUser}
-        navigation={this.props.navigation}
+        authUserType  = {this.state.authUserType}
+        index         = {this.state.index}
+        activeUser    = {this.state.viewCurrentUser}
+        navigation    = {this.props.navigation}
+        updateIndex   = {this.updateIndex}
+        disableSwipe  = {this.toggleSwipe}
+        activeTitle   = {this.toggleTitle}
+        userView      = {this.updateUserView}
       />
     )
   };

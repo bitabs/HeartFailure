@@ -41,10 +41,7 @@ export default class ListOfUsers extends PureComponent {
       Users         : null, authUserUID : null,
       authUserType  : null, switchViews : false,
       filteredUsers : null, health      : null,
-      ECG: null, iWantThisUsers: this.props.authUserType  === "Doctor"
-        ? "Patient"
-        : "Doctor",
-      defaultHealth: {
+      ECG: null, defaultHealth: {
         height    : 0, weight      : 0,
         age       : 0, fat         : 0,
         allergies : 0, bpm         : 0,

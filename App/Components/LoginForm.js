@@ -1,22 +1,74 @@
-import Ionicons from 'react-native-vector-icons/Feather';
-import firebase from 'react-native-firebase';
 import React from 'react'
-import { StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View, Keyboard } from 'react-native'
+
+// predefined components of React
+import {
+  Text, TextInput, TouchableOpacity,
+  TouchableWithoutFeedback, View, Keyboard
+} from 'react-native'
+
+// vector icons package
+import Ionicons from 'react-native-vector-icons/Feather';
+
+// firebase database
+import firebase from 'react-native-firebase';
+
+// form fields from redux
 import {Field, reduxForm} from 'redux-form';
+
+// checkbox component 3rd party
 import CheckBox from 'react-native-check-box';
 
+// styles for this component
+import styles from '../Containers/Styles/LoginFormStyles'
 
-const onLogin = creds => {
-  const {email, password} = creds;
-  firebase.auth().signInAndRetrieveDataWithEmailAndPassword(email, password).catch(err => {
-    const { code, message } = err;
-  });
+/**
+ * This will login the user with their email and password
+ * ==============================================================
+ * @param credentials
+ */
+const onLogin = credentials => {
+  // to login, we need the email and password of the user
+  const {email, password} = credentials;
+
+  // we call the authentication mechanism from firebase and pass the creds
+  firebase.auth()
+    .signInAndRetrieveDataWithEmailAndPassword(email, password)
+    .catch(err => ({ code, message } = err));
 };
 
-const renderInput = ({secureTextEntry, password, placeholder, input: { onChange, ...restInput }}) => {
-  return <TextInput secureTextEntry={secureTextEntry} password={password}  placeholder={placeholder} placeholderTextColor={"#bccad0"} style={styles.input} onChangeText={onChange} {...restInput} underlineColorAndroid="transparent" />
+/**
+ * Converts the normal field to actual input field from redux
+ * ==============================================================
+ * @param secureTextEntry
+ * @param password
+ * @param placeholder
+ * @param onChange
+ * @param restInput
+ * @return {XML}
+ */
+const renderInput = (
+  {secureTextEntry, password, placeholder, input: { onChange, ...restInput }}) => {
+  return (
+    <TextInput
+      secureTextEntry       = {secureTextEntry}
+      password              = {password}
+      placeholder           = {placeholder}
+      placeholderTextColor  = {"#bccad0"}
+      style                 = {styles.input}
+      onChangeText          = {onChange}
+      underlineColorAndroid = "transparent"
+      {...restInput}
+    />
+  )
 };
 
+/**
+ * The container of the form is created here, with their inputs
+ * ==============================================================
+ * @param props
+ * @return {XML}
+ * @constructor
+ */
 const LoginForm = props => {
   const { handleSubmit } = props;
 
@@ -31,12 +83,28 @@ const LoginForm = props => {
           </View>
 
           <View style={styles.middleContainer}>
-            <Field style={styles.input} name="email" placeholder="Email" component={renderInput} />
-            <View style={{position: 'relative'}}>
-              <Ionicons name="eye" size={18} color="rgba(188,202,208, 0.5)" style={{position: 'absolute', right: 15, top: 21}} />
-              <Field style={[styles.input, {marginBottom: 40}]} secureTextEntry={true} password={true} name="password" placeholder="Password" component={renderInput} />
-              <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 10}}>
-                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <Field
+              style={styles.input}
+              name="email"
+              placeholder="Email"
+              component={renderInput}
+            />
+            <View style={styles.positionRelative}>
+              <Ionicons
+                name="eye"
+                size={18}
+                color="rgba(188,202,208, 0.5)"
+                style={styles.ioniconsStyle} />
+              <Field
+                style={[styles.input, {marginBottom: 40}]}
+                secureTextEntry={true}
+                password={true}
+                name="password"
+                placeholder="Password"
+                component={renderInput}
+              />
+              <View style={styles.checkBoxContainer}>
+                <View style={styles.checkBoxContainerSub}>
                   <CheckBox
                     style={{marginRight: 4}}
                     checkBoxColor={'#bccad0'}
@@ -54,13 +122,13 @@ const LoginForm = props => {
 
           <View style={styles.bottomContainer}>
             <TouchableOpacity style={styles.loginBtn} onPress={handleSubmit(onLogin)}>
-              <Text style={{textAlign: 'center', fontSize: 18, fontWeight: 'bold', color: 'white', letterSpacing: 2}}>L O G I N</Text>
+              <Text style={styles.logoutTxt}>L O G I N</Text>
             </TouchableOpacity>
 
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <Text style={{textAlign: 'center', fontSize: 14, fontWeight: 'bold', color: '#bccad0', marginRight: 10}}>Don't have an account?</Text>
-              <TouchableOpacity style={styles.signUp} onPress={() => props.navigation.navigate('SignUp')}>
-                <Text style={{fontSize: 14, color: '#E67D8F', fontWeight: 'bold'}}>Sign Up</Text>
+            <View style={styles.dontHaveAnAccountContainer}>
+              <Text style={styles.dontHaveAccountTxt}>Don't have an account?</Text>
+              <TouchableOpacity onPress={() => props.navigation.navigate('SignUp')}>
+                <Text style={styles.signUpTxt}>Sign Up</Text>
               </TouchableOpacity>
             </View>
 
@@ -70,66 +138,6 @@ const LoginForm = props => {
       </View>
     </TouchableWithoutFeedback>
   )
-}
+};
 
-export default reduxForm({
-  form: 'test'
-})(LoginForm)
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center', // Used to set Text Component Vertically Center
-    alignItems: 'center', // Used to set Text Component Horizontally Center
-  },
-  centerContainer: {
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  topContainer: {
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  topContainerTxt: {
-    marginTop: 10,
-    textAlign: 'center',
-    fontSize: 17,
-    color: '#bccad0'
-  },
-  middleContainer: {
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 10,
-    marginBottom:10
-  },
-  input: {
-    fontSize: 15,
-    color: "#aab8be",
-    height: 40,
-    width: 280,
-    paddingLeft: 15,
-    backgroundColor: 'rgba(188,202,208, 0.15)',
-    marginTop: 10,
-    borderRadius: 5
-  },
-  bottomContainer: {
-    flexDirection: 'column',
-    marginTop: 30,
-    alignItems: 'center'
-  },
-  loginBtn: {
-    backgroundColor: '#E67D8F',
-    alignSelf: 'stretch',
-    borderRadius: 5,
-    padding: 12,
-    width: 280,
-    height: 50,
-    elevation: 2,
-    marginBottom: 20
-  },
-  signUp: {
-
-  }
-});
+export default reduxForm({form: 'test'})(LoginForm)

@@ -244,7 +244,7 @@ class PatientMainScreen extends PureComponent {
    * This method will sign out the user from the application
    * ==============================================================
    */
-  signOutUser = async () => await firebase.auth().signOut().catch(e => console.log(e));
+  signOutUser = async () => await firebase.auth().signOut().catch(e => e);
 
   /**
    * This will toggle the boolean value of the attribute passed
