@@ -94,9 +94,6 @@ export default class LaunchScreen extends Component<*, State> {
     // this method keeps a record of the first user to be viewed
     this.updateUserView = this.updateUserView.bind(this);
 
-    // enable.disable the sliding of the tabs
-    this.toggleSwipe = this.toggleSwipe.bind(this);
-
     // method that retrieves data from firebase
     this.retrieveInfo = this.retrieveInfo.bind(this);
 
@@ -207,14 +204,6 @@ export default class LaunchScreen extends Component<*, State> {
   };
 
   /**
-   * This method will toggle on the condition whether the user
-   * should be able to slide from tabs or not.
-   * ==============================================================
-   * @param val
-   */
-  toggleSwipe = val => this.setState({disableSwipe: val});
-
-  /**
    * This method will toggle on the title of the dashboard based
    * on the type of the user.
    * ==============================================================
@@ -246,7 +235,6 @@ export default class LaunchScreen extends Component<*, State> {
    * @private
    */
   _openRightSideMenu = () => this.props.navigation.navigate('FooDrawerOpen');
-
 
   /**
    * This method will add top bar to the application. Which will
@@ -318,7 +306,6 @@ export default class LaunchScreen extends Component<*, State> {
         activeUser    = {this.state.viewCurrentUser}
         navigation    = {this.props.navigation}
         updateIndex   = {this.updateIndex}
-        disableSwipe  = {this.toggleSwipe}
         activeTitle   = {this.toggleTitle}
         userView      = {this.updateUserView}
       />
@@ -338,7 +325,6 @@ export default class LaunchScreen extends Component<*, State> {
         <StatusBar backgroundColor="white" barStyle="dark-content"/>
         <TabViewAnimated
           style={styles.container}
-          swipeEnabled={this.state.disableSwipe}
           navigationState={this.state}
           renderScene={this._renderScene}
           renderHeader={!(
