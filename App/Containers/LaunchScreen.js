@@ -17,7 +17,8 @@ import type {NavigationState} from 'react-native-tab-view/types'
 import SimplePage from './SimplePage'
 
 // importing firebase to access firebase database
-import firebase from 'react-native-firebase'
+//import firebase from 'react-native-firebase'
+import firebase from '../../firebase'
 
 // helper class to return the authenticated user details
 import User from '../Components/User'
@@ -79,7 +80,7 @@ export default class LaunchScreen extends Component<*, State> {
     };
 
     // Keep a local reference to the database from firebase
-    this.userRef = firebase.app().database().ref(`/Users/`);
+    this.userRef = firebase.database().ref(`/Users/`);
 
     /*
      * Set of methods that require to be in the same context as this

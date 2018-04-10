@@ -3,14 +3,13 @@ package com.heartfailure;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import io.invertase.firebase.RNFirebasePackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.horcrux.svg.SvgPackage;
 import com.AlexanderZaytsev.RNI18n.RNI18nPackage;
-import io.invertase.firebase.RNFirebasePackage;
 import it.innove.BleManagerPackage;
 import com.horcrux.svg.SvgPackage;
 import it.innove.BleManagerPackage;
-import io.invertase.firebase.RNFirebasePackage;
 import io.invertase.firebase.database.RNFirebaseDatabasePackage;
 import io.invertase.firebase.auth.RNFirebaseAuthPackage;
 import com.facebook.react.ReactNativeHost;

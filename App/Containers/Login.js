@@ -4,7 +4,7 @@ import React, { Component } from 'react'
 import {View, StyleSheet} from 'react-native'
 
 // form for the login
-import LoginForm from "../Components/LoginForm"
+import LoginForm from "./LoginForm"
 
 /**
  * This component holds the actual form of the login

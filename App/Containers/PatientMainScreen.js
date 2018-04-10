@@ -22,7 +22,8 @@ import {Images} from '../Containers/PreLoadImages'
 import Feather from "react-native-vector-icons/Feather"
 
 // fireabse module to use firebase database
-import firebase from 'react-native-firebase'
+import firebase from '../../firebase'
+// import firebase from 'react-native-firebase'
 
 // used for editing profile
 import {Field, reduxForm} from "redux-form"
@@ -41,7 +42,7 @@ import styles from './Styles/PatientMainScreenStyles'
  * profile section.
  * ==============================================================
  */
-class PatientMainScreen extends PureComponent {
+export class PatientMainScreen extends PureComponent {
   constructor(props) {
     super(props);
 
@@ -109,13 +110,13 @@ class PatientMainScreen extends PureComponent {
     User().then(user => {
 
       // attach the user reference from firebase to the component
-      this.userRef = firebase.app().database().ref(`/Users/${user.uid}`);
+      this.userRef = firebase.database().ref(`/Users/${user.uid}`);
 
       // attach the ECG reference from firebase to the component
-      this.ecgRef = firebase.app().database().ref(`/ECG/${user.uid}`);
+      this.ecgRef = firebase.database().ref(`/ECG/${user.uid}`);
 
       // attach the health reference from firebase to the component
-      this.healthRef = firebase.app().database().ref(`/Health/${user.uid}`);
+      this.healthRef = firebase.database().ref(`/Health/${user.uid}`);
 
       // let us initiate the fetching by passing the required references
       this.fetchData(this.userRef, this.ecgRef, this.healthRef, user);
@@ -944,11 +945,17 @@ class PatientMainScreen extends PureComponent {
       return (
         <View style={styles.connection} key={uid}>
           <View style={{position: 'relative', marginBottom: 10}}>
-            <Image
-              style={[styles.userImg, styles.userImgOverride]}
-              source={Images[uid]}
-              resizeMode="contain"
-            />
+            {Images[uid] ? (
+              <Image
+                style={[styles.userImg, styles.userImgOverride]}
+                source={Images[uid]}
+                resizeMode="contain"
+              />
+            ) : (
+              <View style={[styles.userImg, styles.userImgOverrideSub]}>
+                <Feather name={"user"} size={30} color={"white"}/>
+              </View>
+            )}
             <View style={styles.checkIconContainer}>
               <Feather
                 style={styles.checkIcon}

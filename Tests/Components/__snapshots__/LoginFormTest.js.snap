@@ -1,0 +1,399 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Testing <LoginForm /> component renders as expected 1`] = `
+<View
+  accessibilityComponentType={undefined}
+  accessibilityLabel={undefined}
+  accessibilityTraits={undefined}
+  accessible={false}
+  hitSlop={undefined}
+  nativeID={undefined}
+  onLayout={undefined}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    Object {
+      "alignItems": "center",
+      "flex": 1,
+      "justifyContent": "center",
+    }
+  }
+  testID={undefined}
+>
+  <View
+    style={
+      Object {
+        "alignItems": "center",
+        "flexDirection": "column",
+        "justifyContent": "center",
+      }
+    }
+  >
+    <View
+      style={
+        Object {
+          "alignItems": "center",
+          "justifyContent": "center",
+        }
+      }
+    >
+      <Text
+        accessible={true}
+        allowFontScaling={false}
+        ellipsizeMode="tail"
+        style={
+          Array [
+            Object {
+              "color": "#bccad0",
+              "fontSize": 63,
+            },
+            undefined,
+            Object {
+              "fontFamily": "Feather",
+              "fontStyle": "normal",
+              "fontWeight": "normal",
+            },
+          ]
+        }
+      >
+        
+      </Text>
+      <Text
+        accessible={true}
+        allowFontScaling={true}
+        ellipsizeMode="tail"
+        style={
+          Object {
+            "color": "#bccad0",
+            "fontSize": 17,
+            "marginTop": 10,
+            "textAlign": "center",
+          }
+        }
+      >
+        Sign into your account.
+      </Text>
+    </View>
+    <View
+      style={
+        Object {
+          "alignItems": "center",
+          "flexDirection": "column",
+          "justifyContent": "center",
+          "marginBottom": 10,
+          "marginTop": 10,
+        }
+      }
+    >
+      <TextInput
+        allowFontScaling={true}
+        name="email"
+        onBlur={[Function]}
+        onChangeText={[Function]}
+        onDragStart={[Function]}
+        onDrop={[Function]}
+        onFocus={[Function]}
+        password={undefined}
+        placeholder="Email"
+        placeholderTextColor="#bccad0"
+        secureTextEntry={undefined}
+        style={
+          Object {
+            "backgroundColor": "rgba(188,202,208, 0.15)",
+            "borderRadius": 5,
+            "color": "#aab8be",
+            "fontSize": 15,
+            "height": 40,
+            "marginTop": 10,
+            "paddingLeft": 15,
+            "width": 280,
+          }
+        }
+        underlineColorAndroid="transparent"
+        value=""
+      />
+      <View
+        style={
+          Object {
+            "position": "relative",
+          }
+        }
+      >
+        <Text
+          accessible={true}
+          allowFontScaling={false}
+          ellipsizeMode="tail"
+          style={
+            Array [
+              Object {
+                "color": "rgba(188,202,208, 0.5)",
+                "fontSize": 18,
+              },
+              Object {
+                "position": "absolute",
+                "right": 15,
+                "top": 21,
+              },
+              Object {
+                "fontFamily": "Feather",
+                "fontStyle": "normal",
+                "fontWeight": "normal",
+              },
+            ]
+          }
+        >
+          
+        </Text>
+        <TextInput
+          allowFontScaling={true}
+          name="password"
+          onBlur={[Function]}
+          onChangeText={[Function]}
+          onDragStart={[Function]}
+          onDrop={[Function]}
+          onFocus={[Function]}
+          password={true}
+          placeholder="Password"
+          placeholderTextColor="#bccad0"
+          secureTextEntry={true}
+          style={
+            Object {
+              "backgroundColor": "rgba(188,202,208, 0.15)",
+              "borderRadius": 5,
+              "color": "#aab8be",
+              "fontSize": 15,
+              "height": 40,
+              "marginTop": 10,
+              "paddingLeft": 15,
+              "width": 280,
+            }
+          }
+          underlineColorAndroid="transparent"
+          value=""
+        />
+        <View
+          style={
+            Object {
+              "alignItems": "center",
+              "flexDirection": "row",
+              "justifyContent": "space-between",
+              "marginTop": 10,
+            }
+          }
+        >
+          <View
+            style={
+              Object {
+                "alignItems": "center",
+                "flexDirection": "row",
+              }
+            }
+          >
+            <View
+              accessibilityComponentType={undefined}
+              accessibilityLabel={undefined}
+              accessibilityTraits={undefined}
+              accessible={true}
+              hasTVPreferredFocus={undefined}
+              hitSlop={undefined}
+              isTVSelectable={true}
+              nativeID={undefined}
+              onLayout={undefined}
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
+              style={
+                Object {
+                  "marginRight": 4,
+                }
+              }
+              testID={undefined}
+              tvParallaxProperties={undefined}
+            >
+              <View
+                style={
+                  Object {
+                    "alignItems": "center",
+                    "flexDirection": "row",
+                  }
+                }
+              >
+                <Image
+                  source={
+                    Object {
+                      "process": [Function],
+                    }
+                  }
+                  style={
+                    Object {
+                      "tintColor": "#bccad0",
+                    }
+                  }
+                />
+              </View>
+            </View>
+            <Text
+              accessible={true}
+              allowFontScaling={true}
+              ellipsizeMode="tail"
+              style={
+                Object {
+                  "color": "#bccad0",
+                }
+              }
+            >
+              Remember me
+            </Text>
+          </View>
+          <View>
+            <Text
+              accessible={true}
+              allowFontScaling={true}
+              ellipsizeMode="tail"
+              style={
+                Object {
+                  "color": "#bccad0",
+                }
+              }
+            >
+              Forgot Pass?
+            </Text>
+          </View>
+        </View>
+      </View>
+    </View>
+    <View
+      style={
+        Object {
+          "alignItems": "center",
+          "flexDirection": "column",
+          "marginTop": 30,
+        }
+      }
+    >
+      <View
+        accessibilityComponentType={undefined}
+        accessibilityLabel={undefined}
+        accessibilityTraits={undefined}
+        accessible={true}
+        collapsable={undefined}
+        hasTVPreferredFocus={undefined}
+        hitSlop={undefined}
+        isTVSelectable={true}
+        nativeID={undefined}
+        onLayout={undefined}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          Object {
+            "alignSelf": "stretch",
+            "backgroundColor": "#E67D8F",
+            "borderRadius": 5,
+            "elevation": 2,
+            "height": 50,
+            "marginBottom": 20,
+            "opacity": 1,
+            "padding": 12,
+            "width": 280,
+          }
+        }
+        testID={undefined}
+        tvParallaxProperties={undefined}
+      >
+        <Text
+          accessible={true}
+          allowFontScaling={true}
+          ellipsizeMode="tail"
+          style={
+            Object {
+              "color": "white",
+              "fontSize": 18,
+              "fontWeight": "bold",
+              "letterSpacing": 2,
+              "textAlign": "center",
+            }
+          }
+        >
+          L O G I N
+        </Text>
+      </View>
+      <View
+        style={
+          Object {
+            "alignItems": "center",
+            "flexDirection": "row",
+          }
+        }
+      >
+        <Text
+          accessible={true}
+          allowFontScaling={true}
+          ellipsizeMode="tail"
+          style={
+            Object {
+              "color": "#bccad0",
+              "fontSize": 14,
+              "fontWeight": "bold",
+              "marginRight": 10,
+              "textAlign": "center",
+            }
+          }
+        >
+          Don't have an account?
+        </Text>
+        <View
+          accessibilityComponentType={undefined}
+          accessibilityLabel={undefined}
+          accessibilityTraits={undefined}
+          accessible={true}
+          collapsable={undefined}
+          hasTVPreferredFocus={undefined}
+          hitSlop={undefined}
+          isTVSelectable={true}
+          nativeID={undefined}
+          onLayout={undefined}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+          style={
+            Object {
+              "opacity": 1,
+            }
+          }
+          testID={undefined}
+          tvParallaxProperties={undefined}
+        >
+          <Text
+            accessible={true}
+            allowFontScaling={true}
+            ellipsizeMode="tail"
+            style={
+              Object {
+                "color": "#E67D8F",
+                "fontSize": 14,
+                "fontWeight": "bold",
+              }
+            }
+          >
+            Sign Up
+          </Text>
+        </View>
+      </View>
+    </View>
+  </View>
+</View>
+`;

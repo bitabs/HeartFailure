@@ -1,4 +1,5 @@
 // Mock your external modules here if needed
+
 jest
 .mock('react-native-i18n', () => {
   const english = require('../App/I18n/languages/english.json')
@@ -18,4 +19,6 @@ jest
       return value
     }
   }
-})
+});
+
+jest.mock('NativeAnimatedHelper');

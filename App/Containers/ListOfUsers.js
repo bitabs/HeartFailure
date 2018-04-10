@@ -10,7 +10,9 @@ import PropTypes from 'prop-types'
 import _ from 'lodash'
 
 // fireabse database package
-import firebase from 'react-native-firebase'
+import firebase from '../../firebase'
+
+//import firebase from 'react-native-firebase'
 
 // Icons package
 import Feather from "react-native-vector-icons/Feather"
@@ -51,13 +53,13 @@ export default class ListOfUsers extends PureComponent {
     };
 
     // Users table from firebase
-    this.userRef = firebase.app().database().ref(`/Users/`);
+    this.userRef = firebase.database().ref(`/Users/`);
 
     // health table from firebase
-    this.healthRef  = firebase.app().database().ref(`/Health/`);
+    this.healthRef  = firebase.database().ref(`/Health/`);
 
     // ECG table from firebase
-    this.ecgRef     = firebase.app().database().ref(`/ECG/`);
+    this.ecgRef     = firebase.database().ref(`/ECG/`);
 
     // the method will fetch the data from above tables
     this.fetchAsyncData = this.fetchAsyncData.bind(this);

@@ -1,0 +1,91 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Testing <Chart /> component renders as expected 1`] = `
+<View
+  style={
+    Object {
+      "height": 100,
+      "width": 750,
+    }
+  }
+>
+  <View
+    style={
+      Object {
+        "flex": 1,
+      }
+    }
+  >
+    <RCTWebView
+      allowsInlineMediaPlayback={undefined}
+      automaticallyAdjustContentInsets={false}
+      bounces={undefined}
+      contentInset={undefined}
+      dataDetectorTypes={undefined}
+      decelerationRate={undefined}
+      injectedJavaScript={undefined}
+      mediaPlaybackRequiresUserAction={undefined}
+      messagingEnabled={false}
+      onLoadingError={[Function]}
+      onLoadingFinish={[Function]}
+      onLoadingStart={[Function]}
+      onMessage={[Function]}
+      onShouldStartLoadWithRequest={undefined}
+      scalesPageToFit={false}
+      scrollEnabled={false}
+      source={
+        Object {
+          "baseUrl": "web/",
+          "html": "<html>
+                    <meta name=\\"viewport\\" content=\\"width=device-width, initial-scale=1, user-scalable=0\\" />
+                    <style media=\\"screen\\" type=\\"text/css\\">
+                    #container {
+                        width:100%;
+                        height:100%;
+                        top:0;
+                        left:0;
+                        right:0;
+                        bottom:0;
+                        position:absolute;
+                        user-select: none;
+                        -webkit-user-select: none;
+                    }
+                    </style>
+                    <head>
+                        <script src=\\"https://code.jquery.com/jquery-2.1.4.min.js\\"></script>
+                        <script src=\\"https://code.highcharts.com/highcharts.js\\"></script>
+                        
+                        
+                        <script src=\\"https://code.highcharts.com/modules/exporting.js\\"></script>
+                        <script>
+                        $(function () {
+                            Highcharts.setOptions(undefined);
+                            Highcharts.chart('container', }           );
+                        });
+                        </script>
+                    </head>
+                    <body>
+                        <div id=\\"container\\">
+                        </div>
+                    </body>
+                </html>",
+        }
+      }
+      style={
+        Array [
+          Object {
+            "flex": 1,
+          },
+          Object {
+            "backgroundColor": "#ffffff",
+          },
+          Object {
+            "height": 100,
+            "width": 750,
+          },
+        ]
+      }
+    />
+  </View>
+</View>
+`;
