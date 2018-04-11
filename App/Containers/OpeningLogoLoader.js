@@ -1,10 +1,20 @@
 import React, { Component } from 'react'
-import {View, StyleSheet, TouchableHighlight, Text} from "react-native";
-import Ionicons from 'react-native-vector-icons/Feather';
+
+// predefined components of react
+import {View, StyleSheet} from "react-native"
+
+// vector icon set
+import Feather from 'react-native-vector-icons/Feather'
+
+// fading animation
 import Fade from '../Components/Fade'
 
+/**
+ * This component will act as a loading component which will be
+ * showing during a computation
+ * ==============================================================
+ */
 export default class OpeningLogoLoader extends Component {
-
   constructor() {
     super();
     this.state = {
@@ -12,26 +22,42 @@ export default class OpeningLogoLoader extends Component {
     }
   }
 
+  /**
+   * When the component loads, show that is ready
+   * ==============================================================
+   */
   componentDidMount() {
     this.setState({loading: true});
   }
 
+  /**
+   * When the component is ready, show the animation
+   * ==============================================================
+   * @return {XML}
+   */
   render() {
     return(
       <View style={styles.container}>
         <Fade visible={this.state.loading}>
-          <Ionicons name="activity" size={33} color="#8F9CAE" />
+          <Feather
+            name="activity"
+            size={33}
+            color="#8F9CAE"
+          />
         </Fade>
       </View>
     )
   }
 }
 
+/**
+ * styles for this component
+ */
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
-    justifyContent: 'center', // Used to set Text Component Vertically Center
-    alignItems: 'center' // Used to set Text Component Horizontally Center
+    justifyContent: 'center',
+    alignItems: 'center'
   }
 });

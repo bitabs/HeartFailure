@@ -1,0 +1,51 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Testing <OpeningLogoLoader /> component renders as expected 1`] = `
+<View
+  style={
+    Object {
+      "alignItems": "center",
+      "flex": 1,
+      "flexDirection": "column",
+      "justifyContent": "center",
+    }
+  }
+>
+  <View
+    collapsable={undefined}
+    style={
+      Object {
+        "opacity": 0,
+        "transform": Array [
+          Object {
+            "scale": 1.1,
+          },
+        ],
+      }
+    }
+    visible={true}
+  >
+    <Text
+      accessible={true}
+      allowFontScaling={false}
+      ellipsizeMode="tail"
+      style={
+        Array [
+          Object {
+            "color": "#8F9CAE",
+            "fontSize": 33,
+          },
+          undefined,
+          Object {
+            "fontFamily": "Feather",
+            "fontStyle": "normal",
+            "fontWeight": "normal",
+          },
+        ]
+      }
+    >
+      
+    </Text>
+  </View>
+</View>
+`;

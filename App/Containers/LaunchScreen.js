@@ -17,7 +17,8 @@ import type {NavigationState} from 'react-native-tab-view/types'
 import SimplePage from './SimplePage'
 
 // importing firebase to access firebase database
-import firebase from 'react-native-firebase'
+//import firebase from 'react-native-firebase'
+import firebase from '../../firebase'
 
 // helper class to return the authenticated user details
 import User from '../Components/User'
@@ -70,19 +71,16 @@ export default class LaunchScreen extends Component<*, State> {
      * refresh if anything changes within this object.
      */
     this.state = {
-      index           : 0,
-      routes          : [{key: '1', icon: 'users'}, {key: '2', icon: 'cpu'}],
-      authUserUID     : null,
-      authUserType    : null,
-      modalVisible    : false,
-      viewCurrentUser : null,
-      defaultView     : null,
-      disableSwipe    : true,
-      activeTitle     : null
+      index           : 0, routes : [
+        {key: '1', icon: 'users'}, {key: '2', icon: 'cpu'}
+      ],
+      authUserUID     : null,  authUserType    : null,
+      modalVisible    : false, viewCurrentUser : null,
+      defaultView     : null,  activeTitle     : null
     };
 
     // Keep a local reference to the database from firebase
-    this.userRef = firebase.app().database().ref(`/Users/`);
+    this.userRef = firebase.database().ref(`/Users/`);
 
     /*
      * Set of methods that require to be in the same context as this
@@ -93,9 +91,6 @@ export default class LaunchScreen extends Component<*, State> {
 
     // this method keeps a record of the first user to be viewed
     this.updateUserView = this.updateUserView.bind(this);
-
-    // enable.disable the sliding of the tabs
-    this.toggleSwipe = this.toggleSwipe.bind(this);
 
     // method that retrieves data from firebase
     this.retrieveInfo = this.retrieveInfo.bind(this);
@@ -207,14 +202,6 @@ export default class LaunchScreen extends Component<*, State> {
   };
 
   /**
-   * This method will toggle on the condition whether the user
-   * should be able to slide from tabs or not.
-   * ==============================================================
-   * @param val
-   */
-  toggleSwipe = val => this.setState({disableSwipe: val});
-
-  /**
    * This method will toggle on the title of the dashboard based
    * on the type of the user.
    * ==============================================================
@@ -246,7 +233,6 @@ export default class LaunchScreen extends Component<*, State> {
    * @private
    */
   _openRightSideMenu = () => this.props.navigation.navigate('FooDrawerOpen');
-
 
   /**
    * This method will add top bar to the application. Which will
@@ -318,7 +304,6 @@ export default class LaunchScreen extends Component<*, State> {
         activeUser    = {this.state.viewCurrentUser}
         navigation    = {this.props.navigation}
         updateIndex   = {this.updateIndex}
-        disableSwipe  = {this.toggleSwipe}
         activeTitle   = {this.toggleTitle}
         userView      = {this.updateUserView}
       />
@@ -338,7 +323,6 @@ export default class LaunchScreen extends Component<*, State> {
         <StatusBar backgroundColor="white" barStyle="dark-content"/>
         <TabViewAnimated
           style={styles.container}
-          swipeEnabled={this.state.disableSwipe}
           navigationState={this.state}
           renderScene={this._renderScene}
           renderHeader={!(

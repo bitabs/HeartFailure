@@ -1,3 +1,4 @@
+// this will hold the images of users
 const Images = {
   "w14FKo72BieZwbxwUouTpN7UQm02"  : require('../Images/Naseebullah.jpg'),
   "sLSfCQziLTTmoI3e74xTpWhnZoj2"  : require('../Images/George.jpg'),

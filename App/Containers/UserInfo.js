@@ -1,28 +1,28 @@
-import React, {Component} from 'react';
+import React, {Component} from 'react'
 
 // predefined components from react native
-import {View, Text, TouchableOpacity, Image, ScrollView, TextInput} from 'react-native';
+import {View, Text, TouchableOpacity, Image, ScrollView, TextInput} from 'react-native'
 
 // importing feather icon package
-import Feather from "react-native-vector-icons/Feather";
+import Feather from "react-native-vector-icons/Feather"
 
 // importing User which will return the authenticated user
-import User from '../Components/User';
+import User from '../Components/User'
 
 // importing firebase to access firebase database
-import firebase from 'react-native-firebase';
-
+// import firebase from 'react-native-firebase'
+import firebase from '../../firebase'
 // static class containing common DB operations
-import Database from '../Components/Database';
+import Database from '../Components/Database'
 
 // Images object containing static url to Users image
-import {Images} from '../Containers/PreLoadImages';
+import {Images} from '../Containers/PreLoadImages'
 
 // chart to visualise ECG & heart sound
-import Chart from "./Chart";
+import Chart from "./Chart"
 
 // SVG package for React Native to work
-import Svg, { Path, Polygon, Polyline, G } from 'react-native-svg';
+import Svg, { Path, Polygon, Polyline, G } from 'react-native-svg'
 
 // TimeAgo to provide time passed from certain point mechanism
 import TimeAgo from "react-native-timeago"
@@ -44,26 +44,29 @@ export default class UserInfo extends Component {
       allMessages     : null,  filteredMessages: null,
       randomFav       : null,  type            : "",
       testing         : false, ECG             : null,
-      heartSound      : null,  HealthFromDB    : null,
+      heartSound      : null,  HealthFromDB    : {
+        bpm: 0,
+        calories: 0
+      },
       ECGFromDB       : null,  total           : 0
     };
 
     // references to the firebase database
 
     // returns list of users that is registered with the application
-    this.userRef   = firebase.app().database().ref(`/Users/`);
+    this.userRef   = firebase.database().ref(`/Users/`);
 
     // returns ECG for each patient
-    this.ecgRef     = firebase.app().database().ref(`/ECG/`);
+    this.ecgRef     = firebase.database().ref(`/ECG/`);
 
     // returns health of each patient
-    this.healthRef  = firebase.app().database().ref(`/Health/`);
+    this.healthRef  = firebase.database().ref(`/Health/`);
 
     // returns comments from patients to doctors
-    this.PCRef      = firebase.app().database().ref(`/PatientsCommentsToDoctors/`);
+    this.PCRef      = firebase.database().ref(`/PatientsCommentsToDoctors/`);
 
     // returns doctors comments to patients
-    this.DCRef      = firebase.app().database().ref(`/DoctorsCommentsToPatients/`);
+    this.DCRef      = firebase.database().ref(`/DoctorsCommentsToPatients/`);
 
     // binding method that needs to be in the same context as "this"
     this.fetchComments = this.fetchComments.bind(this);
@@ -503,8 +506,7 @@ export default class UserInfo extends Component {
                       source={Images[person.uid]}
                       resizeMode="contain"
                   />)
-                  : (<View
-                      style={[styles.profPic, styles.profPicIcon]}
+                  : (<View style={[styles.profPic, styles.profPicIcon]}
                     ><Feather name={"user"} size={20} color={"white"}/>
                     </View>
                   )
@@ -674,9 +676,6 @@ export default class UserInfo extends Component {
    * This method will create a the comments container, which will
    * hold all the messages that have occured between the two users.
    * ==============================================================
-   * @param total
-   * @param Messages
-   * @return {XML}
    */
   commentsContainer = (User, total, Messages) => {
     return (

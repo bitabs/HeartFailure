@@ -1,17 +1,30 @@
+// We need to extend our component
 import React, {Component} from 'react';
+
+// predefined component from react
 import {View, Text, StyleSheet, Image} from "react-native";
+
+// vector icons
 import Feather from 'react-native-vector-icons/Feather';
+
+// prop types for our props
 import PropTypes from 'prop-types';
+
+// static images of the users
 import {Images} from '../Containers/PreLoadImages';
+
+// 3rd party component to get the time ago feature
 import TimeAgo from 'react-native-timeago';
 
+/**
+ * This component will render each message. It is the child
+ * component of the <MessagingComponent />
+ */
 export default class MessageComponent extends Component {
   constructor(props) {
     super(props);
     this.state = {};
   }
-
-  componentDidMount() { }
 
   /**
    * Returns a random integer between min (inclusive) and max (inclusive)
@@ -21,7 +34,10 @@ export default class MessageComponent extends Component {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   };
 
-
+  /**
+   * Randomly return one of the icons
+   * @return {*}
+   */
   randomIcon = () => {
     switch (this.getRandomInt(0, 2))  {
       case 0  : return (<Feather name="monitor"    size={15} color="#bccad0" />);
@@ -31,10 +47,18 @@ export default class MessageComponent extends Component {
     }
   };
 
-  hasWhiteSpace = (s) => {
-    return s.indexOf(' ') >= 0;
-  };
+  /**
+   * Check to see if there are any white spaces on a sgiven string
+   * @param string
+   */
+  hasWhiteSpace = string => string.indexOf(' ') >= 0;
 
+  /**
+   * change the text by addding spaces between each char and
+   * converting it to uppercase
+   * @param text
+   * @return {string}
+   */
   formatText = (text) => {
     let txt = text;
     if (!this.hasWhiteSpace(txt))
@@ -42,6 +66,11 @@ export default class MessageComponent extends Component {
     return txt.toUpperCase();
   };
 
+  /**
+   * Based on the text, return its predefined color code
+   * @param text
+   * @return {*}
+   */
   dynamicTagColor = (text) => {
 
     text = this.formatText(text);
@@ -63,37 +92,60 @@ export default class MessageComponent extends Component {
     }
   };
 
+  /**
+   * Return the styled component when it is ready
+   * @return {XML}
+   */
   render() {
     return(
       <View style={styles.container}>
         <View style={styles.topContainer}>
           {Images[this.props.uid] ? (
-            <Image style={styles.userImg} source={Images[this.props.uid]} resizeMode="contain"/>
+            <Image
+              style={styles.userImg}
+              source={Images[this.props.uid]}
+              resizeMode="contain"
+            />
           ) : (
-            <View style={[styles.userImg, {alignItems: 'center', justifyContent: 'center', backgroundColor: '#E67D8F'}]}>
+            <View style={[
+              styles.userImg, {
+              alignItems: 'center',
+                justifyContent: 'center',
+                backgroundColor: '#E67D8F'
+            }]}>
               <Feather name={"user"} size={20} color={"white"}/>
             </View>
           )}
 
 
           <View style={{flex: 1}}>
-            <Text numberOfLines={1} style={styles.msgPersonName}>{this.props.name}</Text>
-            <TimeAgo style={styles.msgTime} time={this.props.timeStamp} />
+            <Text numberOfLines={1} style={styles.msgPersonName}>
+              {this.props.name}
+            </Text>
+            <TimeAgo
+              style={styles.msgTime}
+              time={this.props.timeStamp}
+            />
           </View>
-          <View style={{flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'space-between'}}>
-            {this.randomIcon()}
+          <View style={{
+            flexDirection: 'column',
+            alignItems: 'flex-end',
+            justifyContent: 'space-between'
+          }}>{this.randomIcon()}
 
-            {
-              this.props.type === "Doctor" ? (
-                <View style={[styles.tag, {backgroundColor: this.dynamicTagColor(this.props.healthAlert), elevation: 2} ]}>
-                  <Text style={{fontSize: 8, color: 'white', fontWeight: 'bold'}}>
-                    {
-                      this.formatText(this.props.healthAlert)
-                    }
-                  </Text>
-                </View>
-              ): null
-            }
+            {this.props.type === "Doctor" ? (
+              <View style={[styles.tag, {
+                backgroundColor: this.dynamicTagColor(this.props.healthAlert),
+                  elevation: 2
+              }]}>
+                <Text style={{
+                  fontSize: 8,
+                  color: 'white',
+                  fontWeight: 'bold'
+                }}>{this.formatText(this.props.healthAlert)}
+                </Text>
+              </View>
+            ): null}
           </View>
         </View>
         <View>
@@ -107,13 +159,10 @@ export default class MessageComponent extends Component {
 const styles = StyleSheet.create({
   container: {
     marginBottom: 20, paddingBottom: 10,
-    //borderBottomWidth: 1,
-    //borderBottomColor: 'rgba(188,202,208, 0.1)'
   },
   topContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    //backgroundColor: 'red'
+    justifyContent: 'space-between'
   },
   userImg: {
     borderRadius: 400,

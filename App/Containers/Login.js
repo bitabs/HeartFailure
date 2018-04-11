@@ -1,28 +1,39 @@
 import React, { Component } from 'react'
+
+// predefined component of react
 import {View, StyleSheet} from 'react-native'
 
-import LoginForm from "../Components/LoginForm";
+// form for the login
+import LoginForm from "./LoginForm"
 
+/**
+ * This component holds the actual form of the login
+ */
 export default class Login extends Component {
   constructor(props) {
     super(props);
     this.state = {};
-    this.buttonPress = this.buttonPress.bind(this);
   }
 
-  buttonPress() {
-    this.props.navigation.navigate('drawerStack');
-  }
-
+  /**
+   * This component will only call the actual form of the login
+   * @return {XML}
+   */
   render() {
     return (
       <View style={styles.container}>
-        <LoginForm navigation={this.props.navigation}  {...this.props}/>
+        <LoginForm
+          navigation={this.props.navigation}
+          {...this.props}
+        />
       </View>
     );
   }
 }
 
+/**
+ * Styles of this component
+ */
 const styles = StyleSheet.create({
   container: {
     flex: 1,

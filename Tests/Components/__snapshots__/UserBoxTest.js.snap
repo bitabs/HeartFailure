@@ -1,0 +1,194 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Testing <UserBox /> component renders as expected 1`] = `
+<View>
+  <View
+    style={
+      Array [
+        Object {
+          "alignItems": "flex-start",
+          "backgroundColor": "white",
+          "flexDirection": "column",
+          "justifyContent": "flex-start",
+          "marginBottom": 20,
+          "padding": 30,
+          "paddingBottom": 0,
+          "paddingTop": 10,
+          "width": 750,
+        },
+        Object {
+          "paddingBottom": 0,
+          "position": "relative",
+        },
+      ]
+    }
+  >
+    <View
+      accessibilityComponentType={undefined}
+      accessibilityLabel={undefined}
+      accessibilityTraits={undefined}
+      accessible={true}
+      collapsable={undefined}
+      hasTVPreferredFocus={undefined}
+      hitSlop={undefined}
+      isTVSelectable={true}
+      nativeID={undefined}
+      onLayout={undefined}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        Object {
+          "alignSelf": "flex-end",
+          "opacity": 1,
+          "padding": 10,
+          "paddingLeft": 30,
+          "paddingRight": 0,
+        }
+      }
+      testID={undefined}
+      tvParallaxProperties={undefined}
+    >
+      <Text
+        accessible={true}
+        allowFontScaling={false}
+        ellipsizeMode="tail"
+        style={
+          Array [
+            Object {
+              "color": "#909aae",
+              "fontSize": 15,
+            },
+            Object {
+              "fontWeight": "900",
+            },
+            Object {
+              "fontFamily": "Feather",
+              "fontStyle": "normal",
+              "fontWeight": "normal",
+            },
+          ]
+        }
+      >
+        
+      </Text>
+    </View>
+    <View
+      style={
+        Object {
+          "alignItems": "flex-start",
+          "flexDirection": "row",
+          "flexWrap": "wrap",
+        }
+      }
+    />
+    <View
+      style={
+        Object {
+          "alignItems": "center",
+          "flexDirection": "row",
+          "justifyContent": "space-between",
+          "paddingBottom": 20,
+          "width": "100%",
+        }
+      }
+    >
+      <View
+        style={
+          Object {
+            "alignItems": "center",
+            "flexDirection": "row",
+          }
+        }
+      >
+        <Text
+          accessible={true}
+          allowFontScaling={false}
+          ellipsizeMode="tail"
+          style={
+            Array [
+              Object {
+                "color": "rgba(144, 154, 174, 0.5)",
+                "fontSize": 15,
+              },
+              Object {
+                "fontWeight": "900",
+              },
+              Object {
+                "fontFamily": "Feather",
+                "fontStyle": "normal",
+                "fontWeight": "normal",
+              },
+            ]
+          }
+        >
+          
+        </Text>
+        <Text
+          accessible={true}
+          allowFontScaling={true}
+          ellipsizeMode="tail"
+          style={
+            Object {
+              "color": "rgba(144, 154, 174, 0.5)",
+              "fontSize": 10,
+              "marginLeft": 5,
+            }
+          }
+        >
+          317
+        </Text>
+      </View>
+      <View
+        style={
+          Object {
+            "alignItems": "center",
+            "flexDirection": "row",
+          }
+        }
+      >
+        <Text
+          accessible={true}
+          allowFontScaling={false}
+          ellipsizeMode="tail"
+          style={
+            Array [
+              Object {
+                "color": "rgba(144, 154, 174, 0.5)",
+                "fontSize": 15,
+              },
+              Object {
+                "fontWeight": "900",
+              },
+              Object {
+                "fontFamily": "Feather",
+                "fontStyle": "normal",
+                "fontWeight": "normal",
+              },
+            ]
+          }
+        >
+          
+        </Text>
+        <Text
+          accessible={true}
+          allowFontScaling={true}
+          ellipsizeMode="tail"
+          style={
+            Object {
+              "color": "rgba(144, 154, 174, 0.5)",
+              "fontSize": 10,
+              "marginLeft": 5,
+            }
+          }
+        >
+          230
+        </Text>
+      </View>
+    </View>
+  </View>
+</View>
+`;

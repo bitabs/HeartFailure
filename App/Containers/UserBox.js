@@ -504,7 +504,7 @@ export default class UserBox extends PureComponent {
                   size={17}
                   color="rgba(144, 154, 174, 0.5)"
                 />
-                <Text style={styles.healthSingular}>{health.bpm}
+                <Text style={styles.healthSingular}>{health.bpm || 0}
                   <Text style={{fontSize: 13}}> bpm</Text>
                 </Text>
               </View>
@@ -517,7 +517,7 @@ export default class UserBox extends PureComponent {
                   color="rgba(144, 154, 174, 0.5)"
                 />
                 <Text
-                  style={styles.healthSingular}>{health.calories}
+                  style={styles.healthSingular}>{health.calories || 0}
                   <Text style={{fontSize: 13}}>cal</Text>
                 </Text>
               </View>
@@ -528,7 +528,7 @@ export default class UserBox extends PureComponent {
                   name="md-thermometer"
                   size={17}
                   color="rgba(144, 154, 174, 0.5)"
-                /><Text style={styles.healthSingular}>{health.thermometer}°</Text>
+                /><Text style={styles.healthSingular}>{health.thermometer || 0}°</Text>
               </View>
             </View>
           </View>
@@ -616,5 +616,5 @@ export default class UserBox extends PureComponent {
 UserBox.propTypes = {
   uid: PropTypes.string.isRequired,
   User: PropTypes.object,
-  updateIndex: PropTypes.func.isRequired
+  updateIndex: PropTypes.func
 };

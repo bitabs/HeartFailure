@@ -1,0 +1,147 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Testing <MessageComponent /> component renders as expected 1`] = `
+<View
+  style={
+    Object {
+      "marginBottom": 20,
+      "paddingBottom": 10,
+    }
+  }
+>
+  <View
+    style={
+      Object {
+        "flexDirection": "row",
+        "justifyContent": "space-between",
+      }
+    }
+  >
+    <View
+      style={
+        Array [
+          Object {
+            "borderRadius": 400,
+            "height": 40,
+            "marginRight": 10,
+            "width": 40,
+          },
+          Object {
+            "alignItems": "center",
+            "backgroundColor": "#E67D8F",
+            "justifyContent": "center",
+          },
+        ]
+      }
+    >
+      <Text
+        accessible={true}
+        allowFontScaling={false}
+        ellipsizeMode="tail"
+        style={
+          Array [
+            Object {
+              "color": "white",
+              "fontSize": 20,
+            },
+            undefined,
+            Object {
+              "fontFamily": "Feather",
+              "fontStyle": "normal",
+              "fontWeight": "normal",
+            },
+          ]
+        }
+      >
+        
+      </Text>
+    </View>
+    <View
+      style={
+        Object {
+          "flex": 1,
+        }
+      }
+    >
+      <Text
+        accessible={true}
+        allowFontScaling={true}
+        ellipsizeMode="tail"
+        numberOfLines={1}
+        style={
+          Object {
+            "color": "#bccad0",
+            "fontSize": 15,
+          }
+        }
+      >
+        Naseebullah
+      </Text>
+      <Text
+        accessible={true}
+        allowFontScaling={true}
+        ellipsizeMode="tail"
+        hideAgo={false}
+        interval={60000}
+        style={
+          Object {
+            "color": "rgba(188,202,208, 0.7)",
+            "fontSize": 12,
+          }
+        }
+        time="2015-06-21T06:24:44.124Z"
+      >
+        3 years ago
+      </Text>
+    </View>
+    <View
+      style={
+        Object {
+          "alignItems": "flex-end",
+          "flexDirection": "column",
+          "justifyContent": "space-between",
+        }
+      }
+    >
+      <Text
+        accessible={true}
+        allowFontScaling={false}
+        ellipsizeMode="tail"
+        style={
+          Array [
+            Object {
+              "color": "#bccad0",
+              "fontSize": 15,
+            },
+            undefined,
+            Object {
+              "fontFamily": "Feather",
+              "fontStyle": "normal",
+              "fontWeight": "normal",
+            },
+          ]
+        }
+      >
+        
+      </Text>
+    </View>
+  </View>
+  <View>
+    <Text
+      accessible={true}
+      allowFontScaling={true}
+      ellipsizeMode="tail"
+      numberOfLines={2}
+      style={
+        Object {
+          "color": "rgba(188,202,208, 0.8)",
+          "fontSize": 13,
+          "marginTop": 5,
+        }
+      }
+    >
+      Hi there
+    </Text>
+  </View>
+</View>
+`;
