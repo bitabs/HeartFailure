@@ -44,7 +44,10 @@ export default class UserInfo extends Component {
       allMessages     : null,  filteredMessages: null,
       randomFav       : null,  type            : "",
       testing         : false, ECG             : null,
-      heartSound      : null,  HealthFromDB    : null,
+      heartSound      : null,  HealthFromDB    : {
+        bpm: 0,
+        calories: 0
+      },
       ECGFromDB       : null,  total           : 0
     };
 
@@ -503,8 +506,7 @@ export default class UserInfo extends Component {
                       source={Images[person.uid]}
                       resizeMode="contain"
                   />)
-                  : (<View
-                      style={[styles.profPic, styles.profPicIcon]}
+                  : (<View style={[styles.profPic, styles.profPicIcon]}
                     ><Feather name={"user"} size={20} color={"white"}/>
                     </View>
                   )
@@ -674,9 +676,6 @@ export default class UserInfo extends Component {
    * This method will create a the comments container, which will
    * hold all the messages that have occured between the two users.
    * ==============================================================
-   * @param total
-   * @param Messages
-   * @return {XML}
    */
   commentsContainer = (User, total, Messages) => {
     return (

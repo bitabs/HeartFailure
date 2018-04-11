@@ -26,5 +26,29 @@ describe('Testing <Statistics /> component', () => {
     ).toJSON();
     expect(tree).toMatchSnapshot()
   });
+
+  it('Should create a chart for the day', () => {
+    const wrapper = shallow(<Statistics handleSubmit={jest.fn()} />);
+    const inst = wrapper.instance().DayConfig()
+    expect(inst)
+  });
+
+  it('Should create a chart for the month', () => {
+    const wrapper = shallow(<Statistics handleSubmit={jest.fn()} />);
+    const inst = wrapper.instance().MonthConfig()
+    expect(inst)
+  });
+
+  it('Should create a chart for the year', () => {
+    const wrapper = shallow(<Statistics handleSubmit={jest.fn()} />);
+    const inst = wrapper.instance().YearConfig()
+    expect(inst)
+  });
+
+  it('Should render the component from render() hook', () => {
+    const wrapper = shallow(<Statistics handleSubmit={jest.fn()} />);
+    const inst = wrapper.instance().render();
+    expect(inst)
+  });
 });
 

@@ -279,7 +279,7 @@ export default class ListOfUsers extends PureComponent {
     ? this.setState({switchViews: value})
     : null;
 
-  users = (Users = null, toFollow, opositeTable) => Object.keys(Users).map(uid => {
+  users = (Users = null, toFollow, opositeTable) => Users ? Object.keys(Users).map(uid => {
     const
       {authUserType, authUserUID, ECG, health, defaultHealth} = this.state,
       {updateIndex, userView} = this.props,
@@ -300,7 +300,7 @@ export default class ListOfUsers extends PureComponent {
         key           = {uid}
       />
     )
-  });
+  }): null;
 
   /**
    * Once the component has been mounted, proceed with rendering

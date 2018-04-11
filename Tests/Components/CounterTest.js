@@ -26,5 +26,12 @@ describe('Testing <Counter /> component', () => {
     ).toJSON();
     expect(tree).toMatchSnapshot()
   });
+
+  it('should start the recording', () => {
+    const wrapper = shallow(<Counter />);
+    const inst = wrapper.instance().startRecording(30);
+    expect(inst)
+  });
+
 });
 

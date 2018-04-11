@@ -25,6 +25,7 @@ export default class Counter extends Component {
    * @param seconds
    */
   startRecording = seconds => {
+    let count = (() => {});
     (count = (cc) => {
       this.setState({counter: cc});
       if (cc > 0) setTimeout(function() { count(--cc); }, 1000);

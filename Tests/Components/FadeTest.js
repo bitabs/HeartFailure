@@ -14,29 +14,17 @@ import renderer from 'react-test-renderer'
 import Adapter from 'enzyme-adapter-react-16';
 
 // the component that will be tested
-import SimplePage from "../../App/Containers/SimplePage";
+import Fade from "../../App/Components/Fade";
 
 Enzyme.configure({ adapter: new Adapter() });
 
-describe('Testing <SimplePage /> component', () => {
-
+describe('Testing <Fade /> component', () => {
   // create an image of the component, and match it with the snapshot
   it('renders as expected', () => {
     const tree = renderer.create(
-      <SimplePage />
+      <Fade visible={false}/>
     ).toJSON();
     expect(tree).toMatchSnapshot()
   });
-
-  it('Should bind the View function from the constructor', () => {
-    const wrapper = shallow(<SimplePage />);
-    const inst = wrapper.instance().constructor();
-    expect(inst)
-  });
-
-  it('Should render the View function', () => {
-    const wrapper = shallow(<SimplePage />);
-    const inst = wrapper.instance().View({});
-    expect(inst)
-  });
 });
+

@@ -14,29 +14,23 @@ import renderer from 'react-test-renderer'
 import Adapter from 'enzyme-adapter-react-16';
 
 // the component that will be tested
-import SimplePage from "../../App/Containers/SimplePage";
+import ECG from "../../App/Containers/ECG";
 
 Enzyme.configure({ adapter: new Adapter() });
 
-describe('Testing <SimplePage /> component', () => {
-
+describe('Testing <ECG /> component', () => {
   // create an image of the component, and match it with the snapshot
   it('renders as expected', () => {
     const tree = renderer.create(
-      <SimplePage />
+      <ECG height={100} width={200}/>
     ).toJSON();
     expect(tree).toMatchSnapshot()
   });
 
-  it('Should bind the View function from the constructor', () => {
-    const wrapper = shallow(<SimplePage />);
-    const inst = wrapper.instance().constructor();
-    expect(inst)
-  });
-
-  it('Should render the View function', () => {
-    const wrapper = shallow(<SimplePage />);
-    const inst = wrapper.instance().View({});
+  it('Should create the ECG Chart', () => {
+    const wrapper = shallow(<ECG height={100} width={200}/>);
+    const inst = wrapper.instance().render();
     expect(inst)
   });
 });
+

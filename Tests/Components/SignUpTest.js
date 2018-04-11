@@ -16,7 +16,7 @@ import {Field, reduxForm} from "redux-form"
 import Adapter from 'enzyme-adapter-react-16';
 
 // the component that will be tested
-import {LoginForm} from "../../App/Containers/LoginForm";
+import {SignUp} from "../../App/Containers/SignUp";
 
 import { createStore } from 'redux';
 
@@ -26,9 +26,9 @@ const store = createStore(() => ({}));
 
 Enzyme.configure({ adapter: new Adapter() });
 
-const Decorated = reduxForm({ form: 'testForm' })(LoginForm);
+const Decorated = reduxForm({ form: 'testForm' })(SignUp);
 
-describe('Testing <LoginForm /> component', () => {
+describe('Testing <SignUp /> component', () => {
   // create an image of the component, and match it with the snapshot
   const __Decorated = (
     <Provider store={store}>
@@ -42,13 +42,13 @@ describe('Testing <LoginForm /> component', () => {
   });
 
   it('Should render the input fields', () => {
-    const wrapper = shallow(<LoginForm handleSubmit={jest.fn()} />);
+    const wrapper = shallow(<SignUp handleSubmit={jest.fn()} />);
     const inst = wrapper.instance().renderInput({input: jest.fn()});
     expect(inst)
   });
 
   it('Should render the component', () => {
-    const wrapper = shallow(<LoginForm handleSubmit={jest.fn()} />);
+    const wrapper = shallow(<SignUp handleSubmit={jest.fn()} />);
     const inst = wrapper.instance().render()
     expect(inst)
   });

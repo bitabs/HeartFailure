@@ -58,6 +58,12 @@ export class Reference {
     return promise
   })
 
+  set = jest.fn((data) => {
+    const promise = Promise.resolve()
+    RNFirebase.promises.push(promise)
+    return promise
+  })
+
   remove = jest.fn(() => {
     const promise = Promise.resolve()
     RNFirebase.promises.push(promise)

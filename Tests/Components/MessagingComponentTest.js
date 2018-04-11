@@ -14,29 +14,29 @@ import renderer from 'react-test-renderer'
 import Adapter from 'enzyme-adapter-react-16';
 
 // the component that will be tested
-import SimplePage from "../../App/Containers/SimplePage";
+import MessagingComponent from "../../App/Components/MessagingComponent";
 
 Enzyme.configure({ adapter: new Adapter() });
 
-describe('Testing <SimplePage /> component', () => {
-
+describe('Testing <MessagingComponent /> component', () => {
   // create an image of the component, and match it with the snapshot
   it('renders as expected', () => {
     const tree = renderer.create(
-      <SimplePage />
+      <MessagingComponent visible={false}/>
     ).toJSON();
     expect(tree).toMatchSnapshot()
   });
 
-  it('Should bind the View function from the constructor', () => {
-    const wrapper = shallow(<SimplePage />);
+  it('Should bind firebase references when the component is ready', () => {
+    const wrapper = shallow(<MessagingComponent />);
     const inst = wrapper.instance().constructor();
     expect(inst)
   });
 
-  it('Should render the View function', () => {
-    const wrapper = shallow(<SimplePage />);
-    const inst = wrapper.instance().View({});
+  it('Should render the component is ready', () => {
+    const wrapper = shallow(<MessagingComponent />);
+    const inst = wrapper.instance().render();
     expect(inst)
   });
 });
+

@@ -14,29 +14,23 @@ import renderer from 'react-test-renderer'
 import Adapter from 'enzyme-adapter-react-16';
 
 // the component that will be tested
-import SimplePage from "../../App/Containers/SimplePage";
+import OpeningLogoLoader from "../../App/Containers/OpeningLogoLoader";
 
 Enzyme.configure({ adapter: new Adapter() });
 
-describe('Testing <SimplePage /> component', () => {
-
+describe('Testing <OpeningLogoLoader /> component', () => {
   // create an image of the component, and match it with the snapshot
   it('renders as expected', () => {
     const tree = renderer.create(
-      <SimplePage />
+      <OpeningLogoLoader />
     ).toJSON();
     expect(tree).toMatchSnapshot()
   });
 
-  it('Should bind the View function from the constructor', () => {
-    const wrapper = shallow(<SimplePage />);
+  it('Should mount the component', () => {
+    const wrapper = shallow(<OpeningLogoLoader />);
     const inst = wrapper.instance().constructor();
     expect(inst)
   });
-
-  it('Should render the View function', () => {
-    const wrapper = shallow(<SimplePage />);
-    const inst = wrapper.instance().View({});
-    expect(inst)
-  });
 });
+

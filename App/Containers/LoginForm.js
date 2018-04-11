@@ -153,7 +153,7 @@ import {
 import Ionicons from 'react-native-vector-icons/Feather';
 
 // firebase database
-import firebase from 'react-native-firebase';
+import firebase from '../../firebase'
 
 // form fields from redux
 import {Field, reduxForm} from 'redux-form';
