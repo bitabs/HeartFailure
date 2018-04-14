@@ -133,7 +133,8 @@ Below are some libraries that are used within our components. Some libraries fro
 ##### App/Fixture Directory
 
 Within this folder, Ignite has generated some dummy data that is closely coupled with Redux.
-We can't remove these data as it breaks the whole application. Our application does not use Fixtures
+We can't remove these data as it breaks the whole application. Our application does not use Fixtures, and therefore,
+we do not deal with any of the data from there.
 
 ##### User's images
 
