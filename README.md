@@ -88,7 +88,7 @@ HeartFailure
 
 
 # External Libraries
-Because this project used Ignite CLI scaffolding, certain libraries have been installed by default, to organise the application and hold the basic structure. However, these libraries are not used within our custom react-native components; bu they are still needed by Ignite CLI:
+Because this project uses Ignite CLI scaffolding, certain libraries have been installed by default, to organise the application and hold the basic structure. However, these libraries are not entirely reliant within our custom react-native components; bu they are still needed by Ignite CLI. For example, the libraries below are installed by the CLI to organise our project.
 
 #### Libraries used by Ignite CLI Scaffolding 
 > [`apisauce`](https://github.com/infinitered/apisauce),
@@ -107,6 +107,7 @@ Because this project used Ignite CLI scaffolding, certain libraries have been in
 > [`reduxsauce`](https://github.com/infinitered/reduxsauce),
 > [`seamless-immutable`](https://github.com/rtfeldman/seamless-immutable)
 
+Below are some libraries that are used within our components. Some liraries from below are not integrated to certain components due to incompatibility issues, but can be used if integrated to react-native modules. For example: slayerjs is a node module which cannot be used within react-native.
 #### Libraries used within our react-native custom components
 > [`react-native`](https://github.com/facebook/react-native),
 > [`firebase-mock`](https://github.com/soumak77/firebase-mock),
