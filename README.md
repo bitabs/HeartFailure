@@ -7,6 +7,7 @@
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat)](http://standardjs.com/)
 
 ###### Project Briefing
+
 > In a normal healthy heart, during each heartbeat a set amount of blood enters the heart and is pumped out 
 again. If you have heart failure, your heart cannot cope with pumping the full amount of blood in each 
 heartbeat. The incidence of heart failure is increasing. Over half a million people in the UK have been 
@@ -21,6 +22,7 @@ real-time. The challenges are many and include design of a system, which is easy
 development of mobile applications for visualization and processing of the signals.
 
 ###### Aim
+
 > This project aims at designing a mobile application (App) capable of receiving data from an external device, 
 process and visualize for the patient. The project may include setting up a remote server for data storing. At
 the end of the project, the student should submit a report. Source codes and hardware are delivered to the 
@@ -88,9 +90,11 @@ HeartFailure
 
 
 ## External Libraries
+
 Because this project uses Ignite CLI scaffolding, certain libraries have been installed by default, to organise the application and hold the basic structure. However, these libraries are not entirely reliant within our custom react-native components; bu they are still needed by Ignite CLI. For example, the libraries below are installed by the CLI to organise our project.
 
 ##### Libraries used by Ignite CLI Scaffolding 
+
 > [`apisauce`](https://github.com/infinitered/apisauce),
 > [`convert-string`](https://github.com/vbuterin/bitcoinjs-lib),
 > [`metro-bundler`](https://github.com/facebook/metro),
@@ -108,7 +112,9 @@ Because this project uses Ignite CLI scaffolding, certain libraries have been in
 > [`seamless-immutable`](https://github.com/rtfeldman/seamless-immutable)
 
 Below are some libraries that are used within our components. Some liraries from below are not integrated to certain components due to incompatibility issues, but can be used if integrated to react-native modules. For example: slayerjs is a node module which cannot be used within react-native.
+
 ##### Libraries used within our react-native custom components
+
 > [`react-native`](https://github.com/facebook/react-native),
 > [`firebase-mock`](https://github.com/soumak77/firebase-mock),
 > [`kalmanjs`](https://github.com/wouterbulten/kalmanjs),
@@ -125,6 +131,16 @@ Below are some libraries that are used within our components. Some liraries from
 > [`react-native-vector-icons`](https://github.com/oblador/react-native-vector-icons),
 > [`react-navigation`](https://github.com/react-navigation/react-navigation),
 > [`slayer`](https://github.com/bbc/slayer)
+
+
+##### App/Fixture Directory
+
+Within this folder, Ignite has generated some dummy data that is closely coupled with Redux.
+We can't remove these data as it breaks the whole application. Our application does not use Fixtures
+
+##### User's images
+
+Dummy images have been taken from google images. Some Images may hold copyright, and some not.
 
 ## Credits
  
