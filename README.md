@@ -45,26 +45,25 @@ react-native run-android    // Run Build for Android
 ###### Folder Structure
 ```
 HeartFailure
-├── App                            // Compiled files (alternatively `dist`)
-│   ├── Components                 // "Dumb" components are stored here. All data is passed into dumb components.
-│   │   ├── Styles                 // Use this folder to create and store style files that match the naming of your components
-│   ├── Config                     // All application specific configuration falls in this folder
-│   ├── Containers                 // A container is what they call a "Smart Component" in Redux. It is a component which knows about Redux.
-│   │   ├── Styles                 // This /Containers/Styles folder will house your container styles.
-│   ├── Fixtures                   // All key API responses are housed here.
-│   ├── Images                     // Static images used in your project are stored here.
-│   ├── Lib                        // treat this as proving ground for components that could be reusable outside your project.
-│   ├── Navigation                 // This folder will house new navigations.
-│   ├── Redux                      // A place to store your Redux files (reducers, stores, etc.).
-│   ├── Sagas                      // A place to store your Sagas (Redux side effects).
-│   ├── Services                   // API calls to external services.
-│   ├── Themes                     // A place to contain styles shared across your project (fonts, colors, etc.).
-│   └── Transforms                 // working with APIs is to change data so that it plays nice between your app and the API.
+├── App                      // Main Application logic lies here
+│   ├── Components           // "Dumb" components are stored here.
+│   │   ├── Styles           // This folder contains the style files that match the naming of our components
+│   ├── Config               // All application specific configuration falls in this folder
+│   ├── Containers           // "Smart Component" lies here
+│   │   ├── Styles           // This folder houses our container styles
+│   ├── Fixtures             // All key API responses are housed here (Not used in our proj)
+│   ├── Images               // Static images used in our project are stored here
+│   ├── Lib                  // Reusable components outside our project
+│   ├── Navigation           // Cinfgures our application routing
+│   ├── Redux                // A place to store our Redux files (default setup from the scaffolding)
+│   ├── Sagas                // A place to store our Sagas (default setup from the scaffolding)
+│   ├── Services             // API calls to external services
+│   ├── Themes               // A place to contain styles shared across our project (fonts, colors, etc.)
+│   └── Transforms           // Working with APIs is to change data so
 ├── README.md
-├── __tests__
-│   ├── index.android.js
-│   └── index.ios.js
-├── android
+├── Tests                    // Unit testing directory              
+│   ├── Components           // Unit testing of our components
+├── android                  // Access point to our android platform
 │   ├── app
 │   ├── build.gradle
 │   ├── gradle
@@ -78,7 +77,7 @@ HeartFailure
 │   └── plugins
 ├── index.android.js
 ├── index.ios.js
-├── ios
+├── ios                      // Access point to our IOS platform
 │   ├── HeartFailure
 │   ├── HeartFailure-tvOS
 │   ├── HeartFailure-tvOSTests
@@ -88,41 +87,40 @@ HeartFailure
 ```
 
 
-###### To Lint on Commit
+# External Libraries
+Because this project used Ignite CLI scaffolding, certain libraries have been installed by default, to organise the application and hold the basic structure. However, these libraries are not used within our custom react-native components; bu they are still needed by Ignite CLI:
 
-> This is implemented using [husky](https://github.com/typicode/husky). There is no additional setup needed.
+#### Libraries used by Ignite CLI Scaffolding 
+> [`apisauce`](https://github.com/infinitered/apisauce),
+> [`convert-string`](https://github.com/vbuterin/bitcoinjs-lib),
+> [`metro-bundler`](https://github.com/facebook/metro),
+> [`ramda`](https://github.com/ramda/ramda),
+> [`ramdasauce`](https://github.com/infinitered/ramdasauce),
+> [`react`](https://github.com/facebook/react),
+> [`react-native-i18n`](https://github.com/fnando/i18n-js),
+> [`react-native-popup-menu`](https://github.com/instea/react-native-popup-menu),
+> [`react-redux`](https://github.com/reactjs/react-redux),
+> [`redux`](https://github.com/reactjs/redux),
+> [`redux-form`](https://github.com/erikras/redux-form),
+> [`redux-persist`](https://github.com/rt2zz/redux-persist),
+> [`redux-saga`](https://github.com/redux-saga/redux-saga),
+> [`reduxsauce`](https://github.com/infinitered/reduxsauce),
+> [`seamless-immutable`](https://github.com/rtfeldman/seamless-immutable)
 
-###### Bypass Lint
-
-> If you have to bypass lint for a special commit that you will come back and clean (pushing something to a branch etc.) then you can bypass git hooks with adding `--no-verify` to your commit command.
-
-###### Understanding Linting Errors
-
-> The linting rules are from JS Standard and React-Standard.  [Regular JS errors can be found with descriptions here](http://eslint.org/docs/rules/), while [React errors and descriptions can be found here](https://github.com/yannickcr/eslint-plugin-react).
-
-###### Secrets
-
-> This project uses [react-native-config](https://github.com/luggit/react-native-config) to expose config variables to your javascript code in React Native. You can store API keys
-and other sensitive information in a `.env` file:
-
-```
-API_URL=https://myapi.com
-GOOGLE_MAPS_API_KEY=abcdefgh
-```
-
-> and access them from React Native like so:
-
-```
-import Secrets from 'react-native-config'
-
-Secrets.API_URL  // 'https://myapi.com'
-Secrets.GOOGLE_MAPS_API_KEY  // 'abcdefgh'
-```
-
-> The `.env` file is ignored by git keeping those secrets out of your repo.
-
-###### Get started
-1. Copy .env.example to .env
-2. Add your config variables
-3. Follow instructions at [https://github.com/luggit/react-native-config#setup](https://github.com/luggit/react-native-config#setup)
-4. Done!
+#### Libraries used within our react-native custom components
+> [`react-native`](https://github.com/facebook/react-native),
+> [`firebase-mock`](https://github.com/soumak77/firebase-mock),
+> [`kalmanjs`](https://github.com/wouterbulten/kalmanjs),
+> [`lodash`](https://github.com/lodash/lodash),
+> [`moment`](http://momentjs.com/),
+> [`prop-types`](https://github.com/facebook/prop-types),
+> [`react-native-ble-manager`](https://github.com/innoveit/react-native-ble-manager),
+> [`react-native-check-box`](https://github.com/crazycodeboy/react-native-check-box),
+> [`react-native-firebase`](https://github.com/invertase/react-native-firebase),
+> [`react-native-highcharts`](https://github.com/TradingPal/react-native-highcharts),
+> [`react-native-svg`](https://github.com/react-native-community/react-native-svg),
+> [`react-native-tab-view`](https://github.com/react-native-community/react-native-tab-view),
+> [`react-native-timeago`](https://github.com/TylerLH/react-native-timeago),
+> [`react-native-vector-icons`](https://github.com/oblador/react-native-vector-icons),
+> [`react-navigation`](https://github.com/react-navigation/react-navigation),
+> [`slayer`](https://github.com/bbc/slayer)
