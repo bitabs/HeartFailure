@@ -101,7 +101,6 @@ Because this project uses Ignite CLI scaffolding, certain libraries have been in
 > [`ramda`](https://github.com/ramda/ramda),
 > [`ramdasauce`](https://github.com/infinitered/ramdasauce),
 > [`react`](https://github.com/facebook/react),
-> [`react-native-i18n`](https://github.com/fnando/i18n-js),
 > [`react-native-popup-menu`](https://github.com/instea/react-native-popup-menu),
 > [`react-redux`](https://github.com/reactjs/react-redux),
 > [`redux`](https://github.com/reactjs/redux),
@@ -111,13 +110,12 @@ Because this project uses Ignite CLI scaffolding, certain libraries have been in
 > [`reduxsauce`](https://github.com/infinitered/reduxsauce),
 > [`seamless-immutable`](https://github.com/rtfeldman/seamless-immutable)
 
-Below are some libraries that are used within our components. Some liraries from below are not integrated to certain components due to incompatibility issues, but can be used if integrated to react-native modules. For example: slayerjs is a node module which cannot be used within react-native.
+Below are some libraries that are used within our components. Some libraries from below are not integrated to certain components due to incompatibility issues, but can be used if integrated to react-native modules. For example: slayerjs is a node module which cannot be used within react-native.
 
 ##### Libraries used within our react-native custom components
 
 > [`react-native`](https://github.com/facebook/react-native),
 > [`firebase-mock`](https://github.com/soumak77/firebase-mock),
-> [`kalmanjs`](https://github.com/wouterbulten/kalmanjs),
 > [`lodash`](https://github.com/lodash/lodash),
 > [`moment`](http://momentjs.com/),
 > [`prop-types`](https://github.com/facebook/prop-types),
@@ -130,7 +128,6 @@ Below are some libraries that are used within our components. Some liraries from
 > [`react-native-timeago`](https://github.com/TylerLH/react-native-timeago),
 > [`react-native-vector-icons`](https://github.com/oblador/react-native-vector-icons),
 > [`react-navigation`](https://github.com/react-navigation/react-navigation),
-> [`slayer`](https://github.com/bbc/slayer)
 
 
 ##### App/Fixture Directory
