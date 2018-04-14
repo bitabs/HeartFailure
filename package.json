@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "postinstall": "rimraf ./node_modules/react-native/local-cli/core/__fixtures__/files/package.json”,
+    "postinstall": "rimraf ./node_modules/react-native/local-cli/core/__fixtures__/files/package.json",
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "test": "jest",
     "clean": "rm -rf $TMPDIR/react-* && watchman watch-del-all && npm cache clean --force",
@@ -23,8 +23,6 @@
   "dependencies": {
     "apisauce": "^0.14.0",
     "convert-string": "^0.1.0",
-    "firebase-mock": "^2.2.0",
-    "kalmanjs": "^1.0.0-beta",
     "lodash": "^4.17.5",
     "metro-bundler": "^0.22.1",
     "moment": "^2.20.1",
@@ -37,21 +35,20 @@
     "react-native-check-box": "^2.0.2",
     "react-native-firebase": "^3.3.1",
     "react-native-highcharts": "^1.0.2",
-    "react-native-i18n": "^2.0.12",
     "react-native-popup-menu": "^0.12.2",
     "react-native-svg": "^6.3.1",
     "react-native-tab-view": "0.0.74",
     "react-native-timeago": "^0.4.0",
     "react-native-vector-icons": "^4.5.0",
-    "react-navigation": "^1.0.0-beta.27",
+    "react-navigation": "^1.0.0-beta.30",
+    "react-navigation-redux-helpers": "^1.0.5",
     "react-redux": "^5.0.2",
     "redux": "^3.6.0",
     "redux-form": "^7.2.1",
     "redux-persist": "^5.4.0",
     "redux-saga": "^0.16.0",
     "reduxsauce": "0.7.0",
-    "seamless-immutable": "^7.0.1",
-    "slayer": "^1.0.1"
+    "seamless-immutable": "^7.0.1"
   },
   "devDependencies": {
     "@storybook/addon-storyshots": "^3.2.3",
