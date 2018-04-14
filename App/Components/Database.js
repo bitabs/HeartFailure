@@ -58,17 +58,6 @@ export default class Database {
   );
 
   /**
-   * Call this method if you want to update the dashboard tab
-   * @param rootUID
-   * @param childUI
-   * @param userObj
-   */
-  static updateDashBoard = (rootUID = null, childUI = null, userObj) =>
-    firebase.database().ref(`/Dashboard/${rootUID}/${childUI}`)
-      .update(userObj)
-      .catch(e => e);
-
-  /**
    * Call this method if you want to send the message from the user to the selected user
    * @param uid
    * @param toUid

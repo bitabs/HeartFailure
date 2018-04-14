@@ -75,9 +75,6 @@ export default class ListOfUsers extends PureComponent {
 
     // add the user to the database
     this.addUser = this.addUser.bind(this);
-
-    // once added, update the dashboard
-    this.updateDashBoard = this.updateDashBoard.bind(this);
   }
 
   /**
@@ -119,11 +116,6 @@ export default class ListOfUsers extends PureComponent {
               // first check if the component is still mounted before adding
               if (this._isMounted) this.addUser(snap.val(), childSnap);
 
-              // Once the user has been added, update the database now
-              authUserType === "Doctor"
-                ? this.updateDashBoard (
-                  authUserUID, childSnap.key, snap.val()[childSnap.key]
-                ): null
             });
 
           // add a listener that will listen to any new users being added
@@ -133,11 +125,6 @@ export default class ListOfUsers extends PureComponent {
               // first check if the component is still mounted before adding
               if (this._isMounted) this.addUser(snap.val(), childSnap);
 
-              // Once the user has been added, update the database now
-              authUserType === "Patient"
-                ? this.updateDashBoard (
-                  childSnap.key, authUserUID, snap.val()[authUserUID]
-                ): null;
             });
 
           const isDoctor = authUserType === "Doctor";
@@ -151,19 +138,6 @@ export default class ListOfUsers extends PureComponent {
       })
     });
   }
-
-  /**
-   * When a user is followed, we need to push that user into the
-   * current user's object. By following users form UI side, we
-   * also need to update the database.
-   * ==============================================================
-   * @param keyFrom
-   * @param keyTo
-   * @param data
-   */
-  updateDashBoard = (keyFrom, keyTo, data) => Database.updateDashBoard (
-    keyFrom, keyTo, data
-  );
 
   /**
    * To add a user, we need to push it into our state obj, so that

@@ -40,12 +40,6 @@ describe('Testing <ListOfUsers /> component', () => {
     expect(inst)
   });
 
-  it('should update the dashboard', () => {
-    const wrapper = shallow(<ListOfUsers updateIndex={jest.fn()}/>);
-    const inst = wrapper.instance().updateDashBoard("eXskfjeri", "Vxmdudosjd", {});
-    expect(inst)
-  });
-
   it('should add the user to the state object of the component', () => {
     const wrapper = shallow(<ListOfUsers userView={jest.fn()} updateIndex={jest.fn()}/>);
     const inst = wrapper.instance().addUser({}, {});
