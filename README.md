@@ -43,7 +43,7 @@ react-native run-android    // Run Build for Android
 ```
 
 ###### Folder Structure
-```
+``` js
 HeartFailure
 ├── App                      // Main Application logic lies here
 │   ├── Components           // "Dumb" components are stored here.
@@ -87,10 +87,10 @@ HeartFailure
 ```
 
 
-# External Libraries
+## External Libraries
 Because this project uses Ignite CLI scaffolding, certain libraries have been installed by default, to organise the application and hold the basic structure. However, these libraries are not entirely reliant within our custom react-native components; bu they are still needed by Ignite CLI. For example, the libraries below are installed by the CLI to organise our project.
 
-#### Libraries used by Ignite CLI Scaffolding 
+##### Libraries used by Ignite CLI Scaffolding 
 > [`apisauce`](https://github.com/infinitered/apisauce),
 > [`convert-string`](https://github.com/vbuterin/bitcoinjs-lib),
 > [`metro-bundler`](https://github.com/facebook/metro),
@@ -108,7 +108,7 @@ Because this project uses Ignite CLI scaffolding, certain libraries have been in
 > [`seamless-immutable`](https://github.com/rtfeldman/seamless-immutable)
 
 Below are some libraries that are used within our components. Some liraries from below are not integrated to certain components due to incompatibility issues, but can be used if integrated to react-native modules. For example: slayerjs is a node module which cannot be used within react-native.
-#### Libraries used within our react-native custom components
+##### Libraries used within our react-native custom components
 > [`react-native`](https://github.com/facebook/react-native),
 > [`firebase-mock`](https://github.com/soumak77/firebase-mock),
 > [`kalmanjs`](https://github.com/wouterbulten/kalmanjs),
@@ -125,3 +125,19 @@ Below are some libraries that are used within our components. Some liraries from
 > [`react-native-vector-icons`](https://github.com/oblador/react-native-vector-icons),
 > [`react-navigation`](https://github.com/react-navigation/react-navigation),
 > [`slayer`](https://github.com/bbc/slayer)
+
+## Credits
+ 
+Lead Developer - Naseebullah Ahmadi (@Naseebullahsafi)
+ 
+## License
+ 
+The MIT License (MIT)
+
+Copyright (c) 2018 Naseebullah Ahmadi
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+> The software is provided "as is", without warranty of any kind, express or implied, including but not limited to warranties of merchantability, fitness for a particular purpose and noninfringement. In no event shall the authors or copyright holders be liable for any claim, damages or other liability, whether in an action of contract, tort or otherwise, arising from, out of or in connection with the software of the use of other dealings in the software
